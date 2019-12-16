@@ -1,0 +1,31 @@
+
+* Browser zum Neuladen erzwingen (nicht aus cache laden)
+* Karten immer gleichgroß, Inhalt soll sich anpassen -> fitty?
+
+
+* index_table: Bulletpoints auch entfernen bei discardCard()
+
+---------------------
+
+deutsche Anführungszeichen:
+	&bdquo;&ldquo;
+
+&sup2;
+
+memory<small><sup> &reg</sup></small>
+
+**es geschah im...
+
+[" <small>()</small>", " <small>()</small>", " <small>()</small>", " <small>()</small>", " <small>()</small>", " <small>()</small>"]
+
+ 
+ <small>()</small>
+
+<small></small>
+
+
+<small><sup> &reg</sup></small>
+
+**berühmte Nachbarn:
+
+["<small>,</small> ", "<small>,</small> ", "<small>,</small> ", "<small>,</small> ", "<small>,</small> ", "<small>,</small> "]

@@ -1,0 +1,228 @@
+* {
+  box-sizing: border-box;
+  /* to avoid red highlite when user selects elements: */
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+body {
+  min-height: 100vh; /* 100% of viewport-height*/
+  margin: 0;
+  font-size: 1.8rem;
+  /*font-family: 'Atma', cursive;*/
+  /*font-family: 'Special Elite', cursive;*/
+  font-family: "Life Savers", cursive;
+  /******background image******/
+  background-image: url("images/white-wall.png");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-repeat: repeat-y;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* stuff-logo styles */
+#stuff-logo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 340px;
+  padding-top: 2rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
+  font-family: "Life Savers", cursive;
+  text-align: center;
+}
+
+#stuff-logo h1 {
+  font-size: 8rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+}
+
+#stuff-logo h2 {
+  font-size: 5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* section styles */
+#construction-area {
+    position: absolute;
+    bottom: 112px;
+    right: 592px;
+    height: 680px;
+    width: 720px;
+    padding: 4px;
+    border: 3px lightgrey dashed;
+    border-radius: 20px;
+    margin-left: 6px;
+    background-color: rgba(211,211,211,0.5);
+}
+
+#objects {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  /* align-items: center; */
+  position: absolute;
+  bottom: 102px;
+  right: 0;
+  height: 800px;
+  width: 580px;
+  padding: 4px;
+  border: 3px lightgrey dashed;
+  border-radius: 10px;
+  margin-right: 4px;
+}
+#queue {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  border-top: 3px black dashed;
+}
+
+#queue-overlay {
+    position: absolute;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* --------------- OBJECT STYLES ---------------*/
+
+.img-box {
+  max-width: 300px;
+  max-height: 300px;
+  text-align: center;
+  margin: 2px;
+  z-index: 1;
+}
+
+
+#queue .img-box {
+    max-height: 90px;
+    width: auto;
+    margin-left: 26px;
+    margin-right: 6px;
+    margin-top: 3px;
+    z-index: 0;
+}
+
+.img-box img {
+    height: 100%;
+    width: auto;
+}
+.img-box img:hover {
+    cursor: pointer;
+}
+
+/* styles for particular object items: */
+.banana {
+    height: 60px;
+    width: auto;
+}
+.bridge {
+    height: 100px;
+    width: auto;
+}
+.cloth {
+    height: 270px;
+    width: auto;
+    /* border: 3px black solid; */
+    border-top-right-radius: 500%;
+    border-top-left-radius: 200%;
+    border-bottom-left-radius: 160%;
+    border-bottom-right-radius: 200%;
+    overflow: hidden;
+    /* background-color: hotpink; */
+    /* clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); */
+}
+
+/* .clip-hexagon {
+    background-color: hotpink;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+} */
+
+.coin {
+  height: 100px;
+  width: auto;
+}
+.flower {
+  height: 170px;
+  width: auto;
+}
+#fur {
+  height: 200px;
+  width: auto;
+}
+.giant {
+    height: 200px;
+    width: auto;
+}
+.peg {
+  height: 120px;
+  width: auto;
+}
+.pig {
+  height: 80px;
+  width: auto;
+}
+.plane {
+  height: 160px;
+  width: auto;
+}
+.pokerchip {
+    height: 90px;
+    width: auto;
+}
+.pole {
+    height: 170px;
+    width: auto;
+}
+.puzzle {
+    height: 170px;
+    width: auto;
+}
+.ring {
+  height: 95px;
+  width: auto;
+}
+.rummikubtile {
+    height: 150px;
+    width: auto;
+}
+.scissors {
+    height: 100px;
+    width: auto;
+}
+.stone {
+    height: 90px;
+    width: auto;
+}
+.ticket {
+    height: 190px;
+    width: auto;
+}
+.token {
+  height: 110px;
+  width: auto;
+}
+.triangle {
+    height: 110px;
+    width: auto;
+}

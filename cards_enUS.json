@@ -1,0 +1,239 @@
+[
+  {
+    "id": 1,
+    "title": "For the Birds",
+    "items": ["Hummingbird", "Sea Eagle", "Parrot", "Pelican", "Sparrow", "Owl"],
+    "german-id": 188
+  },
+  {
+    "id": 2,
+    "title": "When I Grow Up I want to Be",
+    "items": ["A Railroad Engineer", "A Nurse", "An Astronaut", "A Firefighter", "A Ballerina", "A Veterinarian"],
+    "german-id": 187
+  },
+  {
+    "id": 3,
+    "title": "There’s No Such Thing!",
+    "items":["Dragon", "Mermaid", "Abominable Snowman/Yeti", "Nessie/Loch Ness Monster", "Jackalope/Wolpertinger", "Centaur"],
+    "german-id": 185
+  },
+  {
+    "id": 4,
+    "title": "Natural Disasters",
+    "items": ["earthquake", "storm tide", "tornado", "volcanic eruption", "flood", "forest fire"],
+    "german-id": 181
+  },
+  {
+    "id": 5,
+    "title": "Let's go!",
+    "items": ["rowboat", "bus", "horse-drawn carriage", "bicycle", "car", "hiking boots"],
+    "german-id": 180
+  },
+  {
+    "id": 6,
+    "title": "What’s For Dessert?",
+    "items": ["tiramisu", "chocolate mousse", "wobbly jelly/Jell-O", "pancake", "ice cream bombe", "compote/stewed fruit"],
+    "german-id": 179
+  },
+  {
+    "id": 7,
+    "title": "Brrr!",
+    "items": [ "Polar Bear", "Walrus", "Iceberg", "Arctic Ocean", "Penguin", "Greenland"],
+    "german-id": 177
+  },
+  {
+    "id": 8,
+    "title": "Snow Day",
+    "items": ["Sled", "Gloves", "Snowball fight", "Cocoa", "Snowman", "Shovel"]
+  },
+  {
+    "id": 9,
+    "title": "Bouncy",
+    "items": ["Kangaroo", "Rubber ball/Bouncy ball", "Spiral spring", "Grasshopper", "Trampolinist", "Rabbit"],
+    "german-id": 174
+  },
+  {
+    "id": 10,
+    "title": "Doomed to Extinction",
+    "items": ["dinosaur", "sabre-toothed tiger", "mammoth", "woolly rhinoceros", "aurochs/urus <small>(wild cattle)</small>", "dodo <small>(flightless bird)</small>"],
+    "german-id": 173
+  },
+  {
+    "id": 11,
+    "title": "Ouch!",
+    "items": ["Nosebleeding", "Broken arm", "Wasp sting", "Bump on the head", "Stomach ache", "Sore muscles"],
+    "german-id": 171
+  },
+  {
+    "id": 12,
+    "title": "Wonders of the Medieval World",
+    "items": ["Great Wall of China", "Leaning Tower of Pisa", "Ruins of Stonehenge", "Taj Mahal", "Sphinx", "Colosseum of Rome"],
+    "german-id": 73
+  },
+  {
+    "id": 13,
+    "title": "Musical Instruments",
+    "items": ["Tuba", "Piano", "Violin", "Kettledrum", "Trumpet", "Accordion"],
+    "german-id": 72
+  },
+  {
+    "id": 14,
+    "title": "No fear!",
+    "items": ["<small>fear of</small> beards: <small>pogonophobia</small>", "<small>fear of</small> clowns: <small>coulrophobia</small>", "<small>fear of</small> sharks: <small>selachophobia</small>", "<small>fear of</small> gold: <small>aurophobia</small>", "<small>fear of</small> garlic: <small>scorodophobia</small>", "<small>fear of</small> doctors: <small>iatrophobia</small>"],
+    "german-id": 96
+  },
+  {
+    "id": 15,
+    "title": "Splat!",
+    "items": ["rubber duckie", "swim ring", "snorkel", "oxygen device", "swimfins", "inflatable mattress"],
+    "like-german-id": 117
+  },
+  {
+    "id": 16,
+    "title": "Deadly Sins",
+    "items": ["Pride", "Gluttony", "Lust", "Sloth", "Anger", "Envy"]
+  },
+  {
+    "id": 17,
+    "title": "They’ll Bring You Luck",
+    "items": ["Guardian Angel", "Chimney Sweep", "Horseshoe", "Ladybug", "Rabbit’s Foot", "Four Leaf Clover"],
+    "like-german-id": 35
+  },
+  {
+    "id": 18,
+    "title": "Ageless and Evergreen",
+    "items": ["Green around the gills", "Green thumb", "Green with envy", "Green living (eco-friendly)", "Green light", "The green stuff ($$)"]
+  },
+  {
+    "id": 19,
+    "title": "Everybody Needs a Patron!",
+    "items": ["Cobblers <small>(St. Crispian)</small>", "Beekeepers <small>(St. Ambrosius)</small>", "Gravediggers <small>(St. Anthony)</small>", "Gardeners <small>(St. Dorothy)</small>", "Innkeepers <small>(St. Julian)</small>", "Tax collectors <small>(St. Matthew)</small>"],
+    "german-id": 66
+  },
+  {
+    "id": 20,
+    "title": "Paint it Black",
+    "items": ["Blackboard", "Black Sheep", "Black Market", "Black Death <small>(plague)</small>", "Black Magic", "Black Widow <small>(spider)</small>"],
+    "like-german-id": 160
+  },
+  {
+    "id": 21,
+    "title": "Watering Holes",
+    "items": ["Beer garden", "Cocktail lounge", "Village pub", "Nightclub", "Kiosk", "Wine bar"],
+    "german-id": 158
+  },
+  {
+    "id": 22,
+    "title": "Strange Sciences",
+    "items": ["<small>The Science of</small> Mosses: <small>Bryology</small> ", "<small>The Science of</small> Trash: <small>Garbology</small>", "<small>The Science of</small> Snails: <small>Limacology", "<small>The Science of</small> Feet: <small>Podology</small>", "<small>The Science of</small> Milk: <small>Lactology</small>", "<small>The Science of</small> Hair: <small>Trichology</small>"],
+    "german-id": 62
+  },
+  {
+    "id": 23,
+    "title": "Misplaced Body Parts",
+    "items": ["Heart on her sleeve", "Head over heels", "Foot in his mouth", "Eyes in the back of her head", "Armed to the teeth", "Ear to the ground"],
+    "like-german-id": 157
+  },
+  {
+    "id": 24,
+    "title": "You can’t...",
+    "items": ["have everything", "be too careful", "be afraid of your own shadow", "serve two masters", "start too soon", "get outside your own skin"],
+    "german-id": 60
+  },
+  {
+    "id": 25,
+    "title": "Once Every Year",
+    "items": ["Christmas", "Easter", "Birthday", "Wedding Anniversary", "Daylight Saving Time", "Name day/Saint's day"],
+    "german-id": 155
+  },
+  {
+    "id": 26,
+    "title": "Let there be Light!",
+    "items": ["Lighthouse", "Lightweight", "Flashlight", "Stoplight", "Lighter", "Light-years"],
+    "like-german-id": 153
+  },
+  {
+    "id": 27,
+    "title": "Step Right Up!",
+    "items": ["Magician", "Sword swallower", "Circus director", "Snake Lady", "Tightrope Walker", "Juggler"],
+    "german-id": 150
+  },
+  {
+    "id": 28,
+    "title": "At the Amusement Park",
+    "items": ["Swing Carousel", "Bumper Car Ride", "Hall of Mirrors", "Shooting Gallery", "Tunnel of Horror", "Raffle Ticket Booth"],
+    "german-id": 149
+  },
+  {
+    "id": 29,
+    "title": "Chinese Zodiac",
+    "items": ["Rat", "Monkey", "Rooster", "Ox", "Pig", "Dragon"]
+  },
+  {
+    "id": 30,
+    "title": "The Write Stuff",
+    "items": ["ball pen", "quill", "marker", "e-mail", "typewriter", "crayons"],
+    "german-id": 50
+  },
+  {
+    "id": 31,
+    "title": "Making Up!",
+    "items": ["Mascara", "Lipstick", "Powder", "Perfume", "Cotton pads", "Nail polish"],
+    "german-id": 144
+  },
+  {
+    "id": 32,
+    "title": "A Little Latin",
+    "items": ["<small>alter ego =</small> other self", "<small>casus belli =</small> cause of war", "<small>in vino veritas =</small> in</small> wine <small>there is truth</small>", "<small>corpus delicti =</small> piece of evidence/crime weapon", "<small>mea culpa =</small> my fault", "<small>tabula rasa =</small> blank slate"],
+    "german-id": 75
+  },
+  {
+    "id": 33,
+    "title": "Organic?",
+    "items": ["Heart of gold", "Iron Lung", "Skin like leather", "Liver spots", "Brain freeze", "Kidney punch"],
+    "like-german-id": 141
+  },
+  {
+    "id": 34,
+    "title": "Favorite Subject?",
+    "items": ["Mathematics", "Physics", "Biology", "History", "Geography", "English"],
+    "german-id": 140
+  },
+  {
+    "id": 35,
+    "title": "Cartoon Characters",
+    "items": ["Bugs Bunny", "Popeye", "Spongebob Squarepants", "The Simpsons", "Micky Mouse", "The Flintstones"],
+    "like-german-id": 139
+  },
+  {
+    "id": 36,
+    "title": "Once Upon a Time",
+    "items": ["Rapunzel", "Rumpelstiltskin", "Beauty and the Beast", "Cinderella", "Pinocchio", "Puss in Boots"],
+    "like-german-id": 43
+  },
+  {
+    "id": 37,
+    "title": "Put that in your Pipe",
+    "items": ["Peace pipe", "Pipe organ", "Pan pipes", "Pipe cleaner", "Stove pipe hat (top hat)", "Half pipe"]
+  },
+  {
+    "id": 38,
+    "title": "Make a Wish",
+    "items": ["Wishbone", "Shooting Star", "Fairy Godmother", "Birthday Candles", "Wishing Well", "Aladdin’s Lamp"]
+  },
+  {
+    "id": 39,
+    "title": "On off on off",
+    "items": ["Pocket lamp/Flashlight", "MP3 Player", "Alarm clock", "Vibrator", "Electric drill", "Toy car"],
+    "german-id": 169
+  },
+  {
+    "id": 40,
+    "title": "Cheers!",
+    "items": ["Beer", "Cocktail", "Schnapps/Hard liquor", "Champagne", "Liqueur", "Whiskey"],
+    "german-id": 127
+  }
+]
+
+
+

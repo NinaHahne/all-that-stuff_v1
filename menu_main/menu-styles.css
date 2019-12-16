@@ -1,0 +1,210 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh; /* 100% of viewport-height*/
+  margin: 0;
+  font-size: 1.8rem;
+  /*font-family: 'Atma', cursive;*/
+  /*font-family: 'Special Elite', cursive;*/
+  font-family: "Life Savers", cursive;
+  /******background image******/
+  background-image: url("images/white-wall.png");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-repeat: repeat-y;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* header styles */
+
+header {
+  width: 30%;
+  min-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 2rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
+  font-family: "Life Savers", cursive;
+  /*font-family: 'Cabin Sketch', cursive;*/
+  /*font-family: 'Atma', cursive;*/
+  text-align: center;
+}
+
+header h1 {
+  font-size: 8rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+}
+
+header h2 {
+  font-size: 5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* button styles */
+
+.buttonBox {
+  width: 100%;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button {
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  display: inline-block;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  text-align: center;
+  color: black;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 8px;
+  border: 2px solid black;
+  cursor: pointer;
+  /*font-family: 'Special Elite', cursive;*/
+  font-family: "Life Savers", cursive;
+  font-weight: 700;
+}
+
+button:hover {
+  background-color: black;
+  color: white;
+}
+
+button:active {
+  transform: translateY(2px);
+}
+
+button:focus {
+  outline: none;
+}
+
+/* ticker styles */
+#ticker {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  /* border: 2px seagreen solid; */
+  overflow-x: hidden;
+  height: 300px;
+}
+
+#objects {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  bottom: 10px;
+  /* position: absolute; */
+  left: 0;
+  white-space: nowrap;
+  font-size: 0; /* to remove white space between the links, that causes ticker to jump in the first round*/
+  height: 300px;
+}
+
+/* object styles */
+
+#objects .img-box {
+  position: relative;
+  display: inline-block;
+  padding-left: 25px;
+  max-width: 300px;
+  max-height: 300px;
+  /* text-align: center; */
+}
+
+.img-box img {
+    height: 100%;
+    width: auto;
+}
+
+/* styles for particular object img-boxes: */
+.banana {
+    height: 60px;
+    width: auto;
+}
+.bridge {
+    height: 100px;
+    width: auto;
+}
+.cloth {
+    height: 270px;
+    width: auto;
+}
+.coin {
+  height: 100px;
+  width: auto;
+}
+.flower {
+  height: 170px;
+  width: auto;
+}
+#fur {
+  height: 200px;
+  width: auto;
+}
+.giant {
+    height: 200px;
+    width: auto;
+}
+.peg {
+  height: 120px;
+  width: auto;
+}
+.pig {
+  height: 80px;
+  width: auto;
+}
+.plane {
+  height: 160px;
+  width: auto;
+}
+.pokerchip {
+    height: 90px;
+    width: auto;
+}
+.pole {
+    height: 170px;
+    width: auto;
+}
+.puzzle {
+    height: 170px;
+    width: auto;
+}
+.ring {
+  height: 95px;
+  width: auto;
+}
+.rummikubtile {
+    height: 150px;
+    width: auto;
+}
+.scissors {
+    height: 100px;
+    width: auto;
+}
+.stone {
+    height: 90px;
+    width: auto;
+}
+.ticket {
+    height: 190px;
+    width: auto;
+}
+.token {
+  height: 110px;
+  width: auto;
+}
+.triangle {
+    height: 110px;
+    width: auto;
+}

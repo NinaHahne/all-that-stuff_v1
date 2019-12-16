@@ -1,0 +1,31 @@
+img {
+  width: 120px;
+  margin: 20px;
+}
+
+.clip-circle {
+  clip-path: circle(60px at center);
+}
+.clip-ellipse {
+  clip-path: ellipse(60px 40px at center);
+}
+.clip-polygon {
+  clip-path: polygon(5% 5%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+}
+
+.clip-hexagon {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    /* <polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" /> */
+}
+
+body {
+  background: linear-gradient(
+    to bottom,
+    red,
+    yellow
+  );
+}
+
+body, html {
+  height: 100%;
+}
