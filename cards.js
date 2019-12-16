@@ -1,3 +1,7 @@
+// TO DO:
+// * Browser zum Neuladen erzwingen? (nicht aus cache laden)
+// * Karten immer gleichgroß, Inhalt soll sich anpassen -> fitty?
+
 let section = document.querySelector('section');
 let buttonBox = document.getElementsByClassName('buttonBox');
 
