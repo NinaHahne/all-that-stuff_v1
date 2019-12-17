@@ -28,13 +28,13 @@
         left--;
         // console.log(left);
         if (left < -objectList[0].offsetWidth) {
-          //true when first link is off screen..
-          // add to left the width of the currently first link
-          var widthOfFirstObject = objectList[0].offsetWidth; //use clientWidth instead?
-          // console.log(widthOfFirstObject);
-          left += widthOfFirstObject;
-          // make first link the last link
-          objects.appendChild(objectList[0]); //appending will actually remove it from the start and add it to the end
+            //true when first link is off screen..
+            // add to left the width of the currently first link
+            var widthOfFirstObject = objectList[0].offsetWidth; //use clientWidth instead?
+            // console.log(widthOfFirstObject);
+            left += widthOfFirstObject;
+            // make first link the last link
+            objects.appendChild(objectList[0]); //appending will actually remove it from the start and add it to the end
         }
         myReq = requestAnimationFrame(moveObjects); //like setTimeout, but the waiting time is adjusted to the framerate of used hardware(?)
         objects.style.left = left + "px";

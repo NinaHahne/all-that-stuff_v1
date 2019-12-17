@@ -1,56 +1,56 @@
 * {
-  box-sizing: border-box;
-  /* to avoid red highlite when user selects elements: */
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
+    box-sizing: border-box;
+    /* to avoid red highlite when user selects elements: */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 body {
-  min-height: 100vh; /* 100% of viewport-height*/
-  margin: 0;
-  font-size: 1.8rem;
-  /*font-family: 'Atma', cursive;*/
-  /*font-family: 'Special Elite', cursive;*/
-  font-family: "Life Savers", cursive;
-  /******background image******/
-  background-image: url("images/white-wall.png");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: repeat-y;
-  background-position: center;
-  background-attachment: fixed;
+    min-height: 100vh; /* 100% of viewport-height*/
+    margin: 0;
+    font-size: 1.8rem;
+    /*font-family: 'Atma', cursive;*/
+    /*font-family: 'Special Elite', cursive;*/
+    font-family: "Life Savers", cursive;
+    /******background image******/
+    background-image: url("images/white-wall.png");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-repeat: repeat-y;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 /* stuff-logo styles */
 #stuff-logo {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 340px;
-  padding-top: 2rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
-  font-family: "Life Savers", cursive;
-  text-align: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 340px;
+    padding-top: 2rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    font-family: "Life Savers", cursive;
+    text-align: center;
 }
 
 #stuff-logo h1 {
-  font-size: 8rem;
-  font-weight: 800;
-  margin-top: 0;
-  margin-bottom: 1.2rem;
+    font-size: 8rem;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 1.2rem;
 }
 
 #stuff-logo h2 {
-  font-size: 5rem;
-  font-weight: 700;
-  margin-top: 0;
-  margin-bottom: 0;
+    font-size: 5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 /* section styles */
@@ -68,31 +68,31 @@ body {
 }
 
 #objects {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  /* align-items: center; */
-  position: absolute;
-  bottom: 102px;
-  right: 0;
-  height: 800px;
-  width: 580px;
-  padding: 4px;
-  border: 3px lightgrey dashed;
-  border-radius: 10px;
-  margin-right: 4px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    /* align-items: center; */
+    position: absolute;
+    bottom: 102px;
+    right: 0;
+    height: 800px;
+    width: 580px;
+    padding: 4px;
+    border: 3px lightgrey dashed;
+    border-radius: 10px;
+    margin-right: 4px;
 }
 #queue {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 100px;
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  border-top: 3px black dashed;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    border-top: 3px black dashed;
 }
 
 #queue-overlay {
@@ -106,11 +106,11 @@ body {
 /* --------------- OBJECT STYLES ---------------*/
 
 .img-box {
-  max-width: 300px;
-  max-height: 300px;
-  text-align: center;
-  margin: 2px;
-  z-index: 1;
+    max-width: 300px;
+    max-height: 300px;
+    text-align: center;
+    margin: 2px;
+    z-index: 1;
 }
 
 
@@ -154,32 +154,32 @@ body {
 }
 
 .coin {
-  height: 100px;
-  width: auto;
+    height: 100px;
+    width: auto;
 }
 .flower {
-  height: 170px;
-  width: auto;
+    height: 170px;
+    width: auto;
 }
 #fur {
-  height: 200px;
-  width: auto;
+    height: 200px;
+    width: auto;
 }
 .giant {
     height: 200px;
     width: auto;
 }
 .peg {
-  height: 120px;
-  width: auto;
+    height: 120px;
+    width: auto;
 }
 .pig {
-  height: 80px;
-  width: auto;
+    height: 80px;
+    width: auto;
 }
 .plane {
-  height: 160px;
-  width: auto;
+    height: 160px;
+    width: auto;
 }
 .pokerchip {
     height: 90px;
@@ -194,8 +194,8 @@ body {
     width: auto;
 }
 .ring {
-  height: 95px;
-  width: auto;
+    height: 95px;
+    width: auto;
 }
 .rummikubtile {
     height: 150px;
@@ -214,8 +214,8 @@ body {
     width: auto;
 }
 .token {
-  height: 110px;
-  width: auto;
+    height: 110px;
+    width: auto;
 }
 .triangle {
     height: 110px;
