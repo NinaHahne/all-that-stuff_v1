@@ -143,20 +143,15 @@ body {
 .cloth {
     height: 270px;
     width: auto;
-    /* border: 3px black solid; */
+    /* border: 3px black solid;
     border-top-right-radius: 500%;
     border-top-left-radius: 200%;
     border-bottom-left-radius: 160%;
     border-bottom-right-radius: 200%;
-    overflow: hidden;
-    /* background-color: hotpink; */
-    /* clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); */
-}
-
-/* .clip-hexagon {
+    overflow: hidden; */
     background-color: hotpink;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-} */
+}
 
 .coin {
   height: 100px;
