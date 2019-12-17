@@ -149,17 +149,23 @@ body {
     border-bottom-left-radius: 160%;
     border-bottom-right-radius: 200%;
     overflow: hidden; */
-    background-color: hotpink;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
-
+.cloth.v3 {
+    clip-path: polygon(37% 0%, 99% 50%, 100% 78%, 77% 78%, 37% 101%, 30% 88%, 3% 92%, 0% 34%);
+}
 .coin {
     height: 100px;
     width: auto;
 }
+.coin.v1 {
+    clip-path: circle(50px at center);
+}
 .flower {
     height: 170px;
     width: auto;
+}
+.flower.v1 {
+    clip-path: circle(87px at center);
 }
 #fur {
     height: 200px;
