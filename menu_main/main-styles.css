@@ -167,7 +167,8 @@ body {
 .flower.v1 {
     clip-path: circle(87px at center);
 }
-#fur {
+.fur {
+    /* background-color: mediumaquamarine; */
     height: 200px;
     width: auto;
 }
