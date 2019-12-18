@@ -142,7 +142,7 @@ body {
     width: auto;
 }
 .bridge.v1 {
-    background-color: orange;
+    /* background-color: orange; */
     clip-path: polygon(13% 13%, 35% 0%, 62% 0%,82% 19%, 86% 31%, 100% 48%, 100% 68%, 97% 82%, 83% 85%, 21% 97%, 0% 102%, 0% 30%);
 }
 .cloth {
