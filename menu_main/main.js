@@ -117,10 +117,10 @@ function getConstructionAreaBorders() {
     borderBottom = borderTop + $constructionArea.height();
     borderLeft = $constructionArea.offset().left;
     borderRight = borderLeft + $constructionArea.width();
-    console.log('borderTop: ', borderTop);
-    console.log('borderRight: ', borderRight);
-    console.log('borderBottom: ', borderBottom);
-    console.log('borderLeft: ', borderLeft);
+    // console.log('borderTop: ', borderTop);
+    // console.log('borderRight: ', borderRight);
+    // console.log('borderBottom: ', borderBottom);
+    // console.log('borderLeft: ', borderLeft);
 };
 getConstructionAreaBorders();
 
@@ -137,6 +137,7 @@ var translateY;
 var ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
 var universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
 var uniSound = true;
+var muted = false;
 
 window.addEventListener('resize', () => getConstructionAreaBorders());
 
@@ -191,11 +192,13 @@ $(document).on('mouseup', function(e) {
         var $clickedImgBox = $('.move');
         var posX = e.clientX;
         var posY = e.clientY;
-        if (uniSound) {
-            universalDropSound.play();
-        } else {
-            let currentObj = objObj.find(obj => obj.name === $clickedImgId);
-            new Audio("./sounds/" + currentObj.sound).play();
+        if (!muted) {
+            if (uniSound) {
+                universalDropSound.play();
+            } else {
+                let currentObj = objObj.find(obj => obj.name === $clickedImgId);
+                new Audio("./sounds/" + currentObj.sound).play();
+            }
         }
         //only if object is dropped inside the construction area:
         if (borderLeft < posX && posX < borderRight &&
@@ -214,14 +217,26 @@ $(document).on('mouseup', function(e) {
     }
 });
 
+// toggle sound / mute:
 $(document).on('keydown', (e) => {
-    if (e.keyCode == 83) { // = "s"
+    if (e.keyCode == 83) { // = "S"
         if (uniSound) {
             ringDropSound.play();
             uniSound = false;
         } else {
             universalDropSound.play();
             uniSound = true;
+        }
+    } else if (e.keyCode == 77) { // = "M"
+        if (muted) {
+            muted = false;
+            if (uniSound) {
+                universalDropSound.play();
+            } else {
+                ringDropSound.play();
+            }
+        } else {
+            muted = true;
         }
     }
 });
