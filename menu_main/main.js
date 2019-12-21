@@ -1,5 +1,4 @@
 // TO DO:
-// * how to change click + hovering to only img without their transparent surrounding?
 // * update construction area borders when window is resized
 
 const objObj = [
@@ -108,15 +107,22 @@ const objObj = [
 var $objects = $('#objects');
 
 var $constructionArea = $('#construction-area');
-var borderTop = $constructionArea.offset().top;
-var borderBottom = borderTop + $constructionArea.height();
-var borderLeft = $constructionArea.offset().left;
-var borderRight = borderLeft + $constructionArea.width();
+var borderTop;
+var borderBottom;
+var borderLeft;
+var borderRight;
 
-console.log('borderTop: ', borderTop);
-console.log('borderRight: ', borderRight);
-console.log('borderBottom: ', borderBottom);
-console.log('borderLeft: ', borderLeft);
+function getConstructionAreaBorders() {
+    borderTop = $constructionArea.offset().top;
+    borderBottom = borderTop + $constructionArea.height();
+    borderLeft = $constructionArea.offset().left;
+    borderRight = borderLeft + $constructionArea.width();
+    console.log('borderTop: ', borderTop);
+    console.log('borderRight: ', borderRight);
+    console.log('borderBottom: ', borderBottom);
+    console.log('borderLeft: ', borderLeft);
+};
+getConstructionAreaBorders();
 
 var objectClicked = false;
 var $clickedImgBox;
@@ -127,6 +133,12 @@ var startY;
 
 var translateX;
 var translateY;
+
+var ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
+var universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
+var uniSound = true;
+
+window.addEventListener('resize', () => getConstructionAreaBorders());
 
 $(document).on('mousedown', '.img-box', function (e) {
     objectClicked = true;
@@ -179,9 +191,12 @@ $(document).on('mouseup', function(e) {
         var $clickedImgBox = $('.move');
         var posX = e.clientX;
         var posY = e.clientY;
-        let currentObj = objObj.find(obj => obj.name === $clickedImgId);
-        let dropSound = new Audio("./sounds/" + currentObj.sound);
-        dropSound.play();
+        if (uniSound) {
+            universalDropSound.play();
+        } else {
+            let currentObj = objObj.find(obj => obj.name === $clickedImgId);
+            new Audio("./sounds/" + currentObj.sound).play();
+        }
         //only if object is dropped inside the construction area:
         if (borderLeft < posX && posX < borderRight &&
             borderTop < posY && posY < borderBottom) {
@@ -196,6 +211,18 @@ $(document).on('mouseup', function(e) {
 
         $clickedImgBox.removeClass('move');
         objectClicked = false;
+    }
+});
+
+$(document).on('keydown', (e) => {
+    if (e.keyCode == 83) { // = "s"
+        if (uniSound) {
+            ringDropSound.play();
+            uniSound = false;
+        } else {
+            universalDropSound.play();
+            uniSound = true;
+        }
     }
 });
 
