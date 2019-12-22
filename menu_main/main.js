@@ -1,5 +1,5 @@
 // TO DO:
-// * update construction area borders when window is resized
+
 
 const objObj = [
     {
@@ -105,6 +105,8 @@ const objObj = [
 ];
 
 var $objects = $('#objects');
+var $queue = $('#queue');
+var queue = document.getElementById("queue");
 
 var $constructionArea = $('#construction-area');
 var borderTop;
@@ -238,8 +240,27 @@ $(document).on('keydown', (e) => {
         } else {
             muted = true;
         }
+    } else if (e.keyCode == 13) { // = "enter"
+        discardAndRefillObjects();
     }
 });
+
+function discardAndRefillObjects() {
+    var numberOfUsedObjects = $('.selected').length;
+    // console.log($queue.children().last().attr("class"));
+    $('.selected').each(function() {
+        $queue.prepend($(this));
+        $(this).removeClass('selected');
+        $(this).css({
+            transform: `translate(${0}px, ${0}px)`,
+            'z-index': 1
+        });
+    });
+    for (var i = 0; i < numberOfUsedObjects; i++) {
+        // console.log($queue.children().last().attr("class"));
+        $objects.append($queue.children().last());
+    }
+}
 
 function updatePosition(event) {
     var $clickedImgBox = $('.move');

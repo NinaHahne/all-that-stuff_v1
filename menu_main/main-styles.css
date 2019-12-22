@@ -24,6 +24,7 @@ body {
     background-repeat: repeat-y;
     background-position: center;
     background-attachment: fixed;
+    overflow: hidden;
 }
 
 /* stuff-logo styles */
@@ -57,7 +58,7 @@ body {
 #construction-area {
     position: absolute;
     bottom: 112px;
-    right: 592px;
+    right: 632px;
     height: 680px;
     width: 720px;
     padding: 4px;
@@ -76,9 +77,9 @@ body {
     position: absolute;
     bottom: 102px;
     right: 0;
-    height: 800px;
-    width: 580px;
-    padding: 4px;
+    height: 840px;
+    width: 620px;
+    padding: 10px 2px;
     border: 3px lightgrey dashed;
     border-radius: 10px;
     margin-right: 4px;
@@ -101,6 +102,7 @@ body {
     height: 100px;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100000;
 }
 
 /* --------------- OBJECT STYLES ---------------*/
