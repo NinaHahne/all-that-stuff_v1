@@ -162,14 +162,14 @@ body {
     width: auto;
 }
 .coin.v1 {
-    clip-path: circle(50px at center);
+    clip-path: circle(50% at center);
 }
 .flower {
     height: 170px;
     width: auto;
 }
 .flower.v1 {
-    clip-path: circle(87px at center);
+    clip-path: circle(52% at 51% 51%);
 }
 .fur {
     height: 200px;
@@ -217,12 +217,15 @@ body {
     height: 170px;
     width: auto;
 }
+.puzzle.v1 {
+    clip-path: polygon(5% 26%, 36% 26%, 38% 21%, 33% 16%, 33% 7%, 46% -1%, 60% -1%, 65% 3%, 65% 10%, 61% 15%, 59% 22%, 63% 25%, 94% 25%, 97% 48%, 95% 50%, 88% 51%, 78% 44%, 74% 46%, 72% 55%, 74% 65%, 81% 70%, 87% 66%, 93% 66%, 97% 70%, 100% 100%, 64% 100%, 61% 97%, 61% 92%, 65% 84%, 61% 75%, 51% 72%, 42% 80%, 46% 95%, 40% 100%, 0% 99%, 2% 71%, 8% 67%, 16% 74%, 22% 75%, 27% 64%, 22% 51%, 17% 51%, 9% 54%, 4% 51%);
+}
 .ring {
     height: 95px;
     width: auto;
 }
 .ring.v1 {
-    clip-path: circle(49px at center);
+    clip-path: circle(50% at center);
 }
 .rummikubtile {
     height: 150px;
@@ -231,10 +234,12 @@ body {
 .scissors {
     height: 100px;
     width: auto;
+    clip-path: polygon(0% 29%, 0% 21%, 12% 16%, 48% 37%, 59% 27%, 67% 23%, 70% 10%, 76% 1%, 91% 0%, 100% 10%, 100% 28%, 93% 39%, 71% 43%, 63% 46%, 82% 57%, 89% 57%, 99% 67%, 101% 84%, 95% 97%, 80% 101%, 70% 91%, 68% 71%, 51% 60%, 10% 85%, 0% 79%, 0% 72%, 34% 50%);
 }
 .stone {
     height: 90px;
     width: auto;
+    clip-path: polygon(-2% 63%, 1% 44%, 6% 33%, 20% 16%, 36% 4%, 44% 0%, 63% 0%, 73% 5%, 87% 20%, 97% 42%, 103% 60%, 98% 77%, 91% 88%, 79% 99%, 59% 99%, 7% 81%)
 }
 .ticket {
     height: 190px;
@@ -243,6 +248,9 @@ body {
 .token {
     height: 110px;
     width: auto;
+}
+.token.v1 {
+    clip-path: ellipse(50% 51% at 50% 50%);
 }
 .triangle {
     height: 110px;
