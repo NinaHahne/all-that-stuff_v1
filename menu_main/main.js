@@ -1,5 +1,10 @@
 // TO DO:
-
+// switch between different pictures for one object
+// layout mit flexbox?
+// integrate start menu in the main page
+// add card deck to the main page
+// limit object drag to window borders
+// might wanna use .switchClass() from jquery ui?? (instead of .removeClass('v1').addClass('v2')
 
 const objObj = [
     {
@@ -106,9 +111,8 @@ const objObj = [
 
 var $objects = $('#objects');
 var $queue = $('#queue');
-var queue = document.getElementById("queue");
 
-var $constructionArea = $('#construction-area');
+const $constructionArea = $('#construction-area');
 var borderTop;
 var borderBottom;
 var borderLeft;
@@ -159,7 +163,7 @@ $(document).on('mousedown', '.img-box', function (e) {
     // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
     var highestZIndex = 0;
     $('.selected').each(function() {
-        var currentZIndex = Number($(this).css('z-index'));
+        const currentZIndex = Number($(this).css('z-index'));
         if (currentZIndex > highestZIndex) {
             highestZIndex = currentZIndex;
         }
@@ -169,7 +173,7 @@ $(document).on('mousedown', '.img-box', function (e) {
     });
 
     if ($clickedImgBox.hasClass('selected')) {
-        var transformProps = $('.move').css('transform');
+        const transformProps = $('.move').css('transform');
         // console.log(transformProps);
         var values = transformProps.split('(')[1],
             values = values.split(')')[0],
@@ -191,14 +195,14 @@ $(document).on('mouseup', function(e) {
         // console.log('drop object here:');
         // console.log('cursorposition X: ', e.clientX);
         // console.log('cursorposition Y: ', e.clientY);
-        var $clickedImgBox = $('.move');
-        var posX = e.clientX;
-        var posY = e.clientY;
+        const $clickedImgBox = $('.move');
+        const posX = e.clientX;
+        const posY = e.clientY;
         if (!muted) {
             if (uniSound) {
                 universalDropSound.play();
             } else {
-                let currentObj = objObj.find(obj => obj.name === $clickedImgId);
+                const currentObj = objObj.find(obj => obj.name === $clickedImgId);
                 new Audio("./sounds/" + currentObj.sound).play();
             }
         }
@@ -213,7 +217,6 @@ $(document).on('mouseup', function(e) {
                 transform: `translate(${0}px, ${0}px)`
             });
         }
-
         $clickedImgBox.removeClass('move');
         objectClicked = false;
     }
@@ -245,8 +248,52 @@ $(document).on('keydown', (e) => {
     }
 });
 
+$(document).on('dblclick', '.img-box', (e) => {
+    // console.log('img-box was double clicked!');
+    // console.log(e.currentTarget);
+    let imgBox = e.currentTarget;
+    changeObjectImage(imgBox);
+});
+
+function changeObjectImage(imgBox) {
+    if (!$(imgBox).hasClass('only1')) {
+        // console.log('more than one image!');
+        const img = imgBox.querySelector('img');
+        // console.log(img.id);
+        // console.log(img.src);
+        const srcNameV = img.src.split('.png')[0];
+        const newSrcBase = srcNameV.substring(0, srcNameV.length -1);
+        // console.log('active image version: ', srcNameV[srcNameV.length - 1]);
+        if ($(imgBox).hasClass('more2')) {
+            if ($(imgBox).hasClass('v1')) {
+                img.src = newSrcBase + 2 + ".png";
+                $(imgBox).removeClass('v1').addClass('v2');
+            } else if ($(imgBox).hasClass('v2')) {
+                img.src = newSrcBase + 1 + ".png";
+                $(imgBox).removeClass('v2').addClass('v1');
+            }
+        } else if ($(imgBox).hasClass('more3')) {
+            if ($(imgBox).hasClass('v1')) {
+                img.src = newSrcBase + 2 + ".png";
+                $(imgBox).removeClass('v1').addClass('v2');
+            } else if ($(imgBox).hasClass('v2')) {
+                img.src = newSrcBase + 3 + ".png";
+                $(imgBox).removeClass('v2').addClass('v3');
+            } else if ($(imgBox).hasClass('v3')) {
+                img.src = newSrcBase + 1 + ".png";
+                $(imgBox).removeClass('v3').addClass('v1');
+            }
+        }
+    } else {
+        console.log('this object has only one image!');
+    }
+
+    // let currentObj = objObj.find(obj => obj.name === img.id);
+    // console.log(currentObj.images);
+}
+
 function discardAndRefillObjects() {
-    var numberOfUsedObjects = $('.selected').length;
+    const numberOfUsedObjects = $('.selected').length;
     // console.log($queue.children().last().attr("class"));
     $('.selected').each(function() {
         $queue.prepend($(this));
@@ -256,16 +303,16 @@ function discardAndRefillObjects() {
             'z-index': 1
         });
     });
-    for (var i = 0; i < numberOfUsedObjects; i++) {
+    for (let i = 0; i < numberOfUsedObjects; i++) {
         // console.log($queue.children().last().attr("class"));
         $objects.append($queue.children().last());
     }
 }
 
 function updatePosition(event) {
-    var $clickedImgBox = $('.move');
-    var moveX = event.clientX - startX;
-    var moveY = event.clientY - startY;
+    const $clickedImgBox = $('.move');
+    let moveX = event.clientX - startX;
+    let moveY = event.clientY - startY;
     // to move an object, that's already in the construction area, check the transform props and calculate with them:
     if ($clickedImgBox.hasClass('selected')) {
         moveX += translateX;
