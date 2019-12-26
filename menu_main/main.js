@@ -1,9 +1,9 @@
 // TO DO:
-// switch between different pictures for one object
+// indicator for objects with more than 1 image
 // layout mit flexbox?
 // integrate start menu in the main page
 // add card deck to the main page
-// limit object drag to window borders
+// limit object drag to window borders?
 // might wanna use .switchClass() from jquery ui?? (instead of .removeClass('v1').addClass('v2')
 
 const objObj = [
@@ -129,6 +129,24 @@ function getConstructionAreaBorders() {
     // console.log('borderLeft: ', borderLeft);
 };
 getConstructionAreaBorders();
+
+function getObjectPositions() {
+    $objects.children().each(function() {
+        // position() gives position relative to positioned parent
+        var objTop = $(this).position().top;
+        var objLeft = $(this).position().left;
+        // console.log('objTop: ', objTop, 'objLeft: ', objLeft);
+        $(this).css({
+            // position: 'absolute',
+            top: objTop + 'px',
+            left: objLeft + 'px'
+        });
+    });
+    $objects.children('.img-box').css({
+        position: 'absolute'
+    });
+};
+getObjectPositions();
 
 var objectClicked = false;
 var $clickedImgBox;
@@ -295,10 +313,14 @@ function changeObjectImage(imgBox) {
 function discardAndRefillObjects() {
     const numberOfUsedObjects = $('.selected').length;
     // console.log($queue.children().last().attr("class"));
+    $objects.children('.img-box').css({
+        position: 'unset'
+    });
     $('.selected').each(function() {
         $queue.prepend($(this));
         $(this).removeClass('selected');
         $(this).css({
+            position: 'unset',
             transform: `translate(${0}px, ${0}px)`,
             'z-index': 1
         });
@@ -307,6 +329,7 @@ function discardAndRefillObjects() {
         // console.log($queue.children().last().attr("class"));
         $objects.append($queue.children().last());
     }
+    getObjectPositions();
 }
 
 function updatePosition(event) {
