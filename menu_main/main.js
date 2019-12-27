@@ -1,11 +1,12 @@
 // TO DO:
+// how to preload all the images?
 // indicator for objects with more than 1 image
 // layout mit flexbox?
-// integrate start menu in the main page
 // add card deck to the main page
 // limit object drag to window borders?
 // might wanna use .switchClass() from jquery ui?? (instead of .removeClass('v1').addClass('v2')
 
+// ------------------------------------
 // set img draggable = 'false' for all browsers - code from https://www.redips.net/firefox/disable-image-dragging/
 
 // register onLoad event with anonymous function
@@ -29,7 +30,6 @@ window.onload = function (e) {
 function disableDragging(e) {
     e.preventDefault();
 }
-
 // ------------------------------------
 
 const objObj = [
@@ -144,6 +144,67 @@ var borderBottom;
 var borderLeft;
 var borderRight;
 
+// ---------------START MENU---------------------
+var objects = document.getElementById("ticker-objects");
+shuffleObjects(objects);
+var objectList = objects.getElementsByClassName("img-box"); //objectList[0] is always the first link in the list.. list stays in sync
+var left = objects.offsetLeft; //number (in px), x-position of element relative to its parent
+var myReq;
+// var objectsAreMoving = false;
+moveObjects();
+var gameStarted = false;
+
+var playButton = document.getElementById("play");
+
+playButton.addEventListener("click", function() {
+    cancelAnimationFrame(myReq);
+    // console.log(Array.isArray(objectList));
+    let objectArray = Array.from(objectList);
+    // console.log(Array.isArray(objectArray));
+    gameStarted = true;
+    startGame(objectArray);
+});
+
+function moveObjects() {
+    objectsAreMoving = true;
+    // left = left - 2;
+    left--;
+    // console.log(left);
+    if (left < -objectList[0].offsetWidth) {
+        //true when first link is off screen..
+        // add to left the width of the currently first link
+        var widthOfFirstObject = objectList[0].offsetWidth; //use clientWidth instead?
+        // console.log(widthOfFirstObject);
+        left += widthOfFirstObject;
+        // make first link the last link
+        objects.appendChild(objectList[0]); //appending will actually remove it from the start and add it to the end
+    }
+    myReq = requestAnimationFrame(moveObjects); //like setTimeout, but the waiting time is adjusted to the framerate of used hardware(?)
+    objects.style.left = left + "px";
+}
+
+//based on Fisher–Yates shuffle //By Alexey Lebedev :
+function shuffleObjects(objects) {
+    for (var i = objects.children.length; i >= 0; i--) {
+    objects.appendChild(objects.children[(Math.random() * i) | 0]);
+    }
+}
+
+function startGame(objArray) {
+    let activeObjects = objArray.slice(0,10);
+    let queuedObjects = objArray.slice(10);
+    // console.log('activeObjects: ', activeObjects);
+    // console.log('queuedObjects: ', queuedObjects);
+    queuedObjects.reverse();
+    // console.log('queuedObjects: ', queuedObjects);
+    $objects.append(activeObjects);
+    $queue.append(queuedObjects);
+    getObjectPositions();
+    $('.hidden').removeClass('hidden');
+    $('#start-menu').addClass('hidden');
+}
+// ---------------START MENU end---------------------
+
 function getConstructionAreaBorders() {
     borderTop = $constructionArea.offset().top;
     borderBottom = borderTop + $constructionArea.height();
@@ -172,7 +233,7 @@ function getObjectPositions() {
         position: 'absolute'
     });
 };
-getObjectPositions();
+// getObjectPositions();
 
 var objectClicked = false;
 var $clickedImgBox;
@@ -189,42 +250,46 @@ var universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
 var uniSound = true;
 var muted = false;
 
+
 window.addEventListener('resize', () => getConstructionAreaBorders());
 
 $(document).on('mousedown', '.img-box', function (e) {
-    objectClicked = true;
-    $clickedImgBox = $(this);
-    // console.log($clickedImgBox);
-    // show name of clicked object:
-    $clickedImgId = $clickedImgBox.find('img').attr('id');
-    console.log($clickedImgId);
-    $clickedImgBox.addClass('move');
-    startX = e.clientX;
-    startY = e.clientY;
-    // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
-    // get the clicked object to the very front:
+    if (gameStarted) {
+        objectClicked = true;
+        $clickedImgBox = $(this);
+        // console.log($clickedImgBox);
+        // show name of clicked object:
+        $clickedImgId = $clickedImgBox.find('img').attr('id');
+        console.log($clickedImgId);
+        $clickedImgBox.addClass('move');
+        startX = e.clientX;
+        startY = e.clientY;
+        // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
+        // get the clicked object to the very front:
 
-    // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
-    var highestZIndex = 0;
-    $('.selected').each(function() {
-        const currentZIndex = Number($(this).css('z-index'));
-        if (currentZIndex > highestZIndex) {
-            highestZIndex = currentZIndex;
-        }
-    });
-    $clickedImgBox.css({
-        'z-index': highestZIndex + 1
-    });
+        // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
+        var highestZIndex = 0;
+        $('.selected').each(function() {
+            const currentZIndex = Number($(this).css('z-index'));
+            if (currentZIndex > highestZIndex) {
+                highestZIndex = currentZIndex;
+            }
+        });
+        $clickedImgBox.css({
+            'z-index': highestZIndex + 1
+        });
 
-    if ($clickedImgBox.hasClass('selected')) {
-        const transformProps = $('.move').css('transform');
-        // console.log(transformProps);
-        var values = transformProps.split('(')[1],
+        if ($clickedImgBox.hasClass('selected')) {
+            const transformProps = $('.move').css('transform');
+            // console.log(transformProps);
+            var values = transformProps.split('(')[1],
             values = values.split(')')[0],
             values = values.split(',');
-        translateX = Number(values[4]);
-        translateY = Number(values[5]);
-        // console.log('translateX: ', translateX, 'translateY: ', translateY);
+            translateX = Number(values[4]);
+            translateY = Number(values[5]);
+            // console.log('translateX: ', translateX, 'translateY: ', translateY);
+        }
+
     }
 });
 
@@ -266,7 +331,7 @@ $(document).on('mouseup', function(e) {
     }
 });
 
-// toggle sound / mute:
+// toggle sound / mute / discard used objects and refill:
 $(document).on('keydown', (e) => {
     if (e.keyCode == 83) { // = "S"
         if (uniSound) {
