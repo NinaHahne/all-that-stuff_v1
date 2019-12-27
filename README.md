@@ -7,8 +7,5 @@ https://ninahahne.github.io/AllThatStuff/
 cards json file:
 https://ninahahne.github.io/AllThatStuff/cards_enUS.json
 
-menu screen:
-https://ninahahne.github.io/AllThatStuff/menu_main/menu.html
-
-main screen:
+play the game (not finished yet):
 https://ninahahne.github.io/AllThatStuff/menu_main/main.html
