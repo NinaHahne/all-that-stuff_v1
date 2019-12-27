@@ -15,6 +15,7 @@ body {
     /*font-family: 'Atma', cursive;*/
     /*font-family: 'Special Elite', cursive;*/
     font-family: "Life Savers", cursive;
+    overflow: hidden;
     /******background image******/
     background-image: url("images/white-wall.png");
     -webkit-background-size: cover;
@@ -24,7 +25,6 @@ body {
     background-repeat: repeat-y;
     background-position: center;
     background-attachment: fixed;
-    overflow: hidden;
 }
 
 /* ---------START MENU------------- */
@@ -38,21 +38,18 @@ body {
 
 /* header styles */
 header {
-  width: 30%;
-  min-width: 520px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 2rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
-  font-family: "Life Savers", cursive;
-  text-align: center;
+    width: 30%;
+    min-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    font-family: "Life Savers", cursive;
+    text-align: center;
 }
 /* stuff-logo styles */
 #stuff-logo {
-    /* position: absolute;
-    left: 0;
-    top: 0; */
     width: 340px;
     padding-top: 2rem;
     padding-right: 2rem;
@@ -76,62 +73,61 @@ header {
 }
 
 /* button styles */
-
 .buttonBox {
-  width: 100%;
-  min-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+    width: 100%;
+    min-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 button {
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-  display: inline-block;
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  text-align: center;
-  color: black;
-  background-color: rgba(255, 255, 255, 0);
-  border-radius: 8px;
-  border: 2px solid black;
-  cursor: pointer;
-  font-family: "Life Savers", cursive;
-  font-weight: 700;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    display: inline-block;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    text-align: center;
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 8px;
+    border: 2px solid black;
+    cursor: pointer;
+    font-family: "Life Savers", cursive;
+    font-weight: 700;
 }
 
 button:hover {
-  background-color: black;
-  color: white;
+    background-color: black;
+    color: white;
 }
 
 button:active {
-  transform: translateY(2px);
+    transform: translateY(2px);
 }
 
 button:focus {
-  outline: none;
+    outline: none;
 }
 
-/* ticker styles */
+/* object ticker styles */
 #ticker {
-  position: fixed;
-  bottom: 10px;
-  width: 100%;
-  overflow-x: hidden;
-  height: 300px;
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    overflow-x: hidden;
+    height: 300px;
 }
 
 #ticker-objects {
-  display: flex;
-  align-items: center;
-  position: fixed;
-  bottom: 10px;
-  /* position: absolute; */
-  left: 0;
-  white-space: nowrap;
-  font-size: 0; /* to remove white space between the links, that causes ticker to jump in the first round*/
-  height: 300px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    /* position: absolute; */
+    bottom: 10px;
+    left: 0;
+    white-space: nowrap;
+    font-size: 0; /* to remove white space between the links, that causes ticker to jump in the first round*/
+    height: 300px;
 }
 /* ---------MAIN SCREEN ------------- */
 .hidden {
@@ -191,20 +187,18 @@ button:focus {
 /* --------------- OBJECT STYLES ---------------*/
 
 .img-box {
-    /* max-width: 300px;
-    max-height: 300px; */
     text-align: center;
     margin: 2px;
     z-index: 1;
 }
 
 #ticker-objects .img-box {
-  position: relative;
-  display: inline-block;
-  padding-left: 22px;
-  /* ticker only runs smoothly without any margins: */
-  margin: 0;
-  /* text-align: center; */
+    position: relative;
+    display: inline-block;
+    padding-left: 22px;
+    /* ticker only runs smoothly without any margins: */
+    margin: 0;
+    /* text-align: center; */
 }
 
 #queue .img-box {
