@@ -38,6 +38,7 @@ body {
 
 /* header styles */
 header {
+    /* position: absolute; */
     width: 30%;
     min-width: 520px;
     margin-left: auto;
@@ -132,6 +133,24 @@ button:focus {
 /* ---------MAIN SCREEN ------------- */
 .hidden {
     visibility: hidden;
+}
+
+#instructions {
+    position: absolute;
+    width: 470px;
+    margin-left: 6px;
+}
+
+#instructions li {
+    margin-bottom: 5px;
+}
+
+#instructions span {
+    font-weight: bold;
+    color: white;
+    background-color: black;
+    border-radius: 6px;
+    padding: 2px 6px;
 }
 
 #construction-area {
