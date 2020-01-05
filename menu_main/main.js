@@ -1,6 +1,10 @@
-// TO DO:
+// -----------TO DO------------:
+// continue in line 474
+
 // how to preload all the images and sounds?
 // indicator for objects with more than 1 image
+// change image version to v1 when object drops in the queue?
+
 // layout mit flexbox?
 // add card deck to the main page
 // limit object drag to window borders?
@@ -139,10 +143,12 @@ const $objects = $('#objects');
 const $queue = $('#queue');
 
 const $constructionArea = $('#construction-area');
-let borderTop;
-let borderBottom;
-let borderLeft;
-let borderRight;
+let [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders($constructionArea);
+// console.log(borderTop, borderBottom, borderLeft, borderRight);
+
+const $body = $('body');
+let [bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight] = get$objBorders($body);
+// console.log(bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight);
 
 // ---------------START MENU---------------------
 const objects = document.getElementById("ticker-objects");
@@ -205,17 +211,37 @@ function startGame(objArray) {
 }
 // ---------------START MENU end---------------------
 
-function getConstructionAreaBorders() {
-    borderTop = $constructionArea.offset().top;
-    borderBottom = borderTop + $constructionArea.height();
-    borderLeft = $constructionArea.offset().left;
-    borderRight = borderLeft + $constructionArea.width();
-    // console.log('borderTop: ', borderTop);
-    // console.log('borderRight: ', borderRight);
-    // console.log('borderBottom: ', borderBottom);
-    // console.log('borderLeft: ', borderLeft);
+// function getConstructionAreaBorders() {
+//     borderTop = $constructionArea.offset().top;
+//     borderBottom = borderTop + $constructionArea.height();
+//     borderLeft = $constructionArea.offset().left;
+//     borderRight = borderLeft + $constructionArea.width();
+//     // console.log('borderTop: ', borderTop);
+//     // console.log('borderRight: ', borderRight);
+//     // console.log('borderBottom: ', borderBottom);
+//     // console.log('borderLeft: ', borderLeft);
+// };
+// getConstructionAreaBorders();
+
+// function getBodyBorders() {
+//     bodyBorderTop = $body.offset().top;
+//     bodyBorderBottom = bodyBorderTop + $body.height();
+//     bodyBorderLeft = $body.offset().left;
+//     bodyBorderRight = bodyBorderLeft + $body.width();
+//     // console.log('bodyBorderTop: ', bodyBorderTop);
+//     // console.log('bodyBorderRight: ', bodyBorderRight);
+//     // console.log('bodyBorderBottom: ', bodyBorderBottom);
+//     // console.log('bodyBorderLeft: ', bodyBorderLeft);
+// };
+// getBodyBorders();
+
+function get$objBorders($obj) {
+    let top = $obj.offset().top;
+    let bottom = top + $obj.height();
+    let left = $obj.offset().left;
+    let right = left + $obj.width();
+    return [top, bottom, left, right];
 };
-getConstructionAreaBorders();
 
 function getObjectPositions() {
     $objects.children().each(function() {
@@ -252,7 +278,11 @@ let uniSound = true;
 let muted = false;
 
 
-window.addEventListener('resize', () => getConstructionAreaBorders());
+window.addEventListener('resize', () => {
+    [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders($constructionArea);
+    [bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight] = get$objBorders($body);
+    // console.log(bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight);
+});
 
 $(document).on('mousedown', '.img-box', function (e) {
     if (gameStarted) {
@@ -316,7 +346,7 @@ $(document).on('mouseup', function(e) {
                 new Audio("./sounds/" + currentObj.sound).play();
             }
         }
-        //only if object is dropped inside the construction area:
+        //only if object is dropped (when cursor is) inside the construction area:
         if (borderLeft < posX && posX < borderRight &&
             borderTop < posY && posY < borderBottom) {
                 $clickedImgBox.addClass('selected');
@@ -428,6 +458,7 @@ function discardAndRefillObjects() {
 function updatePosition(event) {
     objectMoved = true;
     const $clickedImgBox = $('.move');
+
     let moveX = event.clientX - startX;
     let moveY = event.clientY - startY;
     // to move an object, that's already in the construction area, check the transform props and calculate with them:
@@ -435,6 +466,17 @@ function updatePosition(event) {
         moveX += translateX;
         moveY += translateY;
     }
+    // only update position, if object is inside body:
+    let [top, bottom, left, right] = get$objBorders($clickedImgBox);
+    // console.log(top, bottom, left, right);
+
+    if (!(bodyBorderLeft < left && right < bodyBorderRight)) {
+            console.log('object outside X body!');
+        }
+
+    if (!(bodyBorderTop < top && bottom < bodyBorderBottom)) {
+            console.log('object outside Y body!');
+        }
     $clickedImgBox.css({
         transform: `translate(${moveX}px, ${moveY}px)`
     });
