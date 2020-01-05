@@ -11,7 +11,7 @@
 
 // register onLoad event with anonymous function
 window.onload = function (e) {
-    var evt = e || window.event,// define event (cross browser)
+    let evt = e || window.event,// define event (cross browser)
         imgs,                   // images collection
         i;                      // used in local loop
     // if preventDefault exists, then define onmousedown event handlers
@@ -135,26 +135,26 @@ const objObj = [
     }
 ];
 
-var $objects = $('#objects');
-var $queue = $('#queue');
+const $objects = $('#objects');
+const $queue = $('#queue');
 
 const $constructionArea = $('#construction-area');
-var borderTop;
-var borderBottom;
-var borderLeft;
-var borderRight;
+let borderTop;
+let borderBottom;
+let borderLeft;
+let borderRight;
 
 // ---------------START MENU---------------------
-var objects = document.getElementById("ticker-objects");
+const objects = document.getElementById("ticker-objects");
 shuffleObjects(objects);
-var objectList = objects.getElementsByClassName("img-box"); //objectList[0] is always the first link in the list.. list stays in sync
-var left = objects.offsetLeft; //number (in px), x-position of element relative to its parent
-var myReq;
-// var objectsAreMoving = false;
+let objectList = objects.getElementsByClassName("img-box"); //objectList[0] is always the first link in the list.. list stays in sync
+let left = objects.offsetLeft; //number (in px), x-position of element relative to its parent
+let myReq;
+// let objectsAreMoving = false;
 moveObjects();
-var gameStarted = false;
+let gameStarted = false;
 
-var playButton = document.getElementById("play");
+const playButton = document.getElementById("play");
 
 playButton.addEventListener("click", function() {
     cancelAnimationFrame(myReq);
@@ -173,7 +173,7 @@ function moveObjects() {
     if (left < -objectList[0].offsetWidth) {
         //true when first link is off screen..
         // add to left the width of the currently first link
-        var widthOfFirstObject = objectList[0].offsetWidth; //use clientWidth instead?
+        let widthOfFirstObject = objectList[0].offsetWidth; //use clientWidth instead?
         // console.log(widthOfFirstObject);
         left += widthOfFirstObject;
         // make first link the last link
@@ -185,7 +185,7 @@ function moveObjects() {
 
 //based on Fisher–Yates shuffle //By Alexey Lebedev :
 function shuffleObjects(objects) {
-    for (var i = objects.children.length; i >= 0; i--) {
+    for (let i = objects.children.length; i >= 0; i--) {
     objects.appendChild(objects.children[(Math.random() * i) | 0]);
     }
 }
@@ -220,8 +220,8 @@ getConstructionAreaBorders();
 function getObjectPositions() {
     $objects.children().each(function() {
         // position() gives position relative to positioned parent
-        var objTop = $(this).position().top;
-        var objLeft = $(this).position().left;
+        let objTop = $(this).position().top;
+        let objLeft = $(this).position().left;
         // console.log('objTop: ', objTop, 'objLeft: ', objLeft);
         $(this).css({
             // position: 'absolute',
@@ -235,20 +235,21 @@ function getObjectPositions() {
 };
 // getObjectPositions();
 
-var objectClicked = false;
-var $clickedImgBox;
-var $clickedImgId;
+let objectClicked = false;
+let objectMoved = false;
+let $clickedImgBox;
+let $clickedImgId;
 
-var startX;
-var startY;
+let startX;
+let startY;
 
-var translateX;
-var translateY;
+let translateX;
+let translateY;
 
-var ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
-var universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
-var uniSound = true;
-var muted = false;
+const ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
+const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
+let uniSound = true;
+let muted = false;
 
 
 window.addEventListener('resize', () => getConstructionAreaBorders());
@@ -268,7 +269,7 @@ $(document).on('mousedown', '.img-box', function (e) {
         // get the clicked object to the very front:
 
         // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
-        var highestZIndex = 0;
+        let highestZIndex = 0;
         $('.selected').each(function() {
             const currentZIndex = Number($(this).css('z-index'));
             if (currentZIndex > highestZIndex) {
@@ -307,7 +308,7 @@ $(document).on('mouseup', function(e) {
         const $clickedImgBox = $('.move');
         const posX = e.clientX;
         const posY = e.clientY;
-        if (!muted) {
+        if (!muted && objectMoved) {
             if (uniSound) {
                 universalDropSound.play();
             } else {
@@ -328,6 +329,7 @@ $(document).on('mouseup', function(e) {
         }
         $clickedImgBox.removeClass('move');
         objectClicked = false;
+        objectMoved = false;
     }
 });
 
@@ -424,6 +426,7 @@ function discardAndRefillObjects() {
 }
 
 function updatePosition(event) {
+    objectMoved = true;
     const $clickedImgBox = $('.move');
     let moveX = event.clientX - startX;
     let moveY = event.clientY - startY;
