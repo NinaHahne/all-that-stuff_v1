@@ -1,5 +1,5 @@
 // TO DO:
-// how to preload all the images?
+// how to preload all the images and sounds?
 // indicator for objects with more than 1 image
 // layout mit flexbox?
 // add card deck to the main page
