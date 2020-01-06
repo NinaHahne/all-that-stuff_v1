@@ -1,5 +1,5 @@
 // -----------TO DO------------:
-// continue in line 474
+// continue in line 469
 
 // how to preload all the images and sounds?
 // indicator for objects with more than 1 image
@@ -268,6 +268,10 @@ let $clickedImgId;
 
 let startX;
 let startY;
+let moveX;
+let moveY;
+let ignoreX = 0;
+let ignoreY = 0;
 
 let translateX;
 let translateY;
@@ -459,24 +463,36 @@ function updatePosition(event) {
     objectMoved = true;
     const $clickedImgBox = $('.move');
 
-    let moveX = event.clientX - startX;
-    let moveY = event.clientY - startY;
+    moveX = event.clientX - startX;
+    moveY = event.clientY - startY;
+
+    // // only update position, if object is inside body:
+    // let [top, bottom, left, right] = get$objBorders($clickedImgBox);
+    //
+    // if (bodyBorderLeft < left && right < bodyBorderRight) {
+    //     moveX = event.clientX - startX - ignoreX;
+    // } else {
+    //     // ---------- check here in which direction the mousemove is heading and update if direction is away from the body-border
+    //     console.log('object outside X body!');
+    //     // console.log(event.clientX);
+    //     ignoreX = event.clientX;
+    // }
+    //
+    // if (bodyBorderTop < top && bottom < bodyBorderBottom) {
+    //     moveY = event.clientY - startY - ignoreY;
+    // } else {
+    //     // ---------- check here in which direction the mousemove is heading and update if direction is away from the body-border
+    //     console.log('object outside Y body!');
+    //     // console.log(event.clientY);
+    //     ignoreY = event.clientY;
+    // }
+
     // to move an object, that's already in the construction area, check the transform props and calculate with them:
     if ($clickedImgBox.hasClass('selected')) {
         moveX += translateX;
         moveY += translateY;
     }
-    // only update position, if object is inside body:
-    let [top, bottom, left, right] = get$objBorders($clickedImgBox);
-    // console.log(top, bottom, left, right);
 
-    if (!(bodyBorderLeft < left && right < bodyBorderRight)) {
-            console.log('object outside X body!');
-        }
-
-    if (!(bodyBorderTop < top && bottom < bodyBorderBottom)) {
-            console.log('object outside Y body!');
-        }
     $clickedImgBox.css({
         transform: `translate(${moveX}px, ${moveY}px)`
     });
