@@ -2,7 +2,7 @@
 soon-to-be most awesome browser word game
 
 look at the cards:
-https://ninahahne.github.io/AllThatStuff/
+https://ninahahne.github.io/AllThatStuff/cards.html
 
 cards json file:
 https://ninahahne.github.io/AllThatStuff/cards_enUS.json
