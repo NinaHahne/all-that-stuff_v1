@@ -90,8 +90,9 @@
   },
   {
     "id": 16,
-    "title": "Deadly Sins",
-    "items": ["Pride", "Gluttony", "Lust", "Sloth", "Anger", "Envy"]
+    "title": "Discovered!",
+    "items": ["America <small>(Christoph Columbus)</small>", "Seeway to India <small>(Vasco da Gama)</small>", "Planet Neptune <small>(Johann Galle)</small>", "Troja <small>(Heinrich Schliemann)</small>", "South Pole <small>(Roald Amundsen)</small>", "Penicillin <small>(Alexander Fleming)</small>"],
+    "german-id": 16
   },
   {
     "id": 17,
@@ -234,6 +235,3 @@
     "german-id": 127
   }
 ]
-
-
-
