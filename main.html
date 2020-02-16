@@ -31,7 +31,6 @@
             </ul>
         </section>
 
-
         <section id="construction-area" class="hidden"></section>
 
         <section id="objects" class="hidden">
@@ -107,6 +106,32 @@
 
         <section id="start-menu">
             <header>
+                <div id="select-players">
+                    <div class="player grey" id="grey">
+                        ?
+                    </div>
+                    <div class="player purple" id="purple">
+                        ?
+                    </div>
+                    <div class="player blue" id="blue">
+                        ?
+                    </div>
+                    <div class="player green" id="green">
+                        ?
+                    </div>
+                    <div class="player yellow" id="yellow">
+                        ?
+                    </div>
+                    <div class="player orange" id="orange">
+                        ?
+                    </div>
+                    <div class="player red" id="red">
+                        ?
+                    </div>
+                    <div class="player pink" id="pink">
+                        ?
+                    </div>
+                </div>
                 <div id="stuff-logo">
                     <h2>All&nbsp;That</h2>
                     <h1>Stuff</h1>
@@ -185,9 +210,15 @@
 
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script>
+        <script type="text/javascript">
             var socket = io();
+            socket.on('welcome', function(data) {
+                console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
+            });
+            socket.on('game started', function(data) {
+                console.log(data);
+            });
         </script>
-        <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="/main.js"></script>
     </body>
 </html>

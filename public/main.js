@@ -1,5 +1,5 @@
 
-let players = ['player1', 'player2', 'player3', 'player4']
+let players = ['player1', 'player2', 'player3', 'player4'];
 
 // register onLoad event with anonymous function
 window.onload = function (e) {
@@ -150,7 +150,7 @@ let gameStarted = false;
 
 const playButton = document.getElementById("play");
 
-playButton.addEventListener("click", function(e) {
+playButton.addEventListener("click", function() {
     // e.preventDefault();
     cancelAnimationFrame(myReq);
     // console.log(Array.isArray(objectList));
@@ -160,8 +160,15 @@ playButton.addEventListener("click", function(e) {
     startGame(objectArray);
 });
 
+$(document).on('click', '.player', (e) => {
+    console.log('e.target: ', e.target);
+    console.log('e.currentTarget: ', e.currentTarget);
+    console.log('clicked select players');
+    $(e.target).addClass('selected');
+});
+
 function moveObjects() {
-    objectsAreMoving = true;
+    // objectsAreMoving = true;
     // left = left - 2;
     left--;
     // console.log(left);
@@ -181,7 +188,7 @@ function moveObjects() {
 //based on Fisher–Yates shuffle //By Alexey Lebedev :
 function shuffleObjects(objects) {
     for (let i = objects.children.length; i >= 0; i--) {
-    objects.appendChild(objects.children[(Math.random() * i) | 0]);
+        objects.appendChild(objects.children[(Math.random() * i) | 0]);
     }
 }
 
@@ -232,7 +239,7 @@ function get$objBorders($obj) {
     let left = $obj.offset().left;
     let right = left + $obj.width();
     return [top, bottom, left, right];
-};
+}
 
 function getObjectPositions() {
     $objects.children().each(function() {
@@ -249,7 +256,7 @@ function getObjectPositions() {
     $objects.children('.img-box').css({
         position: 'absolute'
     });
-};
+}
 // getObjectPositions();
 
 let objectClicked = false;
@@ -309,8 +316,8 @@ $(document).on('mousedown', '.img-box', function (e) {
             const transformProps = $('.move').css('transform');
             // console.log(transformProps);
             var values = transformProps.split('(')[1],
-            values = values.split(')')[0],
-            values = values.split(',');
+                values = values.split(')')[0],
+                values = values.split(',');
             translateX = Number(values[4]);
             translateY = Number(values[5]);
             // console.log('translateX: ', translateX, 'translateY: ', translateY);
@@ -344,7 +351,7 @@ $(document).on('mouseup', function(e) {
         //only if object is dropped (when cursor is) inside the construction area:
         if (borderLeft < posX && posX < borderRight &&
             borderTop < posY && posY < borderBottom) {
-                $clickedImgBox.addClass('selected');
+            $clickedImgBox.addClass('selected');
         // if dropped ouside construction area, put it back to it's original position:
         } else {
             $clickedImgBox.removeClass('selected');
