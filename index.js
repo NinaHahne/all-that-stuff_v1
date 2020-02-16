@@ -23,14 +23,28 @@ server.listen(process.env.PORT || 8080, () =>
 );
 
 // SOCKET.IO***********************************
+let gameStarted = false;
+// let onlineUsers = {};
+let selectedPieces = [];
+
 io.on("connection", function(socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
 
     // Generate a v1 (time-based) id:
-    socket.userid = uuid.v1();
-    //tell the player they connected, giving them their id:
+    socket.userId = uuid.v1();
+
+    // tell the player they connected, giving them their id:
     socket.emit("welcome", {
-        id: socket.userid
+        socketId: socket.id,
+        userId: socket.userId,
+        selectedPieces: selectedPieces
+    });
+
+    socket.on("selected piece", function(data) {
+        console.log(`user ${data.userId} joined the game as player '${data.selectedPieceId}'`);
+        selectedPieces.push(data.selectedPieceId);
+        io.sockets.emit("add selected piece", data.selectedPieceId);
+        console.log('selectedPieces: ', selectedPieces);
     });
 
     socket.on("game started", function(startPlayer) {

@@ -138,7 +138,11 @@
                 </div>
 
                 <div class="buttonBox">
-                    <button id="play">play</button>
+                    <div class="">
+                        press
+                    </div>
+                    <button id="play">everybody's in</button>
+                    <div>to start the game</div>
                 </div>
             </header>
 
@@ -211,13 +215,13 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript">
-            var socket = io();
-            socket.on('welcome', function(data) {
-                console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
-            });
-            socket.on('game started', function(data) {
-                console.log(data);
-            });
+            // var socket = io();
+            // socket.on('welcome', function(data) {
+            //     console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
+            // });
+            // socket.on('game started', function(data) {
+            //     console.log(data);
+            // });
         </script>
         <script type="text/javascript" src="/main.js"></script>
     </body>
