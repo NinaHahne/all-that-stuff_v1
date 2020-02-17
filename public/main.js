@@ -29,6 +29,7 @@ var socket = io();
 
 const $objects = $("#objects");
 const $queue = $("#queue");
+const $joinedPlayersContainer = $("#joined-players");
 
 const $constructionArea = $("#construction-area");
 let [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
@@ -40,6 +41,7 @@ const playButton = document.getElementById("play");
 // const $body = $('body');
 // let [bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight] = get$objBorders($body);
 // console.log(bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight);
+
 const objObj = [
     {
         name: "banana",
@@ -146,12 +148,19 @@ const objects = document.getElementById("ticker-objects");
 let objectList = objects.getElementsByClassName("img-box"); //objectList[0] is always the first link in the list.. list stays in sync
 let left = objects.offsetLeft; //number (in px), x-position of element relative to its parent
 let myReq;
+
+const selectPlayersContainer = document.getElementById("select-players");
+
+
 let gameStarted = false;
+let itsMyTurn = false;
+let activePlayer;
 
 let players = [];
 // let myUserId = sessionStorage.getItem('myUserId');
 let mySocketId;
 let selectedPieceId = sessionStorage.getItem('selectedPieceId');
+
 
 // ||| START MENU ************************************************
 shuffleObjects(objects);
@@ -161,11 +170,17 @@ moveObjects();
 playButton.addEventListener("click", function() {
     // e.preventDefault();
     cancelAnimationFrame(myReq);
+
+    let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
+    // console.log('joinedPlayersList: ', joinedPlayersList);
+
+    let playerArray = Array.from(joinedPlayersList);
     // console.log(Array.isArray(objectList));
     let objectArray = Array.from(objectList);
     // console.log(Array.isArray(objectArray));
     gameStarted = true;
-    startGame(objectArray);
+    // itsMyTurn = true;
+    startGame(playerArray, objectArray);
 });
 
 $(document).on("click", ".player", e => {
@@ -177,7 +192,7 @@ $(document).on("click", ".player", e => {
         $(e.target).hasClass("selectedPlayerPiece")
     );
     // if you haven't yet selected a piece and it's not taken by another player:
-    console.log('your selectedPieceId', selectedPieceId);
+    console.log('your selectedPieceId before clicking: ', selectedPieceId);
     if (!selectedPieceId && !$(e.target).hasClass("selectedPlayerPiece")) {
         selectedPieceId = $(e.target).attr("id");
         selectedPiece(selectedPieceId);
@@ -190,10 +205,9 @@ function selectedPiece(pieceId) {
     // console.log('$piece: ', $piece);
     $piece.addClass("selectedPlayerPiece");
     $piece.addClass("myPiece");
-    players.push(pieceId);
+    // players.push(pieceId);
     // console.log('$piece[0].innerText: ', $piece[0].innerText);
     $piece[0].innerText = '!';
-    console.log('players in selectedPiece(): ', players);
     socket.emit("selected piece", {
         // userId: myUserId,
         socketId: mySocketId,
@@ -201,14 +215,14 @@ function selectedPiece(pieceId) {
     });
 }
 
-function updateSelectedPlayers(pieceId) {
+function addPlayer(pieceId) {
     // maybe pieceId is undefined at some point? just a guess for the jquery err when reloading page after changing main.js: Uncaught Error: Syntax error, unrecognized expression: # ... at Function.oe.error...
     // error does not occur with this conditional:
     if (pieceId) {
         let $piece = $("#" + pieceId);
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
-        players.push(selectedPieceId);
+        players.push(pieceId);
     }
 }
 
@@ -247,7 +261,45 @@ function shuffleObjects(objects) {
     }
 }
 
-function startGame(objArray) {
+function changeToMyTurn() {
+    itsMyTurn = true;
+    activePlayer = selectedPieceId;
+    $(".myPiece").addClass('myTurn');
+    $("#construction-area").addClass(selectedPieceId);
+    socket.emit('change to my turn', selectedPieceId);
+}
+
+function changeTurn(nextPlayer) {
+    // next turn is my turn:
+    if (nextPlayer == selectedPieceId) {
+        itsMyTurn = true;
+    } else {
+        // next turn is not my turn:
+        itsMyTurn = false;
+    }
+    $(`#${activePlayer}`).removeClass('myTurn');
+    $("#construction-area").removeClass(activePlayer);
+
+    $(`#${nextPlayer}`).addClass('myTurn');
+    $("#construction-area").addClass(nextPlayer);
+    activePlayer = nextPlayer;
+}
+
+// function nextPlayersTurn() {
+//     let currentPlayerIndex = players.indexOf(activePlayer);
+//     let nextPlayer;
+//     if (currentPlayerIndex + 1 <= players.length - 1) {
+//         nextPlayer = players[currentPlayerIndex + 1];
+//     } else if (currentPlayerIndex + 1 > players.length - 1) {
+//         nextPlayer = players[0];
+//     }
+// }
+
+function startGame(playerArray, objArray) {
+    changeToMyTurn();
+
+    $joinedPlayersContainer.append(playerArray);
+
     let activeObjects = objArray.slice(0, 10);
     let queuedObjects = objArray.slice(10);
     queuedObjects.reverse();
@@ -256,48 +308,87 @@ function startGame(objArray) {
     getObjectPositions();
     $(".hidden").removeClass("hidden");
     $("#start-menu").addClass("hidden");
+    $("#instructions").addClass("hidden");
 
-    socket.emit("game started", players[0]);
+    let activeObjectsHTML = $("#objects")[0].innerHTML;
+    let queuedObjectsHTML = $("#queue")[0].innerHTML;
+
+    // console.log('activeObjectsHTML: ', activeObjectsHTML);
+    // console.log('queuedObjectsHTML: ', queuedObjectsHTML);
+
+    socket.emit("game started", {
+        startPlayer: selectedPieceId,
+        activeObjects: activeObjectsHTML,
+        queuedObjects: queuedObjectsHTML
+    });
+}
+
+function otherPlayerStartsGame(activeObjects, queuedObjects) {
+    let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
+    let playerArray = Array.from(joinedPlayersList);
+    $joinedPlayersContainer.append(playerArray);
+    $objects[0].innerHTML = activeObjects;
+    $queue[0].innerHTML = queuedObjects;
+    getObjectPositions();
+    $(".hidden").removeClass("hidden");
+    $("#start-menu").addClass("hidden");
+    $("#instructions").addClass("hidden");
+    gameStarted = true;
 }
 
 // ||| sockets - start menu:
 socket.on("welcome", function(data) {
-
     sessionStorage.setItem('mySocketId', data.socketId);
     mySocketId = data.socketId;
     console.log(
         `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
     );
+    // remember previously selected piece on page reload:
+    console.log('your selected piece is: ', selectedPieceId);
+    if (selectedPieceId) {
+        selectedPiece(selectedPieceId);
+    }
+
     players = data.selectedPieces;
-    console.log('players in socket.on("welcome"): ', players);
+    // console.log('players in socket.on("welcome"): ', players);
     for (let i = 0; i < players.length; i++) {
         let $piece = $("#" + players[i]);
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
-        // to remember the selected piece on page reload:
-        if ($piece.attr("id") == selectedPieceId) {
-            $piece.addClass("myPiece");
-            $piece[0].innerText = '!';
-            // emit 'selected piece' here too?
-            socket.emit("selected piece", {
-                socketId: mySocketId,
-                selectedPieceId: selectedPieceId
-            });
-        }
     }
 });
 
-socket.on("add selected piece", function(selectedPieceId) {
-    updateSelectedPlayers(selectedPieceId);
+socket.on("add selected piece", function(pieceId) {
+    addPlayer(pieceId);
+    // console.log('players after "add selected piece": ', players);
 });
 
-socket.on("remove selected piece", function(piece) {
-    removePlayer(piece);
+socket.on("remove selected piece", function(pieceId) {
+    removePlayer(pieceId);
+    // console.log('players after "remove selected piece": ', players);
 });
 
-socket.on("game started", function(data) {
-    console.log(data);
+socket.on("game has been started", function(data) {
+    console.log(data.message);
+    // console.log('data.activeObjects: ', data.activeObjects);
+    // console.log('data.queuedObjects: ', data.queuedObjects);
+    otherPlayerStartsGame(data.activeObjects, data.queuedObjects);
 });
+
+socket.on("it's my turn", function(pieceId) {
+    // other player is start-player:
+    if (pieceId != selectedPieceId) {
+        console.log(`it's ${pieceId}'s turn now!'`);
+        changeTurn(pieceId);
+    }
+});
+
+socket.on("change turn", function(nextPlayer) {
+    console.log(`it's ${nextPlayer}'s turn now!'`);
+    changeTurn(nextPlayer);
+});
+
+
 
 // || MAIN GAME ************************************************
 
@@ -380,7 +471,7 @@ window.addEventListener("resize", () => {
 });
 
 $(document).on("mousedown", ".img-box", function(e) {
-    if (gameStarted) {
+    if (gameStarted && itsMyTurn) {
         objectClicked = true;
         $clickedImgBox = $(this);
         // console.log($clickedImgBox);
@@ -488,15 +579,19 @@ $(document).on("keydown", e => {
         }
     } else if (e.keyCode == 13) {
         // = "enter"
+        // simulate next turn:
         discardAndRefillObjects();
+        socket.emit("next player's turn", activePlayer);
     }
 });
 
 $(document).on("dblclick", ".img-box", e => {
-    // console.log('img-box was double clicked!');
-    // console.log(e.currentTarget);
-    let imgBox = e.currentTarget;
-    changeObjectImage(imgBox);
+    if (gameStarted && itsMyTurn) {
+        // console.log('img-box was double clicked!');
+        // console.log(e.currentTarget);
+        let imgBox = e.currentTarget;
+        changeObjectImage(imgBox);
+    }
 });
 
 function changeObjectImage(imgBox) {

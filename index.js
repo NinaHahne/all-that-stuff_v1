@@ -26,6 +26,19 @@ server.listen(process.env.PORT || 8080, () =>
 let gameStarted = false;
 let joinedPlayers = {};
 let selectedPieces = [];
+let currentPlayer;
+
+function nextPlayersTurn(activePlayer) {
+    currentPlayer = activePlayer;
+    let currentPlayerIndex = selectedPieces.indexOf(activePlayer);
+    let nextPlayer;
+    if (currentPlayerIndex + 1 <= selectedPieces.length - 1) {
+        nextPlayer = selectedPieces[currentPlayerIndex + 1];
+    } else if (currentPlayerIndex + 1 > selectedPieces.length - 1) {
+        nextPlayer = selectedPieces[0];
+    }
+    io.sockets.emit("change turn", nextPlayer);
+}
 
 io.on("connection", function(socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
@@ -51,10 +64,23 @@ io.on("connection", function(socket) {
         console.log('selectedPieces: ', selectedPieces);
     });
 
-    socket.on("game started", function(startPlayer) {
-        let msg = `to everyone: game started. It's ${startPlayer}'s turn!`;
+    socket.on("game started", function(data) {
+        let msg = `"${data.startPlayer}" started the game and starts with building!`;
         console.log(msg);
-        io.sockets.emit("game started", msg);
+        io.sockets.emit("game has been started", {
+            message: msg,
+            activeObjects: data.activeObjects,
+            queuedObjects: data.queuedObjects
+        });
+    });
+
+    socket.on("change to my turn", function(player) {
+        currentPlayer = player;
+        io.sockets.emit("it's my turn", player);
+    });
+
+    socket.on("next player's turn", function(activePlayer) {
+        nextPlayersTurn(activePlayer);
     });
 
     // send a message to all connected sockets:

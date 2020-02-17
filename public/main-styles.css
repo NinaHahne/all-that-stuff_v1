@@ -67,6 +67,13 @@ header {
     justify-content: space-around;
 }
 
+#joined-players {
+    display: flex;
+    width: 60%;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
 .player {
     display: flex;
     justify-content: center;
@@ -91,6 +98,18 @@ header {
 }
 
 .player.myPiece {
+    transform: scale(1.1);
+    border-style: double;
+    border-width: 6px;
+}
+
+#joined-players .myPiece {
+    transform: unset;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#joined-players .myTurn {
     transform: scale(1.1);
     border-style: double;
     border-width: 6px;
@@ -250,10 +269,12 @@ button:focus {
     height: 680px;
     width: 720px;
     padding: 4px;
-    border: 3px lightgrey dashed;
+    /* border: 3px lightgrey dashed; */
+    border-width: 3px;
+    border-style: dashed;
     border-radius: 20px;
     margin-left: 6px;
-    background-color: rgba(211, 211, 211, 0.5);
+    /* background-color: rgba(211, 211, 211, 0.5); */
 }
 
 #objects {
