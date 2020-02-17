@@ -28,7 +28,7 @@ let joinedPlayers = {};
 let selectedPieces = [];
 let currentPlayer;
 
-function nextPlayersTurn(activePlayer) {
+function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
     currentPlayer = activePlayer;
     let currentPlayerIndex = selectedPieces.indexOf(activePlayer);
     let nextPlayer;
@@ -37,7 +37,11 @@ function nextPlayersTurn(activePlayer) {
     } else if (currentPlayerIndex + 1 > selectedPieces.length - 1) {
         nextPlayer = selectedPieces[0];
     }
-    io.sockets.emit("change turn", nextPlayer);
+    io.sockets.emit("change turn", {
+        nextPlayer: nextPlayer,
+        activeObjects: activeObjects,
+        queuedObjects: queuedObjects
+    });
 }
 
 io.on("connection", function(socket) {
@@ -69,6 +73,7 @@ io.on("connection", function(socket) {
         console.log(msg);
         io.sockets.emit("game has been started", {
             message: msg,
+            startPlayer: data.startPlayer,
             activeObjects: data.activeObjects,
             queuedObjects: data.queuedObjects
         });
@@ -79,8 +84,8 @@ io.on("connection", function(socket) {
         io.sockets.emit("it's my turn", player);
     });
 
-    socket.on("next player's turn", function(activePlayer) {
-        nextPlayersTurn(activePlayer);
+    socket.on("next player's turn", function(data) {
+        nextPlayersTurn(data.activePlayer, data.activeObjects, data.queuedObjects);
     });
 
     // send a message to all connected sockets:

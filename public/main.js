@@ -269,9 +269,9 @@ function changeToMyTurn() {
     socket.emit('change to my turn', selectedPieceId);
 }
 
-function changeTurn(nextPlayer) {
+function changeTurn(data) {
     // next turn is my turn:
-    if (nextPlayer == selectedPieceId) {
+    if (data.nextPlayer == selectedPieceId) {
         itsMyTurn = true;
     } else {
         // next turn is not my turn:
@@ -280,9 +280,12 @@ function changeTurn(nextPlayer) {
     $(`#${activePlayer}`).removeClass('myTurn');
     $("#construction-area").removeClass(activePlayer);
 
-    $(`#${nextPlayer}`).addClass('myTurn');
-    $("#construction-area").addClass(nextPlayer);
-    activePlayer = nextPlayer;
+    $(`#${data.nextPlayer}`).addClass('myTurn');
+    $("#construction-area").addClass(data.nextPlayer);
+    activePlayer = data.nextPlayer;
+
+    $objects[0].innerHTML = data.activeObjects;
+    $queue[0].innerHTML = data.queuedObjects;
 }
 
 // function nextPlayersTurn() {
@@ -323,7 +326,10 @@ function startGame(playerArray, objArray) {
     });
 }
 
-function otherPlayerStartsGame(activeObjects, queuedObjects) {
+function otherPlayerStartsGame(startPlayer, activeObjects, queuedObjects) {
+    // itsMyTurn = false;
+    activePlayer = startPlayer;
+
     let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
     let playerArray = Array.from(joinedPlayersList);
     $joinedPlayersContainer.append(playerArray);
@@ -333,6 +339,9 @@ function otherPlayerStartsGame(activeObjects, queuedObjects) {
     $(".hidden").removeClass("hidden");
     $("#start-menu").addClass("hidden");
     $("#instructions").addClass("hidden");
+
+    $(`#${startPlayer}`).addClass('myTurn');
+    $("#construction-area").addClass(startPlayer);
     gameStarted = true;
 }
 
@@ -372,7 +381,7 @@ socket.on("game has been started", function(data) {
     console.log(data.message);
     // console.log('data.activeObjects: ', data.activeObjects);
     // console.log('data.queuedObjects: ', data.queuedObjects);
-    otherPlayerStartsGame(data.activeObjects, data.queuedObjects);
+    otherPlayerStartsGame(data.startPlayer, data.activeObjects, data.queuedObjects);
 });
 
 socket.on("it's my turn", function(pieceId) {
@@ -383,9 +392,9 @@ socket.on("it's my turn", function(pieceId) {
     }
 });
 
-socket.on("change turn", function(nextPlayer) {
-    console.log(`it's ${nextPlayer}'s turn now!'`);
-    changeTurn(nextPlayer);
+socket.on("change turn", function(nextPlayerData) {
+    console.log(`it's ${nextPlayerData.nextPlayer}'s turn now!'`);
+    changeTurn(nextPlayerData);
 });
 
 
@@ -581,7 +590,7 @@ $(document).on("keydown", e => {
         // = "enter"
         // simulate next turn:
         discardAndRefillObjects();
-        socket.emit("next player's turn", activePlayer);
+        // socket.emit("next player's turn", activePlayer);
     }
 });
 
@@ -661,6 +670,15 @@ function discardAndRefillObjects() {
         $objects.append($queue.children().last());
     }
     getObjectPositions();
+
+    let activeObjectsHTML = $("#objects")[0].innerHTML;
+    let queuedObjectsHTML = $("#queue")[0].innerHTML;
+
+    socket.emit("next player's turn", {
+        activePlayer: activePlayer,
+        activeObjects: activeObjectsHTML,
+        queuedObjects: queuedObjectsHTML
+    });
 }
 
 function updatePosition(event) {
