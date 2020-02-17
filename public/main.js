@@ -149,8 +149,9 @@ let myReq;
 let gameStarted = false;
 
 let players = [];
-let selectedPieceId = "";
-let myUserId = "";
+// let myUserId = sessionStorage.getItem('myUserId');
+let mySocketId;
+let selectedPieceId = sessionStorage.getItem('selectedPieceId');
 
 // ||| START MENU ************************************************
 shuffleObjects(objects);
@@ -176,6 +177,7 @@ $(document).on("click", ".player", e => {
         $(e.target).hasClass("selectedPlayerPiece")
     );
     // if you haven't yet selected a piece and it's not taken by another player:
+    console.log('your selectedPieceId', selectedPieceId);
     if (!selectedPieceId && !$(e.target).hasClass("selectedPlayerPiece")) {
         selectedPieceId = $(e.target).attr("id");
         selectedPiece(selectedPieceId);
@@ -183,28 +185,41 @@ $(document).on("click", ".player", e => {
 });
 
 function selectedPiece(pieceId) {
+    sessionStorage.setItem('selectedPieceId', pieceId);
     let $piece = $("#" + pieceId);
     // console.log('$piece: ', $piece);
     $piece.addClass("selectedPlayerPiece");
     $piece.addClass("myPiece");
     players.push(pieceId);
-    console.log('$piece[0].innerText: ', $piece[0].innerText);
+    // console.log('$piece[0].innerText: ', $piece[0].innerText);
     $piece[0].innerText = '!';
     console.log('players in selectedPiece(): ', players);
     socket.emit("selected piece", {
-        userId: myUserId,
+        // userId: myUserId,
+        socketId: mySocketId,
         selectedPieceId: pieceId
     });
 }
 
 function updateSelectedPlayers(pieceId) {
     // maybe pieceId is undefined at some point? just a guess for the jquery err when reloading page after changing main.js: Uncaught Error: Syntax error, unrecognized expression: # ... at Function.oe.error...
-    // error does not occur with this continional:
+    // error does not occur with this conditional:
     if (pieceId) {
         let $piece = $("#" + pieceId);
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
         players.push(selectedPieceId);
+    }
+}
+
+function removePlayer(pieceId) {
+    // only if the disconnected player had chosen a piece and it's not "":
+    if (pieceId) {
+        let $piece = $("#" + pieceId);
+        // console.log('$piece: ', $piece);
+        $piece.removeClass("selectedPlayerPiece");
+
+        players = players.filter(item => item !== pieceId);
     }
 }
 
@@ -247,9 +262,11 @@ function startGame(objArray) {
 
 // ||| sockets - start menu:
 socket.on("welcome", function(data) {
-    myUserId = data.userId;
+
+    sessionStorage.setItem('mySocketId', data.socketId);
+    mySocketId = data.socketId;
     console.log(
-        `Connected successfully to the socket.io server. My socketID is ${data.socketId} and my server side userID is ${myUserId}`
+        `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
     );
     players = data.selectedPieces;
     console.log('players in socket.on("welcome"): ', players);
@@ -257,11 +274,25 @@ socket.on("welcome", function(data) {
         let $piece = $("#" + players[i]);
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
+        // to remember the selected piece on page reload:
+        if ($piece.attr("id") == selectedPieceId) {
+            $piece.addClass("myPiece");
+            $piece[0].innerText = '!';
+            // emit 'selected piece' here too?
+            socket.emit("selected piece", {
+                socketId: mySocketId,
+                selectedPieceId: selectedPieceId
+            });
+        }
     }
 });
 
 socket.on("add selected piece", function(selectedPieceId) {
     updateSelectedPlayers(selectedPieceId);
+});
+
+socket.on("remove selected piece", function(piece) {
+    removePlayer(piece);
 });
 
 socket.on("game started", function(data) {

@@ -24,25 +24,29 @@ server.listen(process.env.PORT || 8080, () =>
 
 // SOCKET.IO***********************************
 let gameStarted = false;
-// let onlineUsers = {};
+let joinedPlayers = {};
 let selectedPieces = [];
 
 io.on("connection", function(socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
 
-    // Generate a v1 (time-based) id:
-    socket.userId = uuid.v1();
+    joinedPlayers[socket.id] = "";
 
-    // tell the player they connected, giving them their id:
+    // Generate a v1 (time-based) id:
+    // socket.userId = uuid.v1();
+
+    // tell the player they connected, giving them their socket id and the list with players that joined so far:
     socket.emit("welcome", {
         socketId: socket.id,
-        userId: socket.userId,
+        // userId: socket.userId,
         selectedPieces: selectedPieces
     });
 
     socket.on("selected piece", function(data) {
-        console.log(`user ${data.userId} joined the game as player '${data.selectedPieceId}'`);
+        console.log(`user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`);
         selectedPieces.push(data.selectedPieceId);
+        joinedPlayers[socket.id] = data.selectedPieceId;
+
         io.sockets.emit("add selected piece", data.selectedPieceId);
         console.log('selectedPieces: ', selectedPieces);
     });
@@ -54,9 +58,10 @@ io.on("connection", function(socket) {
     });
 
     // send a message to all connected sockets:
-    io.sockets.emit("achtung", {
-        warning: "This site will go offline for maintenance in one hour."
-    });
+    // io.sockets.emit("achtung", {
+    //     warning: "This site will go offline for maintenance in one hour."
+    // });
+
     // send messages to specific sockets:
     // io.sockets.sockets[recipientSocketId].emit("request", {
     //   message: "You have a new friend request!"
@@ -71,5 +76,10 @@ io.on("connection", function(socket) {
 
     socket.on("disconnect", function() {
         console.log(`socket with the id ${socket.id} is now disconnected`);
+        let piece = joinedPlayers[socket.id];
+        console.log(`player piece "${piece}" is now free again`);
+        selectedPieces = selectedPieces.filter(item => item !== piece);
+        io.sockets.emit("remove selected piece", piece);
+        delete joinedPlayers[socket.id];
     });
 });
