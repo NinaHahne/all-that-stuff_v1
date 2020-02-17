@@ -207,7 +207,7 @@ function selectedPiece(pieceId) {
     $piece.addClass("myPiece");
     // players.push(pieceId);
     // console.log('$piece[0].innerText: ', $piece[0].innerText);
-    $piece[0].innerText = '!';
+    $piece[0].innerText = 'you';
     socket.emit("selected piece", {
         // userId: myUserId,
         socketId: mySocketId,

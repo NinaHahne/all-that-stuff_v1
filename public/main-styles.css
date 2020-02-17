@@ -98,7 +98,7 @@ header {
 }
 
 .player.myPiece {
-    transform: scale(1.1);
+    transform: scale(1.2);
     border-style: double;
     border-width: 6px;
 }
@@ -111,47 +111,50 @@ header {
 
 #joined-players .myTurn {
     transform: scale(1.2);
-    border-style: double;
-    border-width: 6px;
+    /* border-style: double;
+    border-width: 6px; */
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 20px;
 }
 
 .grey {
-    background-color: rgba(128, 128, 128, 0.5);
+    background-color: rgba(128, 128, 128, 0.4);
     border-color: rgb(128, 128, 128);
 }
 
 .purple {
-    background-color: rgba(75, 0, 130, 0.5);
+    background-color: rgba(75, 0, 130, 0.4);
     border-color: rgb(75, 0, 130);
 }
 
 .blue {
-    background-color: rgba(0, 51, 119, 0.5);
+    background-color: rgba(0, 51, 119, 0.4);
     border-color: rgb(0, 51, 119);
 }
 
 .green {
-    background-color: rgba(46, 139, 87, 0.5);
+    background-color: rgba(46, 139, 87, 0.4);
     border-color: rgb(46, 139, 87);
 }
 
 .yellow {
-    background-color: rgba(255, 215, 0, 0.5);
+    background-color: rgba(255, 215, 0, 0.4);
     border-color: rgb(255, 215, 0);
 }
 
 .orange {
-    background-color: rgba(255, 140, 0, 0.5);
+    background-color: rgba(255, 140, 0, 0.4);
     border-color: rgb(255, 140, 0);
 }
 
 .red {
-    background-color: rgba(185, 0, 20, 0.5);
+    background-color: rgba(185, 0, 20, 0.4);
     border-color: rgb(185, 0, 20);
 }
 
 .pink {
-    background-color: rgba(213, 0, 102, 0.5);
+    background-color: rgba(213, 0, 102, 0.4);
     border-color: rgb(213, 0, 102);
 }
 
