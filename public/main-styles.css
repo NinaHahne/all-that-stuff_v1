@@ -110,7 +110,7 @@ header {
 }
 
 #joined-players .myTurn {
-    transform: scale(1.1);
+    transform: scale(1.2);
     border-style: double;
     border-width: 6px;
 }
@@ -232,7 +232,7 @@ button:focus {
     bottom: 10px;
     left: 0;
     white-space: nowrap;
-    font-size: 0; /* to remove white space between the links, that causes ticker to jump in the first round*/
+    font-size: 0; /* to remove white space between the ticker elements, that causes ticker to jump in the first round*/
     height: 300px;
 }
 /* ---------MAIN SCREEN ------------- */
@@ -314,7 +314,7 @@ button:focus {
     z-index: 1000;
 }
 
-/* --------------- OBJECT STYLES ---------------*/
+/* || --------------- OBJECT STYLES ---------------*/
 
 .img-box {
     text-align: center;

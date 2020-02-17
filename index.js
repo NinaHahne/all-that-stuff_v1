@@ -69,8 +69,10 @@ io.on("connection", function(socket) {
     });
 
     socket.on("game started", function(data) {
+        selectedPieces = data.joinedPlayerIds;
+        console.log('joined players at game start: ', selectedPieces);
         let msg = `"${data.startPlayer}" started the game and starts with building!`;
-        console.log(msg);
+        // console.log(msg);
         io.sockets.emit("game has been started", {
             message: msg,
             startPlayer: data.startPlayer,

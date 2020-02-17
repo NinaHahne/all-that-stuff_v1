@@ -301,6 +301,10 @@ function changeTurn(data) {
 function startGame(playerArray, objArray) {
     changeToMyTurn();
 
+    // to get the id of joined players in the order they are rendered:
+    let joinedPlayerIds = playerArray.map(elem => elem.id);
+    // console.log(joinedPlayerIds);
+
     $joinedPlayersContainer.append(playerArray);
 
     let activeObjects = objArray.slice(0, 10);
@@ -321,6 +325,7 @@ function startGame(playerArray, objArray) {
 
     socket.emit("game started", {
         startPlayer: selectedPieceId,
+        joinedPlayerIds: joinedPlayerIds,
         activeObjects: activeObjectsHTML,
         queuedObjects: queuedObjectsHTML
     });
