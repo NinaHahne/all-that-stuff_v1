@@ -156,6 +156,13 @@ io.on("connection", function(socket) {
         });
     });
 
+    socket.on("moving objects", function(data) {
+        io.sockets.emit("objects are moving", {
+            activePlayer: data.activePlayer,
+            movedObjects: data.movedObjects
+        });
+    });
+
     // send a message to all connected sockets:
     // io.sockets.emit("achtung", {
     //     warning: "This site will go offline for maintenance in one hour."

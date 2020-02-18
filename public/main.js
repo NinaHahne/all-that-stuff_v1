@@ -591,6 +591,7 @@ $(document).on("mouseup", function(e) {
         $clickedImgBox.removeClass("move");
         objectClicked = false;
         objectMoved = false;
+        updateObjectsForOtherPlayers();
     }
 });
 
@@ -636,6 +637,7 @@ $(document).on("dblclick", ".img-box", e => {
         // console.log(e.currentTarget);
         let imgBox = e.currentTarget;
         changeObjectImage(imgBox);
+        updateObjectsForOtherPlayers();
     }
 });
 
@@ -754,6 +756,24 @@ function updatePosition(event) {
     $clickedImgBox.css({
         transform: `translate(${moveX}px, ${moveY}px)`
     });
+
+    updateObjectsForOtherPlayers();
+}
+
+function updateObjectsForOtherPlayers() {
+    // pass objects with new coordinates to all players:
+    let activeObjectsHTML = $("#objects")[0].innerHTML;
+
+    socket.emit("moving objects", {
+        activePlayer: activePlayer,
+        movedObjects: activeObjectsHTML
+    });
+}
+
+function objectsAreMoving(data) {
+    if (!itsMyTurn) {
+        $objects[0].innerHTML = data.movedObjects;
+    }
 }
 
 function doneBuilding() {
@@ -810,6 +830,9 @@ function buildingIsDone(data) {
 // }
 
 // ||| sockets - main game: ******************************************
+socket.on("objects are moving", function(data) {
+    objectsAreMoving(data);
+});
 
 socket.on("building is done", function(data) {
     buildingIsDone(data);
