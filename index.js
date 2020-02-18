@@ -86,6 +86,15 @@ io.on("connection", function(socket) {
         nextPlayersTurn(data.activePlayer, data.activeObjects, data.queuedObjects);
     });
 
+    socket.on("done building", function(data) {
+        let msg = `player "${data.activePlayer}" finished building! Guess what it is!`;
+        io.sockets.emit("building is done", {
+            message: msg,
+            activePlayer: data.activePlayer,
+            movedObjects: data.movedObjects
+        });
+    });
+
     // send a message to all connected sockets:
     // io.sockets.emit("achtung", {
     //     warning: "This site will go offline for maintenance in one hour."

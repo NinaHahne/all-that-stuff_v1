@@ -585,10 +585,15 @@ $(document).on("keydown", e => {
             muted = true;
         }
     } else if (e.keyCode == 13) {
-        // = "enter"
+        // = "ENTER"
         // simulate next turn:
         discardAndRefillObjects();
-        // socket.emit("next player's turn", activePlayer);
+    } else if (e.keyCode == 32) {
+        // = "SPACE"
+        if (itsMyTurn) {
+            // simulate "done" with building a word with objects:
+            doneBuilding();
+        }
     }
 });
 
@@ -717,3 +722,26 @@ function updatePosition(event) {
         transform: `translate(${moveX}px, ${moveY}px)`
     });
 }
+
+function doneBuilding() {
+    let activeObjectsHTML = $("#objects")[0].innerHTML;
+    console.log(activeObjectsHTML);
+
+    socket.emit("done building", {
+        activePlayer: activePlayer,
+        movedObjects: activeObjectsHTML
+    });
+}
+
+function buildingIsDone(data) {
+    console.log(data.message);
+    if (!itsMyTurn) {
+        $objects[0].innerHTML = data.movedObjects;
+    }
+}
+
+// ||| sockets - main game: ******************************************
+
+socket.on("building is done", function(data) {
+    buildingIsDone(data);
+});
