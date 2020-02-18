@@ -37,7 +37,7 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
     } else if (currentPlayerIndex + 1 > selectedPieces.length - 1) {
         nextPlayer = selectedPieces[0];
     }
-    io.sockets.emit("change turn", {
+    io.sockets.emit("next turn", {
         nextPlayer: nextPlayer,
         activeObjects: activeObjects,
         queuedObjects: queuedObjects
@@ -81,9 +81,9 @@ io.on("connection", function(socket) {
         });
     });
 
-    socket.on("change to my turn", function(player) {
+    socket.on("start with my turn", function(player) {
         currentPlayer = player;
-        io.sockets.emit("it's my turn", player);
+        io.sockets.emit("I am the start player", player);
     });
 
     socket.on("next player's turn", function(data) {

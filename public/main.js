@@ -261,12 +261,12 @@ function shuffleObjects(objects) {
     }
 }
 
-function changeToMyTurn() {
+function startWithMyTurn() {
     itsMyTurn = true;
     activePlayer = selectedPieceId;
     $(".myPiece").addClass('myTurn');
     $("#construction-area").addClass(selectedPieceId);
-    socket.emit('change to my turn', selectedPieceId);
+    socket.emit('start with my turn', selectedPieceId);
 }
 
 function changeTurn(data) {
@@ -299,7 +299,7 @@ function changeTurn(data) {
 // }
 
 function startGame(playerArray, objArray) {
-    changeToMyTurn();
+    startWithMyTurn();
 
     // to get the id of joined players in the order they are rendered:
     let joinedPlayerIds = playerArray.map(elem => elem.id);
@@ -389,7 +389,7 @@ socket.on("game has been started", function(data) {
     otherPlayerStartsGame(data.startPlayer, data.activeObjects, data.queuedObjects);
 });
 
-socket.on("it's my turn", function(pieceId) {
+socket.on("I am the start player", function(pieceId) {
     // other player is start-player:
     if (pieceId != selectedPieceId) {
         console.log(`it's ${pieceId}'s turn now!'`);
@@ -397,7 +397,7 @@ socket.on("it's my turn", function(pieceId) {
     }
 });
 
-socket.on("change turn", function(nextPlayerData) {
+socket.on("next turn", function(nextPlayerData) {
     console.log(`it's ${nextPlayerData.nextPlayer}'s turn now!'`);
     changeTurn(nextPlayerData);
 });
