@@ -364,6 +364,10 @@ function gameHasBeenStarted(data) {
     let message = `you drew card number ${data.firstCard.id}.`;
     console.log(message);
 
+    if (!muted) {
+        startGong.play();
+    }
+
     gameStarted = true;
 }
 
@@ -481,6 +485,10 @@ let translateY;
 
 const ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
 const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
+const startGong = new Audio("./sounds/56240__q-k__gong-center-clear.wav");
+const doneGong = new Audio("./sounds/434627__dr-macak__ding.wav");
+
+
 let uniSound = true;
 let muted = false;
 
@@ -740,7 +748,7 @@ function updatePosition(event) {
 
 function doneBuilding() {
     let activeObjectsHTML = $("#objects")[0].innerHTML;
-    console.log(activeObjectsHTML);
+    // console.log(activeObjectsHTML);
 
     socket.emit("done building", {
         activePlayer: activePlayer,
@@ -749,6 +757,9 @@ function doneBuilding() {
 }
 
 function buildingIsDone(data) {
+    if (!muted) {
+        doneGong.play();
+    }
     console.log(data.message);
     if (!itsMyTurn) {
         $objects[0].innerHTML = data.movedObjects;
