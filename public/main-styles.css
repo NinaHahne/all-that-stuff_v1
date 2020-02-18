@@ -270,7 +270,7 @@ button:focus {
 #card-deck {
     position: absolute;
     top: 90px;
-    width: 470px;
+    width: 450px;
     margin-left: 20px;
 }
 
@@ -283,7 +283,7 @@ button:focus {
 
 .cardtitle {
   padding-left: 0.2rem;
-  font-size: 2rem;
+  font-size: 32px;
   margin-top: 0;
   margin-bottom: 0.6rem;
   font-weight: 800;
@@ -301,6 +301,7 @@ button:focus {
   vertical-align: top;
   padding-top: 0.8rem;
   display: table-cell;
+  font-size: 28px;
 }
 
 .bullet {
@@ -319,7 +320,7 @@ button:focus {
 
 /* small or strong text on cards */
 small {
-  font-size: 1.2rem;
+  font-size: 20px;
 }
 /* construction area & object containers ------------------*/
 #construction-area {
