@@ -33,7 +33,7 @@ request.onload = function() {
     drawCard(stuffCards);
 };
 
-//the modern version of the Fisher–Yates shuffle algorithm:
+//modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
     //shuffles array in place
     let j, x, i;

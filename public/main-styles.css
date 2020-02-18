@@ -218,7 +218,7 @@ button:focus {
     outline: none;
 }
 
-/* object ticker styles */
+/* object ticker styles------------------ */
 #ticker {
     position: fixed;
     bottom: 10px;
@@ -243,6 +243,7 @@ button:focus {
     visibility: hidden;
 }
 
+/* instructions --------------------- */
 #instructions {
     position: absolute;
     width: 470px;
@@ -265,6 +266,62 @@ button:focus {
     padding: 2px 6px;
 }
 
+/* cards --------------------- */
+#card-deck {
+    position: absolute;
+    top: 90px;
+    width: 470px;
+    margin-left: 20px;
+}
+
+.wordcard {
+  margin-top: 1.5rem;
+  font-weight: 700;
+  display: table;
+  width: 100%;
+}
+
+.cardtitle {
+  padding-left: 0.2rem;
+  font-size: 2rem;
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  font-weight: 800;
+  display: table-cell;
+  height: 5rem;   /*this way, 2 lines of text fit into title cell without size changing */
+  vertical-align: bottom;
+}
+
+.table-row {
+  display: table-row;
+  width: 100%;
+}
+
+.bullet, .item {
+  vertical-align: top;
+  padding-top: 0.8rem;
+  display: table-cell;
+}
+
+.bullet {
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-align: end;
+  width: 8%;
+}
+
+.item {
+  padding-left: 0.5rem;
+  text-align: start;
+  width: 92%;
+  font-weight: 700;
+}
+
+/* small or strong text on cards */
+small {
+  font-size: 1.2rem;
+}
+/* construction area & object containers ------------------*/
 #construction-area {
     position: absolute;
     bottom: 112px;

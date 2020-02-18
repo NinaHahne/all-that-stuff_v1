@@ -161,6 +161,12 @@ let players = [];
 let mySocketId;
 let selectedPieceId = sessionStorage.getItem('selectedPieceId');
 
+// card deck: ****************************************************
+let cardDeck = document.getElementById("card-deck");
+let cardTitle = document.getElementsByClassName("cardtitle");
+let bullets = document.getElementsByClassName("bullet");
+let items = document.getElementsByClassName("item");
+
 
 // ||| START MENU ************************************************
 shuffleObjects(objects);
@@ -261,14 +267,6 @@ function shuffleObjects(objects) {
     }
 }
 
-// function startWithMyTurn() {
-//     itsMyTurn = true;
-//     activePlayer = selectedPieceId;
-//     $(".myPiece").addClass('myTurn');
-//     $("#construction-area").addClass(selectedPieceId);
-//     socket.emit('start with my turn', selectedPieceId);
-// }
-
 function changeTurn(data) {
     // next turn is my turn:
     if (data.nextPlayer == selectedPieceId) {
@@ -286,6 +284,15 @@ function changeTurn(data) {
 
     $objects[0].innerHTML = data.activeObjects;
     $queue[0].innerHTML = data.queuedObjects;
+
+    // new word card:
+    cardTitle[0].innerHTML = data.newCard.title;
+    let cardItems = data.newCard.items;
+    for (let i = 0; i < cardItems.length; i++) {
+        items[i].innerHTML = cardItems[i];
+    }
+    let message = `you drew card number ${data.newCard.id}.`;
+    console.log(message);
 }
 
 function startGame(playerArray, objArray) {
@@ -329,23 +336,33 @@ function startGame(playerArray, objArray) {
 }
 
 function gameHasBeenStarted(data) {
+    if (!itsMyTurn) {
+        activePlayer = data.startPlayer;
 
-    activePlayer = data.startPlayer;
+        $(`#${data.startPlayer}`).addClass('myTurn');
+        $("#construction-area").addClass(data.startPlayer);
 
-    $(`#${data.startPlayer}`).addClass('myTurn');
-    $("#construction-area").addClass(data.startPlayer);
+        let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
+        let playerArray = Array.from(joinedPlayersList);
+        $joinedPlayersContainer.append(playerArray);
 
-    let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
-    let playerArray = Array.from(joinedPlayersList);
-    $joinedPlayersContainer.append(playerArray);
+        $objects[0].innerHTML = data.activeObjects;
+        $queue[0].innerHTML = data.queuedObjects;
+        getObjectPositions();
 
-    $objects[0].innerHTML = data.activeObjects;
-    $queue[0].innerHTML = data.queuedObjects;
-    getObjectPositions();
+        $(".hidden").removeClass("hidden");
+        $("#start-menu").addClass("hidden");
+        $("#instructions").addClass("hidden");
+    }
 
-    $(".hidden").removeClass("hidden");
-    $("#start-menu").addClass("hidden");
-    $("#instructions").addClass("hidden");
+    // first word card:
+    cardTitle[0].innerHTML = data.firstCard.title;
+    let cardItems = data.firstCard.items;
+    for (let i = 0; i < cardItems.length; i++) {
+        items[i].innerHTML = cardItems[i];
+    }
+    let message = `you drew card number ${data.firstCard.id}.`;
+    console.log(message);
 
     gameStarted = true;
 }
@@ -386,9 +403,7 @@ socket.on("game has been started", function(data) {
     console.log(data.message);
     // console.log('data.activeObjects: ', data.activeObjects);
     // console.log('data.queuedObjects: ', data.queuedObjects);
-    if (data.startPlayer != selectedPieceId) {
-        gameHasBeenStarted(data);
-    }
+    gameHasBeenStarted(data);
 });
 
 socket.on("next turn", function(nextPlayerData) {
@@ -739,6 +754,39 @@ function buildingIsDone(data) {
         $objects[0].innerHTML = data.movedObjects;
     }
 }
+
+// card deck: ****************************************************
+// function drawCardDOM(cards) {
+//     cardTitle[0].innerHTML = firstCard.title;
+//     let cardItems = firstCard.items;
+//     for (let i = 0; i < cardItems.length; i++) {
+//         items[i].innerHTML = cardItems[i];
+//     }
+//     let message = `you drew card number ${firstCard.id}.`;
+//     console.log(message);
+// }
+
+// function discardCardDOM() {
+//     cardTitle[0].innerHTML = "";
+//     for (let i = 0; i < items.length; i++) {
+//         items[i].innerHTML = "";
+//     }
+// }
+
+//for testing only, call via console:
+// function drawCardWithId(cardId) {
+//     // moves a card with given cardId to the top of the draw pile (if it is in the draw pile)
+//     let wantedCard = stuffCards.find(card => card.id == cardId);
+//     if (wantedCard != undefined) {
+//         let cardIndex = stuffCards.indexOf(wantedCard);
+//         stuffCards.splice(cardIndex, 1); // removes wantedCard from pile (and returns array containing wantedCard object)
+//         stuffCards.unshift(wantedCard); // adds wantedCard to the top of the draw pile
+//         console.log(wantedCard);
+//     } else {
+//         console.log(wantedCard);
+//         console.log("requested card is not in the draw pile.");
+//     }
+// }
 
 // ||| sockets - main game: ******************************************
 
