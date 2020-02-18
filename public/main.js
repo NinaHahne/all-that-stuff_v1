@@ -175,18 +175,25 @@ moveObjects();
 // EVENT LISTENERS - start menu
 playButton.addEventListener("click", function() {
     // e.preventDefault();
-    cancelAnimationFrame(myReq);
 
     let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
     // console.log('joinedPlayersList: ', joinedPlayersList);
 
     let playerArray = Array.from(joinedPlayersList);
     // console.log(Array.isArray(objectList));
-    let objectArray = Array.from(objectList);
     // console.log(Array.isArray(objectArray));
-    gameStarted = true;
-    // itsMyTurn = true;
-    startGame(playerArray, objectArray);
+    if (playerArray.length < 3) {
+        let msg = "minimum number of players is 3. \nwait for more players to join the game";
+        window.alert(msg);
+        // do something prettier instead of the alert
+    } else {
+        cancelAnimationFrame(myReq);
+        let objectArray = Array.from(objectList);
+        // gameStarted = true;
+        // itsMyTurn = true;
+        startGame(playerArray, objectArray);
+    }
+
 });
 
 $(document).on("click", ".player", e => {
@@ -293,6 +300,9 @@ function changeTurn(data) {
     }
     let message = `you drew card number ${data.newCard.id}.`;
     console.log(message);
+    if (!muted) {
+        startGong.play();
+    }
 }
 
 function startGame(playerArray, objArray) {
