@@ -261,13 +261,13 @@ function shuffleObjects(objects) {
     }
 }
 
-function startWithMyTurn() {
-    itsMyTurn = true;
-    activePlayer = selectedPieceId;
-    $(".myPiece").addClass('myTurn');
-    $("#construction-area").addClass(selectedPieceId);
-    socket.emit('start with my turn', selectedPieceId);
-}
+// function startWithMyTurn() {
+//     itsMyTurn = true;
+//     activePlayer = selectedPieceId;
+//     $(".myPiece").addClass('myTurn');
+//     $("#construction-area").addClass(selectedPieceId);
+//     socket.emit('start with my turn', selectedPieceId);
+// }
 
 function changeTurn(data) {
     // next turn is my turn:
@@ -277,8 +277,8 @@ function changeTurn(data) {
         // next turn is not my turn:
         itsMyTurn = false;
     }
-    $(`#${activePlayer}`).removeClass('myTurn');
-    $("#construction-area").removeClass(activePlayer);
+    $(`#${data.activePlayer}`).removeClass('myTurn');
+    $("#construction-area").removeClass(data.activePlayer);
 
     $(`#${data.nextPlayer}`).addClass('myTurn');
     $("#construction-area").addClass(data.nextPlayer);
@@ -288,23 +288,18 @@ function changeTurn(data) {
     $queue[0].innerHTML = data.queuedObjects;
 }
 
-// function nextPlayersTurn() {
-//     let currentPlayerIndex = players.indexOf(activePlayer);
-//     let nextPlayer;
-//     if (currentPlayerIndex + 1 <= players.length - 1) {
-//         nextPlayer = players[currentPlayerIndex + 1];
-//     } else if (currentPlayerIndex + 1 > players.length - 1) {
-//         nextPlayer = players[0];
-//     }
-// }
-
 function startGame(playerArray, objArray) {
-    startWithMyTurn();
+    // startWithMyTurn();
+    // whoever starts the game, is also the start player:
+    itsMyTurn = true;
+    activePlayer = selectedPieceId;
+
+    $(`#${selectedPieceId}`).addClass('myTurn');
+    $("#construction-area").addClass(selectedPieceId);
 
     // to get the id of joined players in the order they are rendered:
     let joinedPlayerIds = playerArray.map(elem => elem.id);
     // console.log(joinedPlayerIds);
-
     $joinedPlayersContainer.append(playerArray);
 
     let activeObjects = objArray.slice(0, 10);
@@ -313,15 +308,17 @@ function startGame(playerArray, objArray) {
     $objects.append(activeObjects);
     $queue.append(queuedObjects);
     getObjectPositions();
+
     $(".hidden").removeClass("hidden");
     $("#start-menu").addClass("hidden");
     $("#instructions").addClass("hidden");
 
     let activeObjectsHTML = $("#objects")[0].innerHTML;
     let queuedObjectsHTML = $("#queue")[0].innerHTML;
-
     // console.log('activeObjectsHTML: ', activeObjectsHTML);
     // console.log('queuedObjectsHTML: ', queuedObjectsHTML);
+
+    gameStarted = true;
 
     socket.emit("game started", {
         startPlayer: selectedPieceId,
@@ -331,22 +328,25 @@ function startGame(playerArray, objArray) {
     });
 }
 
-function otherPlayerStartsGame(startPlayer, activeObjects, queuedObjects) {
-    // itsMyTurn = false;
-    activePlayer = startPlayer;
+function gameHasBeenStarted(data) {
+
+    activePlayer = data.startPlayer;
+
+    $(`#${data.startPlayer}`).addClass('myTurn');
+    $("#construction-area").addClass(data.startPlayer);
 
     let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
     let playerArray = Array.from(joinedPlayersList);
     $joinedPlayersContainer.append(playerArray);
-    $objects[0].innerHTML = activeObjects;
-    $queue[0].innerHTML = queuedObjects;
+
+    $objects[0].innerHTML = data.activeObjects;
+    $queue[0].innerHTML = data.queuedObjects;
     getObjectPositions();
+
     $(".hidden").removeClass("hidden");
     $("#start-menu").addClass("hidden");
     $("#instructions").addClass("hidden");
 
-    $(`#${startPlayer}`).addClass('myTurn');
-    $("#construction-area").addClass(startPlayer);
     gameStarted = true;
 }
 
@@ -386,14 +386,8 @@ socket.on("game has been started", function(data) {
     console.log(data.message);
     // console.log('data.activeObjects: ', data.activeObjects);
     // console.log('data.queuedObjects: ', data.queuedObjects);
-    otherPlayerStartsGame(data.startPlayer, data.activeObjects, data.queuedObjects);
-});
-
-socket.on("I am the start player", function(pieceId) {
-    // other player is start-player:
-    if (pieceId != selectedPieceId) {
-        console.log(`it's ${pieceId}'s turn now!'`);
-        changeTurn(pieceId);
+    if (data.startPlayer != selectedPieceId) {
+        gameHasBeenStarted(data);
     }
 });
 
@@ -401,7 +395,6 @@ socket.on("next turn", function(nextPlayerData) {
     console.log(`it's ${nextPlayerData.nextPlayer}'s turn now!'`);
     changeTurn(nextPlayerData);
 });
-
 
 
 // || MAIN GAME ************************************************

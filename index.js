@@ -26,10 +26,10 @@ server.listen(process.env.PORT || 8080, () =>
 let gameStarted = false;
 let joinedPlayers = {};
 let selectedPieces = [];
-let currentPlayer;
+// let currentPlayer;
 
 function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
-    currentPlayer = activePlayer;
+    // currentPlayer = activePlayer;
     let currentPlayerIndex = selectedPieces.indexOf(activePlayer);
     let nextPlayer;
     if (currentPlayerIndex + 1 <= selectedPieces.length - 1) {
@@ -38,6 +38,7 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
         nextPlayer = selectedPieces[0];
     }
     io.sockets.emit("next turn", {
+        activePlayer: activePlayer,
         nextPlayer: nextPlayer,
         activeObjects: activeObjects,
         queuedObjects: queuedObjects
@@ -79,11 +80,6 @@ io.on("connection", function(socket) {
             activeObjects: data.activeObjects,
             queuedObjects: data.queuedObjects
         });
-    });
-
-    socket.on("start with my turn", function(player) {
-        currentPlayer = player;
-        io.sockets.emit("I am the start player", player);
     });
 
     socket.on("next player's turn", function(data) {
