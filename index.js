@@ -7,7 +7,7 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server, { origins: "localhost:8080" });
 
 // cards:
-const cards = require('./cards_enUS');
+const cards = require("./cards_enUS");
 
 app.use(express.static("./public"));
 
@@ -37,8 +37,9 @@ let discardPile = [];
 let firstCard;
 let newPile = false;
 
-let correctAnswer = 1;
+let correctAnswer;
 let guessedAnswers = {};
+let answeringOrder = [];
 
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
@@ -89,34 +90,63 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
         nextPlayer = selectedPieces[0];
     }
     replaceCard();
+    correctAnswer = randomNumber(1, 7);
+    guessedAnswers = {};
+    answeringOrder = [];
     io.sockets.emit("next turn", {
         activePlayer: activePlayer,
         nextPlayer: nextPlayer,
         activeObjects: activeObjects,
         queuedObjects: queuedObjects,
-        newCard: firstCard
+        newCard: firstCard,
+        correctAnswer: correctAnswer
     });
+}
+
+// Function to generate random number
+function randomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 function collectGuesses(data) {
     guessedAnswers[data.guessingPlayer] = data.guessedItem;
+    answeringOrder.push(data.guessingPlayer);
 
     let guessedAnswersLength = Object.keys(guessedAnswers).length;
     let joinedPlayersLength = Object.keys(joinedPlayers).length;
 
-    console.log('joinedPlayersLength: ', joinedPlayersLength);
-    console.log('guessedAnswersLength: ', guessedAnswersLength);
-    console.log('guessedAnswers: ', guessedAnswers);
+    // console.log('joinedPlayersLength: ', joinedPlayersLength);
+    // console.log('guessedAnswersLength: ', guessedAnswersLength);
+    console.log("guessedAnswers: ", guessedAnswers);
 
     if (guessedAnswersLength == joinedPlayersLength - 1) {
-        console.log('everyone guessed!');
+        console.log("everyone guessed!");
+
+        let playerPointsIfCorrect = {};
+        let actualPlayerPoints = {};
+        if (joinedPlayersLength <= 6) {
+            let pointsCounter = answeringOrder.length;
+            for (let i = 0; i < answeringOrder.length; i++) {
+                playerPointsIfCorrect[answeringOrder[i]] = pointsCounter;
+                if (guessedAnswers[answeringOrder[i]] == correctAnswer) {
+                    actualPlayerPoints[answeringOrder[i]] = pointsCounter;
+                } else {
+                    actualPlayerPoints[answeringOrder[i]] = 0;
+                }
+
+                pointsCounter--;
+            }
+        } else {
+            // maximum points: 5
+        }
+
         io.sockets.emit("everyone guessed", {
             correctAnswer: correctAnswer,
-            guessedAnswers: guessedAnswers
+            guessedAnswers: guessedAnswers,
+            playerPointsIfCorrect: playerPointsIfCorrect,
+            actualPlayerPoints: actualPlayerPoints
         });
     }
-
-
 }
 
 io.on("connection", function(socket) {
@@ -135,17 +165,19 @@ io.on("connection", function(socket) {
     });
 
     socket.on("selected piece", function(data) {
-        console.log(`user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`);
+        console.log(
+            `user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`
+        );
         selectedPieces.push(data.selectedPieceId);
         joinedPlayers[socket.id] = data.selectedPieceId;
 
         io.sockets.emit("add selected piece", data.selectedPieceId);
-        console.log('selectedPieces: ', selectedPieces);
+        console.log("selectedPieces: ", selectedPieces);
     });
 
     socket.on("game started", function(data) {
         selectedPieces = data.joinedPlayerIds;
-        console.log('joined players at game start: ', selectedPieces);
+        console.log("joined players at game start: ", selectedPieces);
         let msg = `"${data.startPlayer}" started the game and starts with building!`;
         // console.log(msg);
 
@@ -156,19 +188,25 @@ io.on("connection", function(socket) {
         console.log(`${stuffCards.length} cards left.`);
         firstCard = stuffCards.shift();
 
-
+        correctAnswer = randomNumber(1, 7);
+        guessedAnswers = {};
+        answeringOrder = [];
         io.sockets.emit("game has been started", {
             message: msg,
             startPlayer: data.startPlayer,
             activeObjects: data.activeObjects,
             queuedObjects: data.queuedObjects,
-            firstCard: firstCard
+            firstCard: firstCard,
+            correctAnswer: correctAnswer
         });
-
     });
 
     socket.on("next player's turn", function(data) {
-        nextPlayersTurn(data.activePlayer, data.activeObjects, data.queuedObjects);
+        nextPlayersTurn(
+            data.activePlayer,
+            data.activeObjects,
+            data.queuedObjects
+        );
     });
 
     socket.on("done building", function(data) {

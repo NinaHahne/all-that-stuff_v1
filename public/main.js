@@ -151,7 +151,6 @@ let myReq;
 
 const selectPlayersContainer = document.getElementById("select-players");
 
-
 let gameStarted = false;
 let itsMyTurn = false;
 let activePlayer;
@@ -159,7 +158,7 @@ let activePlayer;
 let players = [];
 // let myUserId = sessionStorage.getItem('myUserId');
 let mySocketId;
-let selectedPieceId = sessionStorage.getItem('selectedPieceId');
+let selectedPieceId = sessionStorage.getItem("selectedPieceId");
 
 // card deck: ----------------------------------------------
 let cardTitle = document.getElementsByClassName("cardtitle");
@@ -167,7 +166,7 @@ let cardTitle = document.getElementsByClassName("cardtitle");
 let items = document.getElementsByClassName("item");
 
 let myGuess;
-
+let correctAnswer;
 
 // §§ START MENU ************************************************
 shuffleObjects(objects);
@@ -176,14 +175,17 @@ moveObjects();
 // $$ event listeners - start menu: -----------------------------
 playButton.addEventListener("click", function() {
     // e.preventDefault();
-    let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
+    let joinedPlayersList = selectPlayersContainer.getElementsByClassName(
+        "selectedPlayerPiece"
+    );
     // console.log('joinedPlayersList: ', joinedPlayersList);
 
     let playerArray = Array.from(joinedPlayersList);
     // console.log(Array.isArray(objectList));
     // console.log(Array.isArray(objectArray));
     if (playerArray.length < 3) {
-        let msg = "minimum number of players is 3. \nwait for more players to join the game";
+        let msg =
+            "minimum number of players is 3. \nwait for more players to join the game";
         window.alert(msg);
         // do something prettier instead of the alert
     } else {
@@ -193,7 +195,6 @@ playButton.addEventListener("click", function() {
         // itsMyTurn = true;
         startGame(playerArray, objectArray);
     }
-
 });
 
 $(document).on("click", ".player", e => {
@@ -205,7 +206,7 @@ $(document).on("click", ".player", e => {
         $(e.target).hasClass("selectedPlayerPiece")
     );
     // if you haven't yet selected a piece and it's not taken by another player:
-    console.log('your selectedPieceId before clicking: ', selectedPieceId);
+    console.log("your selectedPieceId before clicking: ", selectedPieceId);
     if (!selectedPieceId && !$(e.target).hasClass("selectedPlayerPiece")) {
         selectedPieceId = $(e.target).attr("id");
         selectedPiece(selectedPieceId);
@@ -214,14 +215,14 @@ $(document).on("click", ".player", e => {
 
 // $$ functions- start menu: ----------------------------------------
 function selectedPiece(pieceId) {
-    sessionStorage.setItem('selectedPieceId', pieceId);
+    sessionStorage.setItem("selectedPieceId", pieceId);
     let $piece = $("#" + pieceId);
     // console.log('$piece: ', $piece);
     $piece.addClass("selectedPlayerPiece");
     $piece.addClass("myPiece");
     // players.push(pieceId);
     // console.log('$piece[0].innerText: ', $piece[0].innerText);
-    $piece[0].innerText = 'you';
+    $piece[0].innerText = "you";
     socket.emit("selected piece", {
         // userId: myUserId,
         socketId: mySocketId,
@@ -276,19 +277,17 @@ function shuffleObjects(objects) {
 }
 
 function changeTurn(data) {
-    // next turn is my turn:
-    if (data.nextPlayer == selectedPieceId) {
-        itsMyTurn = true;
-    } else {
-        // next turn is not my turn:
-        itsMyTurn = false;
-    }
-    $(`#${data.activePlayer}`).removeClass('myTurn');
+    $(`#${data.activePlayer}`).removeClass("myTurn");
     $("#construction-area").removeClass(data.activePlayer);
 
-    $(`#${data.nextPlayer}`).addClass('myTurn');
+    $(`#${data.nextPlayer}`).addClass("myTurn");
     $("#construction-area").addClass(data.nextPlayer);
+
+    $(`.table-row[key=${correctAnswer}]`).removeClass(activePlayer);
+
     activePlayer = data.nextPlayer;
+    correctAnswer = data.correctAnswer;
+    myGuess = '';
 
     $objects[0].innerHTML = data.activeObjects;
     $queue[0].innerHTML = data.queuedObjects;
@@ -299,20 +298,29 @@ function changeTurn(data) {
     for (let i = 0; i < cardItems.length; i++) {
         items[i].innerHTML = cardItems[i];
     }
-    let message = `you drew card number ${data.newCard.id}.`;
-    console.log(message);
+
+    // next turn is my turn:
+    if (data.nextPlayer == selectedPieceId) {
+        console.log(`you drew card number ${data.newCard.id}.`);
+        console.log(`please build item number ${data.correctAnswer}`);
+        $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
+        itsMyTurn = true;
+    } else {
+        // next turn is not my turn:
+        itsMyTurn = false;
+    }
+
     if (!muted) {
         startGong.play();
     }
 }
 
 function startGame(playerArray, objArray) {
-    // startWithMyTurn();
     // whoever starts the game, is also the start player:
     itsMyTurn = true;
     activePlayer = selectedPieceId;
 
-    $(`#${selectedPieceId}`).addClass('myTurn');
+    $(`#${selectedPieceId}`).addClass("myTurn");
     $("#construction-area").addClass(selectedPieceId);
 
     // to get the id of joined players in the order they are rendered:
@@ -350,10 +358,12 @@ function gameHasBeenStarted(data) {
     if (!itsMyTurn) {
         activePlayer = data.startPlayer;
 
-        $(`#${data.startPlayer}`).addClass('myTurn');
+        $(`#${data.startPlayer}`).addClass("myTurn");
         $("#construction-area").addClass(data.startPlayer);
 
-        let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
+        let joinedPlayersList = selectPlayersContainer.getElementsByClassName(
+            "selectedPlayerPiece"
+        );
         let playerArray = Array.from(joinedPlayersList);
         $joinedPlayersContainer.append(playerArray);
 
@@ -364,6 +374,10 @@ function gameHasBeenStarted(data) {
         $(".hidden").removeClass("hidden");
         $("#start-menu").addClass("hidden");
         $("#instructions").addClass("hidden");
+    } else if (itsMyTurn) {
+        console.log(`you drew card number ${data.firstCard.id}.`);
+        console.log(`please build item number ${data.correctAnswer}`);
+        $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
     }
 
     // first word card:
@@ -372,8 +386,8 @@ function gameHasBeenStarted(data) {
     for (let i = 0; i < cardItems.length; i++) {
         items[i].innerHTML = cardItems[i];
     }
-    let message = `you drew card number ${data.firstCard.id}.`;
-    console.log(message);
+
+    correctAnswer = data.correctAnswer;
 
     if (!muted) {
         startGong.play();
@@ -382,15 +396,24 @@ function gameHasBeenStarted(data) {
     gameStarted = true;
 }
 
+function showAnswers(data) {
+    console.log("guessed answers: ", data.guessedAnswers);
+    console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
+    console.log("actualPlayerPoints: ", data.actualPlayerPoints);
+    if (!itsMyTurn) {
+        $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
+    }
+}
+
 // $$ sockets - start menu: ----------------------------------------
 socket.on("welcome", function(data) {
-    sessionStorage.setItem('mySocketId', data.socketId);
+    sessionStorage.setItem("mySocketId", data.socketId);
     mySocketId = data.socketId;
     console.log(
         `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
     );
     // remember previously selected piece on page reload:
-    console.log('your selected piece is: ', selectedPieceId);
+    console.log("your selected piece is: ", selectedPieceId);
     if (selectedPieceId) {
         selectedPiece(selectedPieceId);
     }
@@ -425,7 +448,6 @@ socket.on("next turn", function(nextPlayerData) {
     console.log(`it's ${nextPlayerData.nextPlayer}'s turn now!'`);
     changeTurn(nextPlayerData);
 });
-
 
 // §§ MAIN GAME ************************************************
 
@@ -499,10 +521,8 @@ const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
 const startGong = new Audio("./sounds/56240__q-k__gong-center-clear.wav");
 const doneGong = new Audio("./sounds/434627__dr-macak__ding.wav");
 
-
 let uniSound = true;
 let muted = false;
-
 
 // §§ event listeners - main game ***********************************
 window.addEventListener("resize", () => {
@@ -645,7 +665,7 @@ $(document).on("dblclick", ".img-box", e => {
 });
 
 $("#card-deck").on("mousedown", ".table-row", function(e) {
-    console.log('clicked on a card item');
+    console.log("clicked on a card item");
     if (!itsMyTurn) {
         guessWordFromCard(e);
     }
@@ -809,7 +829,7 @@ function buildingIsDone(data) {
 
 function guessWordFromCard(e) {
     if (!myGuess) {
-        myGuess = e.currentTarget.getAttribute('key');
+        myGuess = e.currentTarget.getAttribute("key");
         // console.log('you clicked on: ', myGuess);
         $(e.currentTarget).addClass(`${selectedPieceId}`);
         socket.emit("made a guess", {
@@ -826,4 +846,12 @@ socket.on("objects are moving", function(data) {
 
 socket.on("building is done", function(data) {
     buildingIsDone(data);
+});
+
+socket.on("everyone guessed", function(data) {
+    console.log("everyone guessed");
+    setTimeout(() => {
+        showAnswers(data);
+    }, 500);
+    // showAnswers(data);
 });
