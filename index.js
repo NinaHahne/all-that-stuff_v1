@@ -91,7 +91,7 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
         nextPlayer = selectedPieces[0];
     }
     currentPlayer = nextPlayer;
-    
+
     replaceCard();
     correctAnswer = randomNumber(1, 7);
     guessedAnswers = {};
@@ -120,17 +120,14 @@ function collectGuesses(data) {
 
     // console.log('joinedPlayersLength: ', joinedPlayersLength);
     // console.log('guessedAnswersLength: ', guessedAnswersLength);
-    console.log("guessedAnswers: ", guessedAnswers);
+    // console.log("guessedAnswers: ", guessedAnswers);
 
     // when everyone guessed:
     if (guessedAnswersLength == joinedPlayersLength - 1) {
-        console.log("everyone guessed!");
 
         let playerPointsIfCorrect = {};
         let actualPlayerPoints = {};
         let numberOfCorrectGuesses = 0;
-        console.log('currentPlayer:', currentPlayer);
-        console.log('numberOfCorrectGuesses before loop: ', numberOfCorrectGuesses);
 
         if (joinedPlayersLength <= 6) {
             let pointsCounter = answeringOrder.length;
@@ -140,16 +137,15 @@ function collectGuesses(data) {
                     actualPlayerPoints[answeringOrder[i]] = pointsCounter;
                     playerPointsTotal[answeringOrder[i]] += pointsCounter;
                     numberOfCorrectGuesses++;
-                    console.log('numberOfCorrectGuesses IN loop: ', numberOfCorrectGuesses);
+
                 } else {
                     actualPlayerPoints[answeringOrder[i]] = 0;
                 }
                 pointsCounter--;
             }
-            console.log('numberOfCorrectGuesses after loop: ', numberOfCorrectGuesses);
-            console.log('playerPointsTotal[currentPlayer] before: ', playerPointsTotal[currentPlayer]);
+
             playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
-            console.log('playerPointsTotal[currentPlayer] after: ', playerPointsTotal[currentPlayer]);
+
         } else {
             // for more than 6 players:
             // maximum points: 5
@@ -202,7 +198,7 @@ io.on("connection", function(socket) {
         discardPile = cards;
         shuffleCards(discardPile); // discard pile gets shuffled and builds the new stuffCards pile
         // drawCard(stuffCards);
-        console.log(`${stuffCards.length} cards left.`);
+        // console.log(`${stuffCards.length} cards left.`);
         firstCard = stuffCards.shift();
 
         for (let i = 0; i < selectedPieces.length; i++) {
