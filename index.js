@@ -37,6 +37,9 @@ let discardPile = [];
 let firstCard;
 let newPile = false;
 
+let correctAnswer = 1;
+let guessedAnswers = {};
+
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
     //shuffles array in place
@@ -93,6 +96,27 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
         queuedObjects: queuedObjects,
         newCard: firstCard
     });
+}
+
+function collectGuesses(data) {
+    guessedAnswers[data.guessingPlayer] = data.guessedItem;
+
+    let guessedAnswersLength = Object.keys(guessedAnswers).length;
+    let joinedPlayersLength = Object.keys(joinedPlayers).length;
+
+    console.log('joinedPlayersLength: ', joinedPlayersLength);
+    console.log('guessedAnswersLength: ', guessedAnswersLength);
+    console.log('guessedAnswers: ', guessedAnswers);
+
+    if (guessedAnswersLength == joinedPlayersLength - 1) {
+        console.log('everyone guessed!');
+        io.sockets.emit("everyone guessed", {
+            correctAnswer: correctAnswer,
+            guessedAnswers: guessedAnswers
+        });
+    }
+
+
 }
 
 io.on("connection", function(socket) {
@@ -161,6 +185,10 @@ io.on("connection", function(socket) {
             activePlayer: data.activePlayer,
             movedObjects: data.movedObjects
         });
+    });
+
+    socket.on("made a guess", function(data) {
+        collectGuesses(data);
     });
 
     // send a message to all connected sockets:

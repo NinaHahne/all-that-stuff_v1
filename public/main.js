@@ -25,7 +25,7 @@ var socket = io();
 // }
 // ------------------------------------
 
-// ||| ELEMENTS & GLOBAL VARIABLES ********************************
+// §§ ELEMENTS & GLOBAL VARIABLES ********************************
 
 const $objects = $("#objects");
 const $queue = $("#queue");
@@ -161,21 +161,21 @@ let players = [];
 let mySocketId;
 let selectedPieceId = sessionStorage.getItem('selectedPieceId');
 
-// card deck: ****************************************************
-let cardDeck = document.getElementById("card-deck");
+// card deck: ----------------------------------------------
 let cardTitle = document.getElementsByClassName("cardtitle");
-let bullets = document.getElementsByClassName("bullet");
+// let bullets = document.getElementsByClassName("bullet");
 let items = document.getElementsByClassName("item");
 
+let myGuess;
 
-// ||| START MENU ************************************************
+
+// §§ START MENU ************************************************
 shuffleObjects(objects);
 moveObjects();
 
-// EVENT LISTENERS - start menu
+// $$ event listeners - start menu: -----------------------------
 playButton.addEventListener("click", function() {
     // e.preventDefault();
-
     let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
     // console.log('joinedPlayersList: ', joinedPlayersList);
 
@@ -212,6 +212,7 @@ $(document).on("click", ".player", e => {
     }
 });
 
+// $$ functions- start menu: ----------------------------------------
 function selectedPiece(pieceId) {
     sessionStorage.setItem('selectedPieceId', pieceId);
     let $piece = $("#" + pieceId);
@@ -381,7 +382,7 @@ function gameHasBeenStarted(data) {
     gameStarted = true;
 }
 
-// ||| sockets - start menu:
+// $$ sockets - start menu: ----------------------------------------
 socket.on("welcome", function(data) {
     sessionStorage.setItem('mySocketId', data.socketId);
     mySocketId = data.socketId;
@@ -426,7 +427,7 @@ socket.on("next turn", function(nextPlayerData) {
 });
 
 
-// || MAIN GAME ************************************************
+// §§ MAIN GAME ************************************************
 
 // function getConstructionAreaBorders() {
 //     borderTop = $constructionArea.offset().top;
@@ -502,6 +503,8 @@ const doneGong = new Audio("./sounds/434627__dr-macak__ding.wav");
 let uniSound = true;
 let muted = false;
 
+
+// §§ event listeners - main game ***********************************
 window.addEventListener("resize", () => {
     [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
         $constructionArea
@@ -641,6 +644,14 @@ $(document).on("dblclick", ".img-box", e => {
     }
 });
 
+$("#card-deck").on("mousedown", ".table-row", function(e) {
+    console.log('clicked on a card item');
+    if (!itsMyTurn) {
+        guessWordFromCard(e);
+    }
+});
+
+// §§ functions - main game ***********************************
 function changeObjectImage(imgBox) {
     if (!$(imgBox).hasClass("only1")) {
         // console.log('more than one image!');
@@ -796,40 +807,19 @@ function buildingIsDone(data) {
     }
 }
 
-// card deck: ****************************************************
-// function drawCardDOM(cards) {
-//     cardTitle[0].innerHTML = firstCard.title;
-//     let cardItems = firstCard.items;
-//     for (let i = 0; i < cardItems.length; i++) {
-//         items[i].innerHTML = cardItems[i];
-//     }
-//     let message = `you drew card number ${firstCard.id}.`;
-//     console.log(message);
-// }
+function guessWordFromCard(e) {
+    if (!myGuess) {
+        myGuess = e.currentTarget.getAttribute('key');
+        // console.log('you clicked on: ', myGuess);
+        $(e.currentTarget).addClass(`${selectedPieceId}`);
+        socket.emit("made a guess", {
+            guessingPlayer: selectedPieceId,
+            guessedItem: myGuess
+        });
+    }
+}
 
-// function discardCardDOM() {
-//     cardTitle[0].innerHTML = "";
-//     for (let i = 0; i < items.length; i++) {
-//         items[i].innerHTML = "";
-//     }
-// }
-
-//for testing only, call via console:
-// function drawCardWithId(cardId) {
-//     // moves a card with given cardId to the top of the draw pile (if it is in the draw pile)
-//     let wantedCard = stuffCards.find(card => card.id == cardId);
-//     if (wantedCard != undefined) {
-//         let cardIndex = stuffCards.indexOf(wantedCard);
-//         stuffCards.splice(cardIndex, 1); // removes wantedCard from pile (and returns array containing wantedCard object)
-//         stuffCards.unshift(wantedCard); // adds wantedCard to the top of the draw pile
-//         console.log(wantedCard);
-//     } else {
-//         console.log(wantedCard);
-//         console.log("requested card is not in the draw pile.");
-//     }
-// }
-
-// ||| sockets - main game: ******************************************
+// §§ sockets - main game: ******************************************
 socket.on("objects are moving", function(data) {
     objectsAreMoving(data);
 });
