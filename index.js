@@ -26,10 +26,10 @@ server.listen(process.env.PORT || 8080, () =>
 );
 
 // SOCKET.IO***********************************
-let gameStarted = false;
+// let gameStarted = false;
 let joinedPlayers = {};
 let selectedPieces = [];
-// let currentPlayer;
+let currentPlayer;
 
 // card deck: ----------------------
 let stuffCards = [];
@@ -37,9 +37,11 @@ let discardPile = [];
 let firstCard;
 let newPile = false;
 
+// guessing & points: --------------
 let correctAnswer;
 let guessedAnswers = {};
 let answeringOrder = [];
+let playerPointsTotal = {};
 
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
@@ -81,7 +83,6 @@ function replaceCard() {
 }
 
 function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
-    // currentPlayer = activePlayer;
     let currentPlayerIndex = selectedPieces.indexOf(activePlayer);
     let nextPlayer;
     if (currentPlayerIndex + 1 <= selectedPieces.length - 1) {
@@ -89,6 +90,8 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
     } else if (currentPlayerIndex + 1 > selectedPieces.length - 1) {
         nextPlayer = selectedPieces[0];
     }
+    currentPlayer = nextPlayer;
+    
     replaceCard();
     correctAnswer = randomNumber(1, 7);
     guessedAnswers = {};
@@ -119,24 +122,36 @@ function collectGuesses(data) {
     // console.log('guessedAnswersLength: ', guessedAnswersLength);
     console.log("guessedAnswers: ", guessedAnswers);
 
+    // when everyone guessed:
     if (guessedAnswersLength == joinedPlayersLength - 1) {
         console.log("everyone guessed!");
 
         let playerPointsIfCorrect = {};
         let actualPlayerPoints = {};
+        let numberOfCorrectGuesses = 0;
+        console.log('currentPlayer:', currentPlayer);
+        console.log('numberOfCorrectGuesses before loop: ', numberOfCorrectGuesses);
+
         if (joinedPlayersLength <= 6) {
             let pointsCounter = answeringOrder.length;
             for (let i = 0; i < answeringOrder.length; i++) {
                 playerPointsIfCorrect[answeringOrder[i]] = pointsCounter;
                 if (guessedAnswers[answeringOrder[i]] == correctAnswer) {
                     actualPlayerPoints[answeringOrder[i]] = pointsCounter;
+                    playerPointsTotal[answeringOrder[i]] += pointsCounter;
+                    numberOfCorrectGuesses++;
+                    console.log('numberOfCorrectGuesses IN loop: ', numberOfCorrectGuesses);
                 } else {
                     actualPlayerPoints[answeringOrder[i]] = 0;
                 }
-
                 pointsCounter--;
             }
+            console.log('numberOfCorrectGuesses after loop: ', numberOfCorrectGuesses);
+            console.log('playerPointsTotal[currentPlayer] before: ', playerPointsTotal[currentPlayer]);
+            playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
+            console.log('playerPointsTotal[currentPlayer] after: ', playerPointsTotal[currentPlayer]);
         } else {
+            // for more than 6 players:
             // maximum points: 5
         }
 
@@ -144,7 +159,8 @@ function collectGuesses(data) {
             correctAnswer: correctAnswer,
             guessedAnswers: guessedAnswers,
             playerPointsIfCorrect: playerPointsIfCorrect,
-            actualPlayerPoints: actualPlayerPoints
+            actualPlayerPoints: actualPlayerPoints,
+            playerPointsTotal: playerPointsTotal
         });
     }
 }
@@ -176,6 +192,7 @@ io.on("connection", function(socket) {
     });
 
     socket.on("game started", function(data) {
+        currentPlayer = data.startPlayer;
         selectedPieces = data.joinedPlayerIds;
         console.log("joined players at game start: ", selectedPieces);
         let msg = `"${data.startPlayer}" started the game and starts with building!`;
@@ -188,9 +205,14 @@ io.on("connection", function(socket) {
         console.log(`${stuffCards.length} cards left.`);
         firstCard = stuffCards.shift();
 
+        for (let i = 0; i < selectedPieces.length; i++) {
+            playerPointsTotal[selectedPieces[i]] = 0;
+        }
+
         correctAnswer = randomNumber(1, 7);
         guessedAnswers = {};
         answeringOrder = [];
+
         io.sockets.emit("game has been started", {
             message: msg,
             startPlayer: data.startPlayer,

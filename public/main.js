@@ -355,7 +355,9 @@ function startGame(playerArray, objArray) {
 }
 
 function gameHasBeenStarted(data) {
-    if (!itsMyTurn) {
+    // double checking, if it's really the players turn, when the game get's started makes testing easier.. (so I don't have to reload all the pages of the other players)
+    if (data.startPlayer != selectedPieceId) {
+        itsMyTurn = false;
         activePlayer = data.startPlayer;
 
         $(`#${data.startPlayer}`).addClass("myTurn");
@@ -400,6 +402,7 @@ function showAnswers(data) {
     console.log("guessed answers: ", data.guessedAnswers);
     console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
     console.log("actualPlayerPoints: ", data.actualPlayerPoints);
+    console.log('playerPointsTotal: ', data.playerPointsTotal);
     if (!itsMyTurn) {
         $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
     }
