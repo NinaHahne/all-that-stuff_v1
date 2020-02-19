@@ -29,12 +29,13 @@ body {
 
 /* ---------START MENU------------- */
 #start-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100vh;
+    width: 100%;
     z-index: 100;
 }
-/* #start-menu * {
-  z-index: 1000;
-} */
 
 #select-players .player {
     /* z-index: 10000; */
@@ -65,6 +66,11 @@ header {
     display: flex;
     width: 100%;
     justify-content: space-around;
+}
+
+/* §§ ---------MAIN GAME------------- */
+#main-game {
+    height: 100vh;
 }
 
 #joined-players {
