@@ -183,7 +183,11 @@ playButton.addEventListener("click", function() {
     let playerArray = Array.from(joinedPlayersList);
     // console.log(Array.isArray(objectList));
     // console.log(Array.isArray(objectArray));
-    if (playerArray.length < 3) {
+    if (!selectedPieceId) {
+        let msg = "please pick a color before you start the game.";
+        window.alert(msg);
+        // do something prettier instead of the alert
+    } else if (playerArray.length < 3) {
         let msg =
             "minimum number of players is 3. \nwait for more players to join the game";
         window.alert(msg);
@@ -287,7 +291,7 @@ function changeTurn(data) {
 
     activePlayer = data.nextPlayer;
     correctAnswer = data.correctAnswer;
-    myGuess = '';
+    myGuess = "";
 
     $objects[0].innerHTML = data.activeObjects;
     $queue[0].innerHTML = data.queuedObjects;
@@ -402,7 +406,7 @@ function showAnswers(data) {
     console.log("guessed answers: ", data.guessedAnswers);
     console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
     console.log("actualPlayerPoints: ", data.actualPlayerPoints);
-    console.log('playerPointsTotal: ', data.playerPointsTotal);
+    console.log("playerPointsTotal: ", data.playerPointsTotal);
     if (!itsMyTurn) {
         $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
     }
