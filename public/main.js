@@ -719,6 +719,9 @@ $("#card-deck").on("mousedown", ".table-row", function(e) {
     }
 });
 
+$('#play-again-btn').on('click', () => window.location.reload(false));
+
+
 // §§ functions - main game ***********************************
 function changeObjectImage(imgBox) {
     if (!$(imgBox).hasClass("only1")) {

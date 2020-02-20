@@ -63,18 +63,6 @@ header {
     justify-content: space-around;
 }
 
-/* §§ ---------MAIN GAME------------- */
-#main-game {
-    height: 100vh;
-}
-
-#joined-players {
-    display: flex;
-    width: 65%;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-
 .player {
     display: flex;
     flex-direction: column;
@@ -85,7 +73,6 @@ header {
     border: 3px dashed transparent;
     border-radius: 50%;
     font-weight: bold;
-    margin: 5px;
     flex-shrink: 0;
     color: white;
 }
@@ -99,6 +86,23 @@ header {
     transform: scale(1.2);
     border-style: double;
     border-width: 6px;
+}
+
+/* §§ ---------MAIN GAME------------- */
+#main-game {
+    height: 100vh;
+}
+
+#joined-players {
+    display: flex;
+    width: 65%;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#joined-players .player,
+#select-players .player {
+    margin: 5px;
 }
 
 #joined-players .player.myPiece {
@@ -156,7 +160,7 @@ header {
     border-color: rgb(213, 0, 102);
 }
 
-/* stuff-logo styles */
+/* §§ stuff-logo styles */
 .stuff-logo {
     padding-top: 2rem;
     padding-right: 2rem;
@@ -179,7 +183,7 @@ header {
     margin-bottom: 0;
 }
 
-/* button styles */
+/* §§ button styles */
 .buttonBox {
     display: flex;
     flex-direction: column;
@@ -187,9 +191,6 @@ header {
 }
 
 button {
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-
     display: inline-block;
     padding: 0.5rem;
     font-size: 26px;
@@ -207,10 +208,14 @@ button {
 button:hover {
     background-color: black;
     color: white;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
 }
 
 button:active {
     transform: translateY(2px);
+    /* -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s; */
 }
 
 button:focus {
@@ -288,6 +293,7 @@ button:focus {
     width: 100%;
     /* to allow the guesses-box to position itself to the right:  */
     position: relative;
+    align-items: center;
 }
 
 .cardtitle {
@@ -451,13 +457,44 @@ small {
 #players-end .player {
     border-style: solid;
     color: black;
-    margin: 20px 0;
+    /* margin: 15px 0; */
 }
 
 #players-end .player:first-child {
     border-style: double;
     transform: scale(1.3);
     border-width: 12px;
+    margin-bottom: 36px;
+}
+
+#players-end .player:nth-child(2) {
+    transform: scale(1.1);
+    margin-bottom: 18px;
+}
+
+#players-end .player:nth-child(3) {
+    transform: scale(1);
+    margin-bottom: 8px;
+}
+
+#players-end .player:nth-child(4) {
+    transform: scale(0.9);
+}
+
+#players-end .player:nth-child(5) {
+    transform: scale(0.8);
+}
+
+#players-end .player:nth-child(6) {
+    transform: scale(0.75);
+}
+
+#players-end .player:nth-child(7) {
+    transform: scale(0.7);
+}
+
+#players-end .player:nth-child(8) {
+    transform: scale(0.65);
 }
 
 /* §§ --------------- OBJECT STYLES ---------------*/
