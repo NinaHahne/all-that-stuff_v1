@@ -16,6 +16,47 @@
         <link rel="stylesheet" type="text/css" href="main-styles.css">
     </head>
     <body>
+        <section id="main-game" class="hidden">
+
+            <section id="joined-players"></section>
+
+            <section id="instructions" class="hidden">
+                    <!-- <div class="stuff-logo">
+                    <h2>All&nbsp;That</h2>
+                    <h1>Stuff</h1>
+                </div> -->
+                <h2>Instructions</h2>
+                <p>will be fully playable soon...<br>so far you can:</p>
+                <ul>
+                    <li><strong>drag&drop</strong> objects to the grey construction area</li>
+                    <li><strong>double-click</strong> objects to switch perspective <small>(only for some objects)</small> </li>
+                    <li>press <span>enter</span> to start next turn <small>(empty construction area and refill objects)</small> </li>
+                    <li>press <span>S</span> to toggle sound <small>(same sound/different sound for every object)</small></li>
+                    <li>press <span>M</span> to mute sounds</li>
+                </ul>
+            </section>
+
+            <section id="card-deck">
+                <div class="wordcard">
+                    <div class="cardtitle">Card Title</div>
+                    <div class="table-row" key="1"><div class="bullet">1.</div><div class="item">first word</div><div class="guesses"></div></div>
+                    <div class="table-row" key="2"><div class="bullet">2.</div><div class="item">second word</div><div class="guesses"></div></div>
+                    <div class="table-row" key="3"><div class="bullet">3.</div><div class="item">third word</div><div class="guesses"></div></div>
+                    <div class="table-row" key="4"><div class="bullet">4.</div><div class="item">forth word</div><div class="guesses"></div></div>
+                    <div class="table-row" key="5"><div class="bullet">5.</div><div class="item">fifth word</div><div class="guesses"></div></div>
+                    <div class="table-row" key="6"><div class="bullet">6.</div><div class="item">sixth word</div><div class="guesses"></div></div>
+                </div>
+            </section>
+
+            <section id="construction-area"></section>
+
+            <section id="objects"></section>
+
+            <section id="queue"></section>
+
+            <div id="queue-overlay"></div>
+
+        </section>
         <section id="start-menu">
             <header>
                 <div id="select-players">
@@ -147,61 +188,20 @@
                 </div>
             </div>
         </section>
-        <section id="main-game" class="hidden">
-
-            <section id="joined-players"></section>
-
-            <section id="instructions" class="hidden">
-                    <!-- <div class="stuff-logo">
-                    <h2>All&nbsp;That</h2>
-                    <h1>Stuff</h1>
-                </div> -->
-                <h2>Instructions</h2>
-                <p>will be fully playable soon...<br>so far you can:</p>
-                <ul>
-                    <li><strong>drag&drop</strong> objects to the grey construction area</li>
-                    <li><strong>double-click</strong> objects to switch perspective <small>(only for some objects)</small> </li>
-                    <li>press <span>enter</span> to start next turn <small>(empty construction area and refill objects)</small> </li>
-                    <li>press <span>S</span> to toggle sound <small>(same sound/different sound for every object)</small></li>
-                    <li>press <span>M</span> to mute sounds</li>
-                </ul>
-            </section>
-
-            <section id="card-deck">
-                <div class="wordcard">
-                    <div class="table-row cardtitle">Card Title</div>
-                    <div class="table-row" key="1"><div class="bullet">1.</div><div class="item">first word</div><div class="guesses"></div></div>
-                    <div class="table-row" key="2"><div class="bullet">2.</div><div class="item">second word</div><div class="guesses"></div></div>
-                    <div class="table-row" key="3"><div class="bullet">3.</div><div class="item">third word</div><div class="guesses"></div></div>
-                    <div class="table-row" key="4"><div class="bullet">4.</div><div class="item">forth word</div><div class="guesses"></div></div>
-                    <div class="table-row" key="5"><div class="bullet">5.</div><div class="item">fifth word</div><div class="guesses"></div></div>
-                    <div class="table-row" key="6"><div class="bullet">6.</div><div class="item">sixth word</div><div class="guesses"></div></div>
-                </div>
-            </section>
-
-            <section id="construction-area"></section>
-
-            <section id="objects"></section>
-
-            <section id="queue"></section>
-
-            <div id="queue-overlay"></div>
-
-        </section>
         <section id="game-end" class="hidden">
-            <header>
-                <div id="players-end">
+            <div id="players-end">
 
-                </div>
+            </div>
+            <div id="play-again-box">
                 <div class="stuff-logo">
                     <h2>All&nbsp;That</h2>
                     <h1>Stuff</h1>
                 </div>
 
                 <div class="buttonBox">
-                    <button id="play-again">play again</button>
+                    <button id="play-again-btn">play again</button>
                 </div>
-            </header>
+            </div>
 
             <!-- <div id="ticker">
                 <div id="ticker-objects">

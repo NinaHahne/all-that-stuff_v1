@@ -202,7 +202,7 @@ playButton.addEventListener("click", function() {
     }
 });
 
-$(document).on("click", ".player", e => {
+$('#start-menu').on("click", ".player", e => {
     // console.log('e.target: ', e.target);
     // console.log('e.currentTarget: ', e.currentTarget);
     // console.log('clicked select players');
@@ -221,19 +221,18 @@ $(document).on("click", ".player", e => {
 // $$ functions- start menu: ----------------------------------------
 function selectedPiece(pieceId) {
     sessionStorage.setItem("selectedPieceId", pieceId);
-    let $piece = $("#" + pieceId);
+    let $piece = $('#start-menu').find("#" + pieceId);
     // console.log('$piece: ', $piece);
     $piece.addClass("selectedPlayerPiece");
     $piece.addClass("myPiece");
     // players.push(pieceId);
     // console.log('$piece[0].innerText: ', $piece[0].innerText);
     let $playerName = $piece.find('.player-name');
-    console.log('.player-name in $piece: ', $playerName[0]);
+    // console.log('.player-name in $piece: ', $playerName[0]);
 
     // $piece[0].innerText = "you";
     $playerName[0].innerText = "you";
-
-    console.log('.player-name in $piece: ', $playerName[0]);
+    // console.log('.player-name in $piece: ', $playerName[0]);
 
     socket.emit("selected piece", {
         // userId: myUserId,
@@ -467,7 +466,7 @@ socket.on("welcome", function(data) {
     players = data.selectedPieces;
     // console.log('players in socket.on("welcome"): ', players);
     for (let i = 0; i < players.length; i++) {
-        let $piece = $("#" + players[i]);
+        let $piece = $('#start-menu').find("#" + players[i]);
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
     }
@@ -715,7 +714,6 @@ $(document).on("dblclick", ".img-box", e => {
 });
 
 $("#card-deck").on("mousedown", ".table-row", function(e) {
-    console.log("clicked on a card item");
     if (!itsMyTurn) {
         guessWordFromCard(e);
     }
@@ -918,7 +916,7 @@ function gameEnds(data) {
     let ranking = data.rankingArray;
     for (let i = 0; i < ranking.length; i++) {
         let playerElement =
-            `<div class="player ${ranking[i].player}" id="${ranking[i].player}">
+            `<div class="player ${ranking[i].player}">
                 <div class="player-points">${ranking[i].points}</div>
             </div>`;
         // let playerElement =

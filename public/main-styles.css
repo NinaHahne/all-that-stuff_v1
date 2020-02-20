@@ -282,14 +282,15 @@ button:focus {
     width: 100%;
 }
 
-.table-row {
+.table-row,
+.cardtitle {
     display: flex;
     width: 100%;
     /* to allow the guesses-box to position itself to the right:  */
     position: relative;
 }
 
-.table-row.cardtitle {
+.cardtitle {
     padding-left: 0.2rem;
     font-size: 32px;
     margin-top: 0;
@@ -299,12 +300,12 @@ button:focus {
     height: 80px;
 }
 
-.table-row:not(.cardtitle) {
+.table-row {
     border-radius: 10px;
     padding: 10px 4px 5px 8px;
 }
 
-.table-row:not(.cardtitle):hover {
+.table-row:hover {
     cursor: pointer;
 }
 
@@ -353,7 +354,7 @@ small {
 }
 
 
-/* construction area & object containers ------------------*/
+/* §§ construction area & object containers ------------------*/
 #construction-area {
     position: absolute;
     bottom: 112px;
@@ -414,6 +415,37 @@ small {
     height: 100vh;
     width: 100%;
     z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* siegertreppchen: ----------------------*/
+/* #players-end {
+    width: 580px;
+    display: flex;
+    justify-content: space-between;
+    height: 300px;
+    align-items: flex-end;
+}
+
+#players-end .player:first-child {
+    border-style: double;
+    transform: scale(1.3);
+    border-width: 12px;
+    align-self: start;
+}
+
+#players-end .player:nth-child(2) {
+    order: -1;
+    align-self: center;
+} */
+
+/* ---------------------------------------- */
+#players-end {
+    display: flex;
+    flex-direction: column;
+    margin-right: 100px;
 }
 
 #players-end .player {

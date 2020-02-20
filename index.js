@@ -159,7 +159,7 @@ function collectGuesses(data) {
     }
 }
 
-function getWinner(data) {
+function getWinner() {
     // console.log('data.playerArray in getWinner:', data.playerArray);
     // console.log('data.playerPiecesHTML: ', data.playerPiecesHTML);
 
@@ -281,8 +281,8 @@ io.on("connection", function(socket) {
         collectGuesses(data);
     });
 
-    socket.on("end game", function(data) {
-        getWinner(data);
+    socket.on("end game", function() {
+        getWinner();
     });
 
     // send a message to all connected sockets:
