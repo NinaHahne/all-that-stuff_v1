@@ -226,7 +226,14 @@ function selectedPiece(pieceId) {
     $piece.addClass("myPiece");
     // players.push(pieceId);
     // console.log('$piece[0].innerText: ', $piece[0].innerText);
-    $piece[0].innerText = "you";
+    let $playerName = $piece.find('.player-name');
+    console.log('.player-name in $piece: ', $playerName[0]);
+
+    // $piece[0].innerText = "you";
+    $playerName[0].innerText = "you";
+
+    console.log('.player-name in $piece: ', $playerName[0]);
+
     socket.emit("selected piece", {
         // userId: myUserId,
         socketId: mySocketId,
@@ -409,6 +416,20 @@ function showAnswers(data) {
     if (!itsMyTurn) {
         $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
     }
+    // show answers of all guessers:
+    $(`.table-row[key=${data.correctAnswer}]`).addClass(activePlayer);
+    // show correct answer:
+
+}
+
+function addPoints(data) {
+    for (let player in data.playerPointsTotal) {
+        let $piece = $("#" + player);
+        let $playerPoints = $piece.find('.player-points');
+        $playerPoints[0].innerText = data.playerPointsTotal[player];
+    }
+    // for the first round:
+    $('.player-points').removeClass('hidden');
 }
 
 // $$ sockets - start menu: ----------------------------------------
@@ -858,6 +879,9 @@ socket.on("everyone guessed", function(data) {
     console.log("everyone guessed");
     setTimeout(() => {
         showAnswers(data);
+        setTimeout(() => {
+            addPoints(data);
+        }, 1000);
     }, 500);
-    // showAnswers(data);
+
 });

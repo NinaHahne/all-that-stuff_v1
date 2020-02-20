@@ -77,6 +77,7 @@ header {
 
 .player {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100px;
@@ -188,7 +189,7 @@ header {
 button {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
-    
+
     display: inline-block;
     padding: 0.5rem;
     font-size: 26px;
