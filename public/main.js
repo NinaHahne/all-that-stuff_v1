@@ -296,6 +296,16 @@ function changeTurn(data) {
 
     $(`.table-row[key=${correctAnswer}]`).removeClass(activePlayer);
 
+    // reset guess markers:
+    let $guessesBoxesList = $(`.table-row`).find('.guesses');
+    console.log('$guessesBoxesList: ', $guessesBoxesList);
+    // console.log('$guessesBoxesList[0]: ', $guessesBoxesList[0]);
+    console.log('$guessesBoxesList.length: ', $guessesBoxesList.length);
+
+    for (let i = 0; i < $guessesBoxesList.length; i++) {
+        $guessesBoxesList[i].innerHTML = '';
+    }
+
     activePlayer = data.nextPlayer;
     correctAnswer = data.correctAnswer;
     myGuess = "";
@@ -409,17 +419,29 @@ function gameHasBeenStarted(data) {
 }
 
 function showAnswers(data) {
-    console.log("guessed answers: ", data.guessedAnswers);
-    console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
-    console.log("actualPlayerPoints: ", data.actualPlayerPoints);
-    console.log("playerPointsTotal: ", data.playerPointsTotal);
+    // console.log("guessed answers: ", data.guessedAnswers);
+    // console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
+    // console.log("actualPlayerPoints: ", data.actualPlayerPoints);
+    // console.log("playerPointsTotal: ", data.playerPointsTotal);
     if (!itsMyTurn) {
         $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
     }
     // show answers of all guessers:
-    $(`.table-row[key=${data.correctAnswer}]`).addClass(activePlayer);
-    // show correct answer:
+    for (let player in data.guessedAnswers) {
 
+        let $guessesBoxInCardItem = $(`.table-row[key=${data.guessedAnswers[player]}]`).find('.guesses');
+
+        let newGuess = `<div class="guess ${player}"></div>`;
+
+        $guessesBoxInCardItem.append(newGuess);
+        // empty guesses div for next turn.... also for startGame?
+
+    }
+}
+
+function showCorrectAnswer(data) {
+    // show correct answer:
+    $(`.table-row[key=${data.correctAnswer}]`).addClass(activePlayer);
 }
 
 function addPoints(data) {
@@ -880,8 +902,11 @@ socket.on("everyone guessed", function(data) {
     setTimeout(() => {
         showAnswers(data);
         setTimeout(() => {
-            addPoints(data);
-        }, 1000);
-    }, 500);
+            showCorrectAnswer(data);
+            setTimeout(() => {
+                addPoints(data);
+            }, 500); // time before addPoints
+        }, 1000); // time before showCorrectAnswer
+    }, 500); // time before showAnswers
 
 });

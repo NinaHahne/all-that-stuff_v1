@@ -285,6 +285,8 @@ button:focus {
 .table-row {
     display: flex;
     width: 100%;
+    /* to allow the guesses-box to position itself to the right:  */
+    position: relative;
 }
 
 .table-row.cardtitle {
@@ -331,6 +333,26 @@ button:focus {
 small {
     font-size: 22px;
 }
+
+.guesses {
+    display: flex;
+    position: absolute;
+    right: 10px;
+    align-items: center;
+    margin-left: 10px;
+    justify-content: flex-end;
+}
+
+.guess {
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 2px;
+    margin-left: 4px;
+}
+
+
 /* construction area & object containers ------------------*/
 #construction-area {
     position: absolute;
