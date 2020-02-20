@@ -27,7 +27,7 @@ body {
     background-attachment: fixed;
 }
 
-/* ---------START MENU------------- */
+/* §§ ---------START MENU------------- */
 #start-menu {
     position: absolute;
     top: 0;
@@ -37,19 +37,16 @@ body {
     z-index: 100;
 }
 
-#select-players .player {
-    /* z-index: 10000; */
+#select-players .player:hover {
     -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
 }
 
-.player:hover {
+.player:not(.selectedPlayerPiece):hover {
     cursor: pointer;
 }
 
-/* header styles */
 header {
-    /* position: absolute; */
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -57,8 +54,6 @@ header {
     padding-right: 2rem;
     padding-left: 2rem;
     font-family: "Life Savers", cursive;
-    /* text-align: center; */
-    /* justify-content: center; */
     align-items: center;
 }
 
@@ -75,7 +70,7 @@ header {
 
 #joined-players {
     display: flex;
-    width: 60%;
+    width: 65%;
     justify-content: space-around;
     margin-top: 20px;
 }
@@ -97,10 +92,6 @@ header {
 .player.selectedPlayerPiece {
     border-style: solid;
     color: black;
-}
-
-.player.selectedPlayerPiece:hover {
-    cursor: unset;
 }
 
 .player.myPiece {
@@ -189,14 +180,15 @@ header {
 
 /* button styles */
 .buttonBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 button {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
+    
     display: inline-block;
     padding: 0.5rem;
     font-size: 26px;
@@ -272,61 +264,71 @@ button:focus {
     padding: 2px 6px;
 }
 
-/* cards --------------------- */
+/* §§ cards --------------------- */
 #card-deck {
     position: absolute;
-    top: 90px;
-    width: 450px;
-    margin-left: 20px;
+    top: 140px;
+    left: 25px;
+    width: 440px;
 }
 
 .wordcard {
-  margin-top: 1.5rem;
-  font-weight: 700;
-  display: table;
-  width: 100%;
-}
-
-.cardtitle {
-  padding-left: 0.2rem;
-  font-size: 32px;
-  margin-top: 0;
-  margin-bottom: 0.6rem;
-  font-weight: 800;
-  display: table-cell;
-  height: 5rem;   /*this way, 2 lines of text fit into title cell without size changing */
-  vertical-align: bottom;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-weight: 700;
+    width: 100%;
 }
 
 .table-row {
-  display: table-row;
-  width: 100%;
+    display: flex;
+    width: 100%;
 }
 
-.bullet, .item {
-  vertical-align: top;
-  padding-top: 0.8rem;
-  display: table-cell;
-  font-size: 28px;
+.table-row.cardtitle {
+    padding-left: 0.2rem;
+    font-size: 32px;
+    margin-top: 0;
+    margin-bottom: 0.6rem;
+    font-weight: 800;
+    align-items: flex-end;
+    height: 80px;
+}
+
+.table-row:not(.cardtitle) {
+    border-radius: 10px;
+    padding: 10px 4px 5px 8px;
+}
+
+.table-row:not(.cardtitle):hover {
+    cursor: pointer;
+}
+
+.bullet,
+.item {
+    vertical-align: top;
+    /* padding-top: 0.8rem; */
+    font-size: 30px;
 }
 
 .bullet {
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-align: end;
-  width: 8%;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-align: end;
+    width: 25px;
 }
 
 .item {
-  padding-left: 0.5rem;
-  text-align: start;
-  width: 92%;
-  font-weight: 700;
+    padding-left: 0.5rem;
+    text-align: start;
+    /* width: 92%; */
+    font-weight: 700;
 }
 
 /* small or strong text on cards */
 small {
-  font-size: 20px;
+    font-size: 22px;
 }
 /* construction area & object containers ------------------*/
 #construction-area {

@@ -339,9 +339,8 @@ function startGame(playerArray, objArray) {
     $queue.append(queuedObjects);
     getObjectPositions();
 
-    $(".hidden").removeClass("hidden");
     $("#start-menu").addClass("hidden");
-    $("#instructions").addClass("hidden");
+    $("#main-game").removeClass("hidden");
 
     let activeObjectsHTML = $("#objects")[0].innerHTML;
     let queuedObjectsHTML = $("#queue")[0].innerHTML;
@@ -377,9 +376,9 @@ function gameHasBeenStarted(data) {
         $queue[0].innerHTML = data.queuedObjects;
         getObjectPositions();
 
-        $(".hidden").removeClass("hidden");
         $("#start-menu").addClass("hidden");
-        $("#instructions").addClass("hidden");
+        $("#main-game").removeClass("hidden");
+
     } else if (itsMyTurn) {
         console.log(`you drew card number ${data.firstCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
