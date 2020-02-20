@@ -104,7 +104,7 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
     });
 }
 
-// Function to generate random number
+// Function to generate random number, min incl, max excl.
 function randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
@@ -157,6 +157,42 @@ function collectGuesses(data) {
             playerPointsTotal: playerPointsTotal
         });
     }
+}
+
+function getWinner(data) {
+    // console.log('data.playerArray in getWinner:', data.playerArray);
+    // console.log('data.playerPiecesHTML: ', data.playerPiecesHTML);
+
+    let ranking = [];
+    for (let player in playerPointsTotal) {
+        console.log(player, ":", playerPointsTotal[player]);
+        // let playerElement =
+        //     `<div class="player ${player}" id="${player}">
+        //         <div class="player-name">${player}</div>
+        //         <div class="player-points">${playerPointsTotal[player]}</div>
+        //     </div>`;
+        let playerPontsObj = {
+            player: player,
+            points: playerPointsTotal[player]
+        };
+        ranking.push(playerPontsObj);
+        console.log('playerPontsObj in getWinner loop:', playerPontsObj);
+    }
+
+    // sort array in place by points, descending:
+    ranking.sort(function (a, b) {
+        return b.points - a.points;
+    });
+
+    let winner = ranking[0].player;
+    console.log(winner, 'wins!');
+
+    let msg = `game is over`;
+    io.sockets.emit("game ends", {
+        message: msg,
+        rankingArray: ranking,
+        winner: winner
+    });
 }
 
 io.on("connection", function(socket) {
@@ -243,6 +279,10 @@ io.on("connection", function(socket) {
 
     socket.on("made a guess", function(data) {
         collectGuesses(data);
+    });
+
+    socket.on("end game", function(data) {
+        getWinner(data);
     });
 
     // send a message to all connected sockets:

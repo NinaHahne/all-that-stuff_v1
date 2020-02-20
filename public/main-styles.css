@@ -95,19 +95,19 @@ header {
     color: black;
 }
 
-.player.myPiece {
+#select-players .player.myPiece {
     transform: scale(1.2);
     border-style: double;
     border-width: 6px;
 }
 
-#joined-players .myPiece {
+#joined-players .player.myPiece {
     transform: unset;
     border-style: solid;
     border-width: 3px;
 }
 
-#joined-players .myTurn {
+#joined-players .player.myTurn {
     transform: scale(1.2);
     /* border-style: double;
     border-width: 6px; */
@@ -157,7 +157,7 @@ header {
 }
 
 /* stuff-logo styles */
-#stuff-logo {
+.stuff-logo {
     padding-top: 2rem;
     padding-right: 2rem;
     padding-left: 2rem;
@@ -165,14 +165,14 @@ header {
     text-align: center;
 }
 
-#stuff-logo h1 {
+.stuff-logo h1 {
     font-size: 8rem;
     font-weight: 800;
     margin-top: 0;
     margin-bottom: 1.2rem;
 }
 
-#stuff-logo h2 {
+.stuff-logo h2 {
     font-size: 5rem;
     font-weight: 700;
     margin-top: 0;
@@ -406,7 +406,29 @@ small {
     z-index: 1000;
 }
 
-/* || --------------- OBJECT STYLES ---------------*/
+/* §§ ---------GAME END------------- */
+#game-end {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: 100;
+}
+
+#players-end .player {
+    border-style: solid;
+    color: black;
+    margin: 20px 0;
+}
+
+#players-end .player:first-child {
+    border-style: double;
+    transform: scale(1.3);
+    border-width: 12px;
+}
+
+/* §§ --------------- OBJECT STYLES ---------------*/
 
 .img-box {
     text-align: center;

@@ -150,6 +150,7 @@ let left = objects.offsetLeft; //number (in px), x-position of element relative 
 let myReq;
 
 const selectPlayersContainer = document.getElementById("select-players");
+const playersContainer = document.getElementById("joined-players");
 
 let gameStarted = false;
 let itsMyTurn = false;
@@ -298,10 +299,6 @@ function changeTurn(data) {
 
     // reset guess markers:
     let $guessesBoxesList = $(`.table-row`).find('.guesses');
-    console.log('$guessesBoxesList: ', $guessesBoxesList);
-    // console.log('$guessesBoxesList[0]: ', $guessesBoxesList[0]);
-    console.log('$guessesBoxesList.length: ', $guessesBoxesList.length);
-
     for (let i = 0; i < $guessesBoxesList.length; i++) {
         $guessesBoxesList[i].innerHTML = '';
     }
@@ -700,6 +697,10 @@ $(document).on("keydown", e => {
             // simulate "done" with building a word with objects:
             doneBuilding();
         }
+    } else if (e.keyCode == 69) {
+        // = "E"
+        // simulate "game end":
+        endGame();
     }
 });
 
@@ -888,6 +889,49 @@ function guessWordFromCard(e) {
     }
 }
 
+function endGame() {
+    // let playerPiecesHTML = $("#joined-players")[0].innerHTML;
+    // console.log('playerPiecesHTML: ', playerPiecesHTML);
+    //
+    // let playersList = playersContainer.getElementsByClassName(
+    //     "player"
+    // );
+    //
+    // let playerArray = Array.from(playersList);
+
+    socket.emit("end game", {
+        // playerArray: playerArray,
+        // playerPiecesHTML: playerPiecesHTML
+    });
+}
+
+function gameEnds(data) {
+    console.log(data.message);
+    console.log(data.rankingArray);
+    console.log(`player "${data.winner}" wins!`);
+
+    $("#main-game").addClass("hidden");
+    $("#game-end").removeClass("hidden");
+
+    let $playersEnd = $('#players-end');
+    // console.log('$playersEnd[0].innerHTML: ', $playersEnd[0].innerHTML);
+    let ranking = data.rankingArray;
+    for (let i = 0; i < ranking.length; i++) {
+        let playerElement =
+            `<div class="player ${ranking[i].player}" id="${ranking[i].player}">
+                <div class="player-points">${ranking[i].points}</div>
+            </div>`;
+        // let playerElement =
+        //     `<div class="player ${ranking[i].player}" id="${ranking[i].player}">
+        //         <div class="player-name">${ranking[i].player}</div>
+        //         <div class="player-points">${ranking[i].points}</div>
+        //     </div>`;
+        $playersEnd.append(playerElement);
+    }
+
+    // $playersEnd[0].innerHTML = data.playerRankingHTML;
+}
+
 // §§ sockets - main game: ******************************************
 socket.on("objects are moving", function(data) {
     objectsAreMoving(data);
@@ -909,4 +953,8 @@ socket.on("everyone guessed", function(data) {
         }, 1000); // time before showCorrectAnswer
     }, 500); // time before showAnswers
 
+});
+
+socket.on("game ends", function(data) {
+    gameEnds(data);
 });
