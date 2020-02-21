@@ -149,9 +149,24 @@ function collectGuesses(data) {
 
             playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
 
-        } else {
-            // for more than 6 players:
+        } else if (joinedPlayersLength > 6) {
+            // for more than 6 players (max 8):
             // maximum points: 5
+            let pointsCounter = 0;
+            for (let i = answeringOrder.length; i > 0; i--) {
+                playerPointsIfCorrect[answeringOrder[i]] = pointsCounter;
+                if (guessedAnswers[answeringOrder[i]] == correctAnswer) {
+                    actualPlayerPoints[answeringOrder[i]] = pointsCounter;
+                    playerPointsTotal[answeringOrder[i]] += pointsCounter;
+                    numberOfCorrectGuesses++;
+
+                } else {
+                    actualPlayerPoints[answeringOrder[i]] = 0;
+                }
+                if (pointsCounter < 5) {
+                    pointsCounter++;
+                }
+            }
         }
 
         io.sockets.emit("everyone guessed", {
@@ -217,15 +232,17 @@ io.on("connection", function(socket) {
     });
 
     socket.on("selected piece", function(data) {
-        console.log('joinedPlayers on "selected piece": ', joinedPlayers);
-        console.log(
-            `user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`
-        );
-        selectedPieces.push(data.selectedPieceId);
-        joinedPlayers[socket.id] = data.selectedPieceId;
+        if (data.selectedPieceId) {
+            console.log('joinedPlayers on "selected piece": ', joinedPlayers);
+            console.log(
+                `user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`
+            );
+            selectedPieces.push(data.selectedPieceId);
+            joinedPlayers[socket.id] = data.selectedPieceId;
 
-        io.sockets.emit("add selected piece", data.selectedPieceId);
-        console.log("selectedPieces: ", selectedPieces);
+            io.sockets.emit("add selected piece", data.selectedPieceId);
+            console.log("selectedPieces: ", selectedPieces);
+        }
     });
 
     socket.on("game started", function(data) {

@@ -155,21 +155,23 @@ const selectPlayersContainer = document.getElementById("select-players");
 // const playersContainer = document.getElementById("joined-players");
 
 // §§ game/player state: --------------------------
+// let numberOfRoundsLeft;
+
 let gameStarted = false;
 if (sessionStorage.getItem("gameStarted")) {
     gameStarted = sessionStorage.getItem("gameStarted");
 }
 let itsMyTurn = false;
 if (sessionStorage.getItem("itsMyTurn")) {
-    gameStarted = sessionStorage.getItem("itsMyTurn");
+    itsMyTurn = sessionStorage.getItem("itsMyTurn");
 }
 let activePlayer;
 if (sessionStorage.getItem("activePlayer")) {
-    gameStarted = sessionStorage.getItem("activePlayer");
+    activePlayer = sessionStorage.getItem("activePlayer");
 }
 let players = [];
 if (sessionStorage.getItem("players")) {
-    gameStarted = sessionStorage.getItem("players");
+    players = sessionStorage.getItem("players");
 }
 let mySocketId; //should I put this too in the sessionStorage??????
 
@@ -177,15 +179,15 @@ let selectedPieceId = sessionStorage.getItem("selectedPieceId");
 
 let doneBtnPressed = false;
 if (sessionStorage.getItem("doneBtnPressed")) {
-    gameStarted = sessionStorage.getItem("doneBtnPressed");
+    doneBtnPressed = sessionStorage.getItem("doneBtnPressed");
 }
 let myGuess;
 if (sessionStorage.getItem("myGuess")) {
-    gameStarted = sessionStorage.getItem("myGuess");
+    myGuess = sessionStorage.getItem("myGuess");
 }
 let correctAnswer;
 if (sessionStorage.getItem("correctAnswer")) {
-    gameStarted = sessionStorage.getItem("correctAnswer");
+    correctAnswer = sessionStorage.getItem("correctAnswer");
 }
 
 // card deck: ----------------------------------
@@ -369,7 +371,11 @@ function changeTurn(data) {
     $pointsIfCorrect[0].innerHTML = '';
     let highestAchievablePoint = players.length - 1;
     for (let i = highestAchievablePoint; i > 0; i--) {
-        let elem = `<div class="points">${i}</div>`;
+        let points = i;
+        if (i > 5) {
+            points = 5;
+        }
+        let elem = `<div class="points">${points}</div>`;
         $pointsIfCorrect.append(elem);
     }
 
@@ -543,7 +549,11 @@ function gameHasBeenStarted(data) {
     // create "points if correct" boxes:
     let highestAchievablePoint = players.length - 1;
     for (let i = highestAchievablePoint; i > 0; i--) {
-        let elem = `<div class="points">${i}</div>`;
+        let points = i;
+        if (i > 5) {
+            points = 5;
+        }
+        let elem = `<div class="points">${points}</div>`;
         $pointsIfCorrect.append(elem);
     }
 
@@ -556,6 +566,21 @@ function gameHasBeenStarted(data) {
 
     gameStarted = true;
     sessionStorage.setItem("gameStarted", gameStarted);
+
+    // set number of Rounds:
+    // if (players.length == 3 || players.length == 5 ) {
+    //     numberOfRoundsLeft = 15;
+    // } else if (players.length == 4) {
+    //     numberOfRoundsLeft = 12;
+    // } else if (players.length == 6) {
+    //     numberOfRoundsLeft = 18;
+    // } else if (players.length == 7) {
+    //     numberOfRoundsLeft = 14;
+    // } else if (players.length == 8) {
+    //     numberOfRoundsLeft = 16;
+    // }
+    //
+    // numberOfRoundsLeft--;
 }
 
 function someOneGuessed(data) {
