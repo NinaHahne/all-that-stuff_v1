@@ -279,20 +279,6 @@ $("#start-menu").on("click", ".player", e => {
 // §§ functions- start menu: ----------------------------------------
 function selectedPiece(pieceId) {
     sessionStorage.setItem("selectedPieceId", pieceId);
-    let $piece = $("#start-menu").find("#" + pieceId);
-    // console.log("$piece: ", $piece);
-
-    $piece.addClass("selectedPlayerPiece");
-    $piece.addClass("myPiece");
-    // players.push(pieceId);
-    // console.log('$piece[0].innerText: ', $piece[0].innerText);
-    let $playerName = $piece.find(".player-name");
-    // console.log("$playerName: ", $playerName);
-
-    // inconsistent ERR: Cannot set property 'innerText' of undefined:
-    // $piece[0].innerText = "you";
-    $playerName[0].innerText = "you";
-    // console.log('.player-name in $piece: ', $playerName[0]);
 
     socket.emit("selected piece", {
         // userId: myUserId,
@@ -304,11 +290,25 @@ function selectedPiece(pieceId) {
 function addPlayer(pieceId) {
     // maybe pieceId is undefined at some point? just a guess for the jquery err when reloading page after changing main.js: Uncaught Error: Syntax error, unrecognized expression: # ... at Function.oe.error...
     // error does not occur with this conditional:
-    if (pieceId) {
-        let $piece = $("#" + pieceId);
-        // console.log('$piece: ', $piece);
-        $piece.addClass("selectedPlayerPiece");
-        players.push(pieceId);
+    players.push(pieceId);
+    let $piece = $("#start-menu").find("#" + pieceId);
+    $piece.addClass("selectedPlayerPiece");
+
+    let $playerName = $piece.find(".player-name");
+    // if it was me, selecting a piece:
+    if (pieceId == selectedPieceId) {
+        // console.log("$piece: ", $piece);
+        $piece.addClass("myPiece");
+        // players.push(pieceId);
+        // console.log('$piece[0].innerText: ', $piece[0].innerText);
+        // console.log("$playerName: ", $playerName);
+
+        // inconsistent ERR: Cannot set property 'innerText' of undefined:
+
+        $playerName[0].innerText = "you";
+        // console.log('.player-name in $piece: ', $playerName[0]);
+    } else {
+        // $playerName[0].innerText = "";
     }
 }
 
@@ -507,6 +507,29 @@ function gameHasBeenStarted(data) {
         $message.addClass("bold");
         $message[0].innerText = `it's your turn!`;
     }
+    // delete "?" from other player names:
+    let $pieces = $("#joined-players").find('.player');
+
+    let $otherPlayerNames = $pieces.find(".player-name");
+
+    // console.log('$otherPlayerNames:', $otherPlayerNames);
+    for (let i = 0; i < $otherPlayerNames.length; i++) {
+        // console.log($otherPlayerNames[i].innerText);
+        if ($otherPlayerNames[i].innerText == '?') {
+            $otherPlayerNames[i].innerText = '';
+        }
+    }
+    // $otherPlayerNames.map(player => {
+    //     console.log('player.innerText: ', player[0].innerText);
+    //     // if (player.innerText) {
+    //     //
+    //     // }
+    //     // console.log('$otherPlayerNames loop: ', $(this)[0].innerText);
+    //     // $(this)[0].innerText = '';
+    // });
+
+
+    // $otherPlayerNames.innerText = '';
 
     // first word card:
     cardTitle[0].innerHTML = data.firstCard.title;
@@ -619,7 +642,9 @@ socket.on("welcome", function(data) {
 });
 
 socket.on("add selected piece", function(pieceId) {
-    addPlayer(pieceId);
+    if (pieceId) {
+        addPlayer(pieceId);
+    }
     // console.log('players after "add selected piece": ', players);
 });
 
