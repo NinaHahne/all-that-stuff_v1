@@ -359,6 +359,38 @@ small {
     margin-left: 4px;
 }
 
+#points-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 100px;
+    height: 130px;
+    left: 25px;
+}
+
+#points-container h3 {
+    margin-top: 0px;
+    margin-bottom: 8px;
+    font-weight: 800;
+    font-size: 30px;
+}
+
+#points-if-correct {
+    display: flex;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.points {
+    height: 40px;
+    width: 40px;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 50%;
+    border-color: transparent;
+    text-align: center;
+    margin: 0 10px;
+}
 
 /* §§ construction area & object containers ------------------*/
 #construction-area {

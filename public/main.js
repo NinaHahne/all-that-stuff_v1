@@ -33,7 +33,7 @@ const $queue = $("#queue");
 const $joinedPlayersContainer = $("#joined-players");
 
 const $constructionArea = $("#construction-area");
-const $message = $('#construction-area').find('.message');
+const $message = $("#construction-area").find(".message");
 let [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
     $constructionArea
 );
@@ -192,6 +192,7 @@ if (sessionStorage.getItem("correctAnswer")) {
 let cardTitle = document.getElementsByClassName("cardtitle");
 // let bullets = document.getElementsByClassName("bullet");
 let items = document.getElementsByClassName("item");
+let $pointsIfCorrect = $('#points-if-correct');
 
 // §§ moving objects: --------------------------
 let objectClicked = false;
@@ -213,7 +214,9 @@ const ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
 const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
 const startGong = new Audio("./sounds/56240__q-k__gong-center-clear.wav");
 const doneGong = new Audio("./sounds/434627__dr-macak__ding.wav");
-const successJingle = new Audio("./sounds/270404__littlerobotsoundfactory__jingle-achievement-00.wav");
+const successJingle = new Audio(
+    "./sounds/270404__littlerobotsoundfactory__jingle-achievement-00.wav"
+);
 const drumroll = new Audio("./sounds/12896__harri__circus-short.mp3");
 const bubblePop1 = new Audio("./sounds/422813__pinto0lucas__bubble-low.wav");
 const plop = new Audio("./sounds/431671__pellepyb__b1.ogg");
@@ -254,7 +257,7 @@ playButton.addEventListener("click", function() {
     }
 });
 
-$('#start-menu').on("click", ".player", e => {
+$("#start-menu").on("click", ".player", e => {
     // console.log('e.target: ', e.target);
     // console.log('e.currentTarget: ', e.currentTarget);
     // console.log('clicked select players');
@@ -263,12 +266,12 @@ $('#start-menu').on("click", ".player", e => {
         $(e.target).hasClass("selectedPlayerPiece")
     );
     // if you haven't yet selected a piece and it's not taken by another player:
-    console.log("your selectedPieceId before clicking: ", selectedPieceId);
+    // console.log("your selectedPieceId before clicking: ", selectedPieceId);
     if (!selectedPieceId && !$(e.target).hasClass("selectedPlayerPiece")) {
         selectedPieceId = $(e.target).attr("id");
-        console.log('$(e.target).attr("id") l269: ', $(e.target).attr("id"));
+        // console.log('$(e.target).attr("id") l269: ', $(e.target).attr("id"));
         sessionStorage.setItem("selectedPieceId", selectedPieceId);
-        console.log('selectedPieceId l271: ', selectedPieceId);
+        // console.log("selectedPieceId l271: ", selectedPieceId);
         selectedPiece(selectedPieceId);
     }
 });
@@ -276,15 +279,15 @@ $('#start-menu').on("click", ".player", e => {
 // §§ functions- start menu: ----------------------------------------
 function selectedPiece(pieceId) {
     sessionStorage.setItem("selectedPieceId", pieceId);
-    let $piece = $('#start-menu').find("#" + pieceId);
-    console.log('$piece: ', $piece);
+    let $piece = $("#start-menu").find("#" + pieceId);
+    // console.log("$piece: ", $piece);
 
     $piece.addClass("selectedPlayerPiece");
     $piece.addClass("myPiece");
     // players.push(pieceId);
     // console.log('$piece[0].innerText: ', $piece[0].innerText);
-    let $playerName = $piece.find('.player-name');
-    console.log('$playerName: ', $playerName);
+    let $playerName = $piece.find(".player-name");
+    // console.log("$playerName: ", $playerName);
 
     // inconsistent ERR: Cannot set property 'innerText' of undefined:
     // $piece[0].innerText = "you";
@@ -356,9 +359,18 @@ function changeTurn(data) {
     $(`.table-row[key=${correctAnswer}]`).removeClass(activePlayer);
 
     // reset guess markers:
-    let $guessesBoxesList = $(`.table-row`).find('.guesses');
+    let $guessesBoxesList = $(`.table-row`).find(".guesses");
     for (let i = 0; i < $guessesBoxesList.length; i++) {
-        $guessesBoxesList[i].innerHTML = '';
+        $guessesBoxesList[i].innerHTML = "";
+    }
+
+    // create "points if correct" boxes:
+    // reset from previous game:
+    $pointsIfCorrect[0].innerHTML = '';
+    let highestAchievablePoint = players.length - 1;
+    for (let i = highestAchievablePoint; i > 0; i--) {
+        let elem = `<div class="points">${i}</div>`;
+        $pointsIfCorrect.append(elem);
     }
 
     activePlayer = data.nextPlayer;
@@ -383,23 +395,23 @@ function changeTurn(data) {
         items[i].innerHTML = cardItems[i];
     }
 
-    $message.removeClass('hidden');
+    $message.removeClass("hidden");
 
     // next turn is my turn:
     if (data.nextPlayer == selectedPieceId) {
         console.log(`you drew card number ${data.newCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
         $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
-        $('#done-btn').removeClass('hidden');
+        $("#done-btn").removeClass("hidden");
         $message[0].innerText = `it's your turn!`;
-        $message.addClass('bold');
+        $message.addClass("bold");
         itsMyTurn = true;
         sessionStorage.setItem("itsMyTurn", itsMyTurn);
     } else {
         // next turn is not my turn:
-        $('#done-btn').addClass('hidden');
-        $message.removeClass('bold');
-        $message[0].innerText = '...under construction...';
+        $("#done-btn").addClass("hidden");
+        $message.removeClass("bold");
+        $message[0].innerText = "...under construction...";
         itsMyTurn = false;
         sessionStorage.setItem("itsMyTurn", itsMyTurn);
     }
@@ -455,7 +467,7 @@ function gameHasBeenStarted(data) {
     doneBtnPressed = false;
     sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 
-    $message.removeClass('hidden');
+    $message.removeClass("hidden");
 
     // double checking, if it's really the players turn, when the game get's started makes testing easier.. (so I don't have to reload all the pages of the other players)
     if (data.startPlayer != selectedPieceId) {
@@ -481,19 +493,18 @@ function gameHasBeenStarted(data) {
         $("#start-menu").addClass("hidden");
         $("#main-game").removeClass("hidden");
 
-        $message.removeClass('bold');
-        $message.removeClass('hidden');
-        $message[0].innerText = '...under construction...';
+        $message.removeClass("bold");
+        $message.removeClass("hidden");
+        $message[0].innerText = "...under construction...";
 
-        $('#done-btn').addClass('hidden');
-
+        $("#done-btn").addClass("hidden");
     } else if (itsMyTurn) {
         console.log(`you drew card number ${data.firstCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
         $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
-        $('#done-btn').removeClass('hidden');
+        $("#done-btn").removeClass("hidden");
 
-        $message.addClass('bold');
+        $message.addClass("bold");
         $message[0].innerText = `it's your turn!`;
     }
 
@@ -502,6 +513,15 @@ function gameHasBeenStarted(data) {
     let cardItems = data.firstCard.items;
     for (let i = 0; i < cardItems.length; i++) {
         items[i].innerHTML = cardItems[i];
+    }
+
+    // reset from previous game:
+    $pointsIfCorrect[0].innerHTML = '';
+    // create "points if correct" boxes:
+    let highestAchievablePoint = players.length - 1;
+    for (let i = highestAchievablePoint; i > 0; i--) {
+        let elem = `<div class="points">${i}</div>`;
+        $pointsIfCorrect.append(elem);
     }
 
     correctAnswer = data.correctAnswer;
@@ -516,7 +536,10 @@ function gameHasBeenStarted(data) {
 }
 
 function someOneGuessed(data) {
-    console.log('someone guessed');
+    console.log("someone guessed");
+    let $highestFreePointBox = $pointsIfCorrect.children().not('.claimed').first();
+    console.log('highestFreePointBox:', $highestFreePointBox);
+    $highestFreePointBox.addClass(`claimed ${data.guessingPlayer}`);
     if (!muted) {
         plop.play();
     }
@@ -532,14 +555,14 @@ function showAnswers(data) {
     }
     // show answers of all guessers:
     for (let player in data.guessedAnswers) {
-
-        let $guessesBoxInCardItem = $(`.table-row[key=${data.guessedAnswers[player]}]`).find('.guesses');
+        let $guessesBoxInCardItem = $(
+            `.table-row[key=${data.guessedAnswers[player]}]`
+        ).find(".guesses");
 
         let newGuess = `<div class="guess ${player}"></div>`;
 
         $guessesBoxInCardItem.append(newGuess);
         // empty guesses div for next turn.... also for startGame?
-
     }
     if (!muted) {
         // pop sound for displaying all answers:
@@ -560,11 +583,11 @@ function showCorrectAnswer(data) {
 function addPoints(data) {
     for (let player in data.playerPointsTotal) {
         let $piece = $("#" + player);
-        let $playerPoints = $piece.find('.player-points');
+        let $playerPoints = $piece.find(".player-points");
         $playerPoints[0].innerText = data.playerPointsTotal[player];
     }
     // for the first round:
-    $('.player-points').removeClass('hidden');
+    $(".player-points").removeClass("hidden");
     if (!muted) {
         bubblePop1.play();
     }
@@ -589,7 +612,7 @@ socket.on("welcome", function(data) {
     sessionStorage.setItem("players", players);
     // console.log('players in socket.on("welcome"): ', players);
     for (let i = 0; i < players.length; i++) {
-        let $piece = $('#start-menu').find("#" + players[i]);
+        let $piece = $("#start-menu").find("#" + players[i]);
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
     }
@@ -832,10 +855,9 @@ $("#card-deck").on("mousedown", ".table-row", function(e) {
     }
 });
 
-$('#done-btn').on('click', doneBuilding);
+$("#done-btn").on("click", doneBuilding);
 
-$('#play-again-btn').on('click', () => window.location.reload(false));
-
+$("#play-again-btn").on("click", () => window.location.reload(false));
 
 // §§ functions - main game ***********************************
 function changeObjectImage(imgBox) {
@@ -1015,10 +1037,10 @@ function buildingIsDone(data) {
     }
     if (!itsMyTurn) {
         $objects[0].innerHTML = data.movedObjects;
-        $message.addClass('bold');
+        $message.addClass("bold");
         $message[0].innerText = `what's all that stuff?`;
     } else if (itsMyTurn) {
-        $message.removeClass('bold');
+        $message.removeClass("bold");
         $message[0].innerText = `done!`;
     }
     doneBtnPressed = true;
@@ -1063,12 +1085,11 @@ function gameEnds(data) {
     $("#main-game").addClass("hidden");
     $("#game-end").removeClass("hidden");
 
-    let $playersEnd = $('#players-end');
+    let $playersEnd = $("#players-end");
     // console.log('$playersEnd[0].innerHTML: ', $playersEnd[0].innerHTML);
     let ranking = data.rankingArray;
     for (let i = 0; i < ranking.length; i++) {
-        let playerElement =
-            `<div class="player ${ranking[i].player}">
+        let playerElement = `<div class="player ${ranking[i].player}">
                 <div class="player-points">${ranking[i].points}</div>
             </div>`;
         // let playerElement =
@@ -1110,7 +1131,6 @@ socket.on("everyone guessed", function(data) {
             }, 1500); // time before addPoints
         }, 1500); // time before showCorrectAnswer
     }, 500); // time before showAnswers
-
 });
 
 socket.on("game ends", function(data) {
