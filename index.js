@@ -120,6 +120,11 @@ function collectGuesses(data) {
     // console.log('guessedAnswersLength: ', guessedAnswersLength);
     // console.log("guessedAnswers: ", guessedAnswers);
 
+    io.sockets.emit("someone guessed", {
+        guessingPlayer: data.guessingPlayer,
+        guessedItem: data.guessedItem
+    });
+
     // when everyone guessed:
     if (guessedAnswersLength == joinedPlayersLength - 1) {
 

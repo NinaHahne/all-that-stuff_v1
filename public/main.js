@@ -193,6 +193,9 @@ const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
 const startGong = new Audio("./sounds/56240__q-k__gong-center-clear.wav");
 const doneGong = new Audio("./sounds/434627__dr-macak__ding.wav");
 const successJingle = new Audio("./sounds/270404__littlerobotsoundfactory__jingle-achievement-00.wav");
+const drumroll = new Audio("./sounds/12896__harri__circus-short.mp3");
+const bubblePop1 = new Audio("./sounds/422813__pinto0lucas__bubble-low.wav");
+const plop = new Audio("./sounds/431671__pellepyb__b1.ogg");
 
 let uniSound = true;
 let muted = false;
@@ -201,7 +204,7 @@ let muted = false;
 shuffleObjects(objects);
 moveObjects();
 
-// $$ event listeners - start menu: -----------------------------
+// §§ event listeners - start menu: -----------------------------
 playButton.addEventListener("click", function() {
     // e.preventDefault();
     let joinedPlayersList = selectPlayersContainer.getElementsByClassName(
@@ -246,7 +249,7 @@ $('#start-menu').on("click", ".player", e => {
     }
 });
 
-// $$ functions- start menu: ----------------------------------------
+// §§ functions- start menu: ----------------------------------------
 function selectedPiece(pieceId) {
     sessionStorage.setItem("selectedPieceId", pieceId);
     let $piece = $('#start-menu').find("#" + pieceId);
@@ -291,6 +294,7 @@ function removePlayer(pieceId) {
     }
 }
 
+// §§ functions- main game: ----------------------------------------
 function moveObjects() {
     // left = left - 2;
     left--;
@@ -465,6 +469,13 @@ function gameHasBeenStarted(data) {
     gameStarted = true;
 }
 
+function someOneGuessed(data) {
+    console.log('someone guessed');
+    if (!muted) {
+        plop.play();
+    }
+}
+
 function showAnswers(data) {
     // console.log("guessed answers: ", data.guessedAnswers);
     // console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
@@ -484,6 +495,15 @@ function showAnswers(data) {
         // empty guesses div for next turn.... also for startGame?
 
     }
+    if (!muted) {
+        // pop sound for displaying all answers:
+        plop.play();
+        // drumroll until showCorrectAnswer:
+        // adding 700ms..
+        setTimeout(() => {
+            drumroll.play();
+        }, 700);
+    }
 }
 
 function showCorrectAnswer(data) {
@@ -499,9 +519,12 @@ function addPoints(data) {
     }
     // for the first round:
     $('.player-points').removeClass('hidden');
+    if (!muted) {
+        bubblePop1.play();
+    }
 }
 
-// $$ sockets - start menu: ----------------------------------------
+// §§ sockets - start menu: ----------------------------------------
 socket.on("welcome", function(data) {
     sessionStorage.setItem("mySocketId", data.socketId);
     mySocketId = data.socketId;
@@ -1000,8 +1023,9 @@ function gameEnds(data) {
         //     </div>`;
         $playersEnd.append(playerElement);
     }
-
-    successJingle.play();
+    if (!muted) {
+        successJingle.play();
+    }
 }
 
 // §§ sockets - main game: ******************************************
@@ -1011,6 +1035,10 @@ socket.on("objects are moving", function(data) {
 
 socket.on("building is done", function(data) {
     buildingIsDone(data);
+});
+
+socket.on("someone guessed", function(data) {
+    someOneGuessed(data);
 });
 
 socket.on("everyone guessed", function(data) {
@@ -1023,9 +1051,9 @@ socket.on("everyone guessed", function(data) {
                 addPoints(data);
                 setTimeout(() => {
                     discardAndRefillObjects();
-                }, 1000); // time before change to next turn
-            }, 500); // time before addPoints
-        }, 1000); // time before showCorrectAnswer
+                }, 1700); // time before change to next turn
+            }, 1500); // time before addPoints
+        }, 1500); // time before showCorrectAnswer
     }, 500); // time before showAnswers
 
 });
