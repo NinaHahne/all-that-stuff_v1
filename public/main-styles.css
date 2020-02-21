@@ -374,6 +374,31 @@ small {
     border-radius: 20px;
     margin-left: 6px;
     /* background-color: rgba(211, 211, 211, 0.5); */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+#construction-area .message {
+    align-self: flex-start;
+    margin-top: 10px;
+    font-size: 36px;
+    /* position: absolute;
+    top: 10px;
+    right: 100px; */
+}
+
+#construction-area .message.bold {
+    font-weight: bold;
+}
+
+
+#done-btn {
+    margin: 5px 5px;
+    border-radius: 5px 15px 5px 15px;
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
 }
 
 #objects {

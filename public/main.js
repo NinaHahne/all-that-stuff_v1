@@ -26,12 +26,14 @@ var socket = io();
 // ------------------------------------
 
 // §§ ELEMENTS & GLOBAL VARIABLES ********************************
+const testingMode = true;
 
 const $objects = $("#objects");
 const $queue = $("#queue");
 const $joinedPlayersContainer = $("#joined-players");
 
 const $constructionArea = $("#construction-area");
+const $message = $('#construction-area').find('.message');
 let [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
     $constructionArea
 );
@@ -166,8 +168,34 @@ let cardTitle = document.getElementsByClassName("cardtitle");
 // let bullets = document.getElementsByClassName("bullet");
 let items = document.getElementsByClassName("item");
 
+let doneBtnPressed = false;
 let myGuess;
 let correctAnswer;
+
+// §§ moving objects: --------------------------
+let objectClicked = false;
+let objectMoved = false;
+let $clickedImgBox;
+let $clickedImgId;
+
+let startX;
+let startY;
+let moveX;
+let moveY;
+// let ignoreX = 0;
+// let ignoreY = 0;
+let translateX;
+let translateY;
+
+// §§ sounds: --------------------------
+const ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
+const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
+const startGong = new Audio("./sounds/56240__q-k__gong-center-clear.wav");
+const doneGong = new Audio("./sounds/434627__dr-macak__ding.wav");
+const successJingle = new Audio("./sounds/270404__littlerobotsoundfactory__jingle-achievement-00.wav");
+
+let uniSound = true;
+let muted = false;
 
 // §§ START MENU ************************************************
 shuffleObjects(objects);
@@ -304,6 +332,7 @@ function changeTurn(data) {
 
     activePlayer = data.nextPlayer;
     correctAnswer = data.correctAnswer;
+    doneBtnPressed = false;
     myGuess = "";
 
     $objects[0].innerHTML = data.activeObjects;
@@ -316,14 +345,22 @@ function changeTurn(data) {
         items[i].innerHTML = cardItems[i];
     }
 
+    $message.removeClass('hidden');
+
     // next turn is my turn:
     if (data.nextPlayer == selectedPieceId) {
         console.log(`you drew card number ${data.newCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
         $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
+        $('#done-btn').removeClass('hidden');
+        $message[0].innerText = `it's your turn!`;
+        $message.addClass('bold');
         itsMyTurn = true;
     } else {
         // next turn is not my turn:
+        $('#done-btn').addClass('hidden');
+        $message.removeClass('bold');
+        $message[0].innerText = '...under construction...';
         itsMyTurn = false;
     }
 
@@ -371,6 +408,10 @@ function startGame(playerArray, objArray) {
 }
 
 function gameHasBeenStarted(data) {
+    doneBtnPressed = false;
+
+    $message.removeClass('hidden');
+
     // double checking, if it's really the players turn, when the game get's started makes testing easier.. (so I don't have to reload all the pages of the other players)
     if (data.startPlayer != selectedPieceId) {
         itsMyTurn = false;
@@ -392,10 +433,20 @@ function gameHasBeenStarted(data) {
         $("#start-menu").addClass("hidden");
         $("#main-game").removeClass("hidden");
 
+        $message.removeClass('bold');
+        $message.removeClass('hidden');
+        $message[0].innerText = '...under construction...';
+
+        $('#done-btn').addClass('hidden');
+
     } else if (itsMyTurn) {
         console.log(`you drew card number ${data.firstCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
         $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
+        $('#done-btn').removeClass('hidden');
+
+        $message.addClass('bold');
+        $message[0].innerText = `it's your turn!`;
     }
 
     // first word card:
@@ -546,29 +597,6 @@ function getObjectPositions() {
 }
 // getObjectPositions();
 
-let objectClicked = false;
-let objectMoved = false;
-let $clickedImgBox;
-let $clickedImgId;
-
-let startX;
-let startY;
-let moveX;
-let moveY;
-// let ignoreX = 0;
-// let ignoreY = 0;
-
-let translateX;
-let translateY;
-
-const ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
-const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
-const startGong = new Audio("./sounds/56240__q-k__gong-center-clear.wav");
-const doneGong = new Audio("./sounds/434627__dr-macak__ding.wav");
-
-let uniSound = true;
-let muted = false;
-
 // §§ event listeners - main game ***********************************
 window.addEventListener("resize", () => {
     [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
@@ -689,17 +717,27 @@ $(document).on("keydown", e => {
     } else if (e.keyCode == 13) {
         // = "ENTER"
         // simulate next turn:
-        discardAndRefillObjects();
+        if (testingMode) {
+            discardAndRefillObjects();
+        }
     } else if (e.keyCode == 32) {
         // = "SPACE"
-        if (itsMyTurn) {
+        if (itsMyTurn && testingMode) {
             // simulate "done" with building a word with objects:
             doneBuilding();
         }
     } else if (e.keyCode == 69) {
         // = "E"
         // simulate "game end":
-        endGame();
+        if (testingMode) {
+            endGame();
+        }
+    } else if (e.keyCode == 188) {
+        // = ","
+        // rotateObjectClockwise();
+    } else if (e.keyCode == 190) {
+        // = "."
+        // rotateObjectCounterClockwise();
     }
 });
 
@@ -718,6 +756,8 @@ $("#card-deck").on("mousedown", ".table-row", function(e) {
         guessWordFromCard(e);
     }
 });
+
+$('#done-btn').on('click', doneBuilding);
 
 $('#play-again-btn').on('click', () => window.location.reload(false));
 
@@ -842,6 +882,30 @@ function updatePosition(event) {
     updateObjectsForOtherPlayers();
 }
 
+// UNDER CONSTRUCTION......
+// let transformRotateC;
+// let rotateC = 45;
+//
+// function rotateObjectClockwise() {
+//     const transformProps = $clickedImgBox.css("transform");
+//     console.log('transformProps', transformProps);
+//
+//     // var values = transformProps.split("(")[1],
+//     //     values = values.split(")")[0],
+//     //     values = values.split(",");
+//
+//     // transformRotateC = Number(values[4]);
+//     // console.log('transformProps.split:', values);
+//
+//     if ($clickedImgBox.hasClass("rotated")) {
+//         rotateC += transformRotateC;
+//     }
+//
+//     $clickedImgBox.css({
+//         transform: `rotate(${rotateC}deg`
+//     });
+// }
+
 function updateObjectsForOtherPlayers() {
     // pass objects with new coordinates to all players:
     let activeObjectsHTML = $("#objects")[0].innerHTML;
@@ -859,6 +923,7 @@ function objectsAreMoving(data) {
 }
 
 function doneBuilding() {
+    // check if there is at least 1 object in the construction area...
     let activeObjectsHTML = $("#objects")[0].innerHTML;
     // console.log(activeObjectsHTML);
 
@@ -869,17 +934,23 @@ function doneBuilding() {
 }
 
 function buildingIsDone(data) {
+    console.log(data.message);
     if (!muted) {
         doneGong.play();
     }
-    console.log(data.message);
     if (!itsMyTurn) {
         $objects[0].innerHTML = data.movedObjects;
+        $message.addClass('bold');
+        $message[0].innerText = `what's all that stuff?`;
+    } else if (itsMyTurn) {
+        $message.removeClass('bold');
+        $message[0].innerText = `done!`;
     }
+    doneBtnPressed = true;
 }
 
 function guessWordFromCard(e) {
-    if (!myGuess) {
+    if (!myGuess & doneBtnPressed) {
         myGuess = e.currentTarget.getAttribute("key");
         // console.log('you clicked on: ', myGuess);
         $(e.currentTarget).addClass(`${selectedPieceId}`);
@@ -930,7 +1001,7 @@ function gameEnds(data) {
         $playersEnd.append(playerElement);
     }
 
-    // $playersEnd[0].innerHTML = data.playerRankingHTML;
+    successJingle.play();
 }
 
 // §§ sockets - main game: ******************************************
@@ -950,6 +1021,9 @@ socket.on("everyone guessed", function(data) {
             showCorrectAnswer(data);
             setTimeout(() => {
                 addPoints(data);
+                setTimeout(() => {
+                    discardAndRefillObjects();
+                }, 1000); // time before change to next turn
             }, 500); // time before addPoints
         }, 1000); // time before showCorrectAnswer
     }, 500); // time before showAnswers
