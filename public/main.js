@@ -25,8 +25,8 @@ var socket = io();
 // }
 // ------------------------------------
 
-// §§ ELEMENTS & GLOBAL VARIABLES ********************************
 const testingMode = true;
+// §§ ELEMENTS & GLOBAL VARIABLES ********************************
 
 const $objects = $("#objects");
 const $queue = $("#queue");
@@ -152,25 +152,46 @@ let left = objects.offsetLeft; //number (in px), x-position of element relative 
 let myReq;
 
 const selectPlayersContainer = document.getElementById("select-players");
-const playersContainer = document.getElementById("joined-players");
+// const playersContainer = document.getElementById("joined-players");
 
+// §§ game/player state: --------------------------
 let gameStarted = false;
+if (sessionStorage.getItem("gameStarted")) {
+    gameStarted = sessionStorage.getItem("gameStarted");
+}
 let itsMyTurn = false;
+if (sessionStorage.getItem("itsMyTurn")) {
+    gameStarted = sessionStorage.getItem("itsMyTurn");
+}
 let activePlayer;
-
+if (sessionStorage.getItem("activePlayer")) {
+    gameStarted = sessionStorage.getItem("activePlayer");
+}
 let players = [];
-// let myUserId = sessionStorage.getItem('myUserId');
-let mySocketId;
+if (sessionStorage.getItem("players")) {
+    gameStarted = sessionStorage.getItem("players");
+}
+let mySocketId; //should I put this too in the sessionStorage??????
+
 let selectedPieceId = sessionStorage.getItem("selectedPieceId");
 
-// card deck: ----------------------------------------------
+let doneBtnPressed = false;
+if (sessionStorage.getItem("doneBtnPressed")) {
+    gameStarted = sessionStorage.getItem("doneBtnPressed");
+}
+let myGuess;
+if (sessionStorage.getItem("myGuess")) {
+    gameStarted = sessionStorage.getItem("myGuess");
+}
+let correctAnswer;
+if (sessionStorage.getItem("correctAnswer")) {
+    gameStarted = sessionStorage.getItem("correctAnswer");
+}
+
+// card deck: ----------------------------------
 let cardTitle = document.getElementsByClassName("cardtitle");
 // let bullets = document.getElementsByClassName("bullet");
 let items = document.getElementsByClassName("item");
-
-let doneBtnPressed = false;
-let myGuess;
-let correctAnswer;
 
 // §§ moving objects: --------------------------
 let objectClicked = false;
@@ -245,6 +266,9 @@ $('#start-menu').on("click", ".player", e => {
     console.log("your selectedPieceId before clicking: ", selectedPieceId);
     if (!selectedPieceId && !$(e.target).hasClass("selectedPlayerPiece")) {
         selectedPieceId = $(e.target).attr("id");
+        console.log('$(e.target).attr("id") l269: ', $(e.target).attr("id"));
+        sessionStorage.setItem("selectedPieceId", selectedPieceId);
+        console.log('selectedPieceId l271: ', selectedPieceId);
         selectedPiece(selectedPieceId);
     }
 });
@@ -253,14 +277,16 @@ $('#start-menu').on("click", ".player", e => {
 function selectedPiece(pieceId) {
     sessionStorage.setItem("selectedPieceId", pieceId);
     let $piece = $('#start-menu').find("#" + pieceId);
-    // console.log('$piece: ', $piece);
+    console.log('$piece: ', $piece);
+
     $piece.addClass("selectedPlayerPiece");
     $piece.addClass("myPiece");
     // players.push(pieceId);
     // console.log('$piece[0].innerText: ', $piece[0].innerText);
     let $playerName = $piece.find('.player-name');
-    // console.log('.player-name in $piece: ', $playerName[0]);
+    console.log('$playerName: ', $playerName);
 
+    // inconsistent ERR: Cannot set property 'innerText' of undefined:
     // $piece[0].innerText = "you";
     $playerName[0].innerText = "you";
     // console.log('.player-name in $piece: ', $playerName[0]);
@@ -291,6 +317,7 @@ function removePlayer(pieceId) {
         $piece.removeClass("selectedPlayerPiece");
 
         players = players.filter(item => item !== pieceId);
+        sessionStorage.setItem("players", players);
     }
 }
 
@@ -335,9 +362,16 @@ function changeTurn(data) {
     }
 
     activePlayer = data.nextPlayer;
+    sessionStorage.setItem("activePlayer", activePlayer);
+
     correctAnswer = data.correctAnswer;
+    sessionStorage.setItem("correctAnswer", correctAnswer);
+
     doneBtnPressed = false;
+    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
+
     myGuess = "";
+    sessionStorage.setItem("myGuess", myGuess);
 
     $objects[0].innerHTML = data.activeObjects;
     $queue[0].innerHTML = data.queuedObjects;
@@ -360,12 +394,14 @@ function changeTurn(data) {
         $message[0].innerText = `it's your turn!`;
         $message.addClass('bold');
         itsMyTurn = true;
+        sessionStorage.setItem("itsMyTurn", itsMyTurn);
     } else {
         // next turn is not my turn:
         $('#done-btn').addClass('hidden');
         $message.removeClass('bold');
         $message[0].innerText = '...under construction...';
         itsMyTurn = false;
+        sessionStorage.setItem("itsMyTurn", itsMyTurn);
     }
 
     if (!muted) {
@@ -376,7 +412,10 @@ function changeTurn(data) {
 function startGame(playerArray, objArray) {
     // whoever starts the game, is also the start player:
     itsMyTurn = true;
+    sessionStorage.setItem("itsMyTurn", itsMyTurn);
+
     activePlayer = selectedPieceId;
+    sessionStorage.setItem("activePlayer", activePlayer);
 
     $(`#${selectedPieceId}`).addClass("myTurn");
     $("#construction-area").addClass(selectedPieceId);
@@ -402,6 +441,7 @@ function startGame(playerArray, objArray) {
     // console.log('queuedObjectsHTML: ', queuedObjectsHTML);
 
     gameStarted = true;
+    sessionStorage.setItem("gameStarted", gameStarted);
 
     socket.emit("game started", {
         startPlayer: selectedPieceId,
@@ -413,13 +453,17 @@ function startGame(playerArray, objArray) {
 
 function gameHasBeenStarted(data) {
     doneBtnPressed = false;
+    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 
     $message.removeClass('hidden');
 
     // double checking, if it's really the players turn, when the game get's started makes testing easier.. (so I don't have to reload all the pages of the other players)
     if (data.startPlayer != selectedPieceId) {
         itsMyTurn = false;
+        sessionStorage.setItem("itsMyTurn", itsMyTurn);
+
         activePlayer = data.startPlayer;
+        sessionStorage.setItem("activePlayer", activePlayer);
 
         $(`#${data.startPlayer}`).addClass("myTurn");
         $("#construction-area").addClass(data.startPlayer);
@@ -461,12 +505,14 @@ function gameHasBeenStarted(data) {
     }
 
     correctAnswer = data.correctAnswer;
+    sessionStorage.setItem("correctAnswer", correctAnswer);
 
     if (!muted) {
         startGong.play();
     }
 
     gameStarted = true;
+    sessionStorage.setItem("gameStarted", gameStarted);
 }
 
 function someOneGuessed(data) {
@@ -526,6 +572,8 @@ function addPoints(data) {
 
 // §§ sockets - start menu: ----------------------------------------
 socket.on("welcome", function(data) {
+    selectedPieceId = sessionStorage.getItem("selectedPieceId");
+
     sessionStorage.setItem("mySocketId", data.socketId);
     mySocketId = data.socketId;
     console.log(
@@ -538,6 +586,7 @@ socket.on("welcome", function(data) {
     }
 
     players = data.selectedPieces;
+    sessionStorage.setItem("players", players);
     // console.log('players in socket.on("welcome"): ', players);
     for (let i = 0; i < players.length; i++) {
         let $piece = $('#start-menu').find("#" + players[i]);
@@ -560,7 +609,10 @@ socket.on("game has been started", function(data) {
     console.log(data.message);
     // console.log('data.activeObjects: ', data.activeObjects);
     // console.log('data.queuedObjects: ', data.queuedObjects);
-    gameHasBeenStarted(data);
+    // only if player joined:
+    if (selectedPieceId) {
+        gameHasBeenStarted(data);
+    }
 });
 
 socket.on("next turn", function(nextPlayerData) {
@@ -970,11 +1022,14 @@ function buildingIsDone(data) {
         $message[0].innerText = `done!`;
     }
     doneBtnPressed = true;
+    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 }
 
 function guessWordFromCard(e) {
     if (!myGuess & doneBtnPressed) {
         myGuess = e.currentTarget.getAttribute("key");
+        sessionStorage.setItem("myGuess", myGuess);
+
         // console.log('you clicked on: ', myGuess);
         $(e.currentTarget).addClass(`${selectedPieceId}`);
         socket.emit("made a guess", {

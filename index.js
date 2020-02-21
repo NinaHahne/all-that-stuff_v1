@@ -202,8 +202,9 @@ function getWinner() {
 
 io.on("connection", function(socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
+    console.log('joinedPlayers on connection: ', joinedPlayers);
 
-    joinedPlayers[socket.id] = "";
+    // joinedPlayers[socket.id] = "";
 
     // Generate a v1 (time-based) id:
     // socket.userId = uuid.v1();
@@ -216,6 +217,7 @@ io.on("connection", function(socket) {
     });
 
     socket.on("selected piece", function(data) {
+        console.log('joinedPlayers on "selected piece": ', joinedPlayers);
         console.log(
             `user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`
         );
@@ -308,11 +310,14 @@ io.on("connection", function(socket) {
     // socket.broadcast.emit('hi everyone else')
 
     socket.on("disconnect", function() {
+        console.log('joinedPlayers on "disconnect": ', joinedPlayers);
         console.log(`socket with the id ${socket.id} is now disconnected`);
         let piece = joinedPlayers[socket.id];
         console.log(`player piece "${piece}" is now free again`);
         selectedPieces = selectedPieces.filter(item => item !== piece);
-        io.sockets.emit("remove selected piece", piece);
-        delete joinedPlayers[socket.id];
+        if (piece) {
+            io.sockets.emit("remove selected piece", piece);
+            delete joinedPlayers[socket.id];
+        }
     });
 });
