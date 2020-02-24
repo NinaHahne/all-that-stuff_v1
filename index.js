@@ -233,7 +233,7 @@ io.on("connection", function(socket) {
 
     socket.on("selected piece", function(data) {
         if (data.selectedPieceId) {
-            console.log('joinedPlayers on "selected piece": ', joinedPlayers);
+            // console.log('joinedPlayers on "selected piece": ', joinedPlayers);
             console.log(
                 `user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`
             );
@@ -248,7 +248,7 @@ io.on("connection", function(socket) {
     socket.on("game started", function(data) {
         currentPlayer = data.startPlayer;
         selectedPieces = data.joinedPlayerIds;
-        console.log("joined players at game start: ", selectedPieces);
+        // console.log("joined players at game start: ", selectedPieces);
         let msg = `"${data.startPlayer}" started the game and starts with building!`;
         // console.log(msg);
 
@@ -327,7 +327,7 @@ io.on("connection", function(socket) {
     // socket.broadcast.emit('hi everyone else')
 
     socket.on("disconnect", function() {
-        console.log('joinedPlayers on "disconnect": ', joinedPlayers);
+        // console.log('joinedPlayers on "disconnect": ', joinedPlayers);
         console.log(`socket with the id ${socket.id} is now disconnected`);
         let piece = joinedPlayers[socket.id];
         console.log(`player piece "${piece}" is now free again`);
