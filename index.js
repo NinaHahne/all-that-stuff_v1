@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
-const uuid = require("uuid");
+// const uuid = require("uuid");
 
 // for socket.io:
 const server = require("http").Server(app);
-const io = require("socket.io")(server, { origins: "localhost:8080" });
+const io = require("socket.io")(server, {
+    origins: "localhost:8080 http://192.168.0.14:8080:*"
+});
 
 // cards:
 const cards = require("./cards_enUS");

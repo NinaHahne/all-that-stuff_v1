@@ -1,5 +1,6 @@
 // io() is apparently actually not undefined?:
-var socket = io();
+// var socket = io();
+var socket = io.connect();
 
 // to prevent image dragging for imgs that are dynamically declared:
 // // register onLoad event with anonymous function
