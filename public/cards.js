@@ -63,7 +63,7 @@ function discardCard() {
     if (newPile === false) {
         discardPile.push(firstCard);
     }
-    console.log(`${discardPile.length} cards in the discard pile.`); //TEST
+    // console.log(`${discardPile.length} cards in the discard pile.`); //TEST
     console.log(`${stuffCards.length} cards left.`); //TEST
 
     cardTitle[0].innerHTML = "";
