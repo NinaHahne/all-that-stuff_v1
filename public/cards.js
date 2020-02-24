@@ -35,6 +35,7 @@ request.onload = function() {
 
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
+    console.log(`all ${cards.length} has been shuffled.`);
     //shuffles array in place
     let j, x, i;
     for (i = cards.length - 1; i > 0; i--) {
@@ -56,7 +57,7 @@ function drawCard(cards) {
         items[i].innerHTML = cardItems[i];
     }
     let message = `you drew card number ${firstCard.id}.`;
-    console.log(message); //TEST
+    console.log(message);
 }
 
 function discardCard() {
@@ -64,7 +65,7 @@ function discardCard() {
         discardPile.push(firstCard);
     }
     // console.log(`${discardPile.length} cards in the discard pile.`); //TEST
-    console.log(`${stuffCards.length} cards left.`); //TEST
+    // console.log(`${stuffCards.length} cards left.`); //TEST
 
     cardTitle[0].innerHTML = "";
     for (let i = 0; i < items.length; i++) {
