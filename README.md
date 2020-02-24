@@ -2,7 +2,7 @@
 soon-to-be most awesome multi-player browser word game
 
 look at the cards:
-https://ninahahne.github.io/AllThatStuff/public/cards.html
+http://www.allthatstuff.fun/cards
 
 cards json file:
-https://ninahahne.github.io/AllThatStuff/cards_enUS.json
+http://www.allthatstuff.fun/cards_enUS.json
