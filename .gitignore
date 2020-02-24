@@ -1,3 +1,5 @@
+node_modules
+secrets.json
 english-cards_ideas/*
 WasnDas.pptx
 objects_big/*
