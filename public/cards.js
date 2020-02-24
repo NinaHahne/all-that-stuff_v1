@@ -35,7 +35,7 @@ request.onload = function() {
 
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
-    console.log(`all ${cards.length} has been shuffled.`);
+    console.log(`all ${cards.length} cards has been shuffled.`);
     //shuffles array in place
     let j, x, i;
     for (i = cards.length - 1; i > 0; i--) {
