@@ -212,6 +212,8 @@ let moveY;
 let translateX;
 let translateY;
 
+let transformRotate = 0;
+
 // §§ sounds: --------------------------
 const ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
 const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
@@ -759,6 +761,8 @@ $(document).on("mousedown", ".img-box", function(e) {
     if (gameStarted && itsMyTurn) {
         objectClicked = true;
         $clickedImgBox = $(this);
+        // reset transform rotate:
+        transformRotate = 0;
         // console.log($clickedImgBox);
         // show name of clicked object:
         $clickedImgId = $clickedImgBox.find("img").attr("id");
@@ -766,9 +770,7 @@ $(document).on("mousedown", ".img-box", function(e) {
         $clickedImgBox.addClass("move");
         startX = e.clientX;
         startY = e.clientY;
-        // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
         // get the clicked object to the very front:
-
         // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
         let highestZIndex = 0;
         $(".selected").each(function() {
@@ -781,15 +783,29 @@ $(document).on("mousedown", ".img-box", function(e) {
             "z-index": highestZIndex + 1
         });
 
+        //  https://css-tricks.com/get-value-of-css-rotation-through-javascript/
+
+        // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
         if ($clickedImgBox.hasClass("selected")) {
             const transformProps = $(".move").css("transform");
-            // console.log(transformProps);
+            console.log('transformProps: ', transformProps);
             var values = transformProps.split("(")[1],
                 values = values.split(")")[0],
                 values = values.split(",");
+
             translateX = Number(values[4]);
             translateY = Number(values[5]);
             // console.log('translateX: ', translateX, 'translateY: ', translateY);
+
+            // get the transform/rotate properties:
+            let a= Number(values[0]);
+            let b= Number(values[1]);
+            // let c= Number(values[2]);
+            // let d= Number(values[3]);
+            // console.log('a: ', a, 'b: ', b, 'c: ', c, 'd: ', d);
+
+            transformRotate = Math.round(Math.atan2(b, a) * (180/Math.PI));
+            console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
         }
     }
 });
@@ -829,6 +845,7 @@ $(document).on("mouseup", function(e) {
             // if dropped ouside construction area, put it back to it's original position:
         } else {
             $clickedImgBox.removeClass("selected");
+            // reset object position::
             $clickedImgBox.css({
                 transform: `translate(${0}px, ${0}px)`
             });
@@ -875,18 +892,18 @@ $(document).on("keydown", e => {
             // simulate "done" with building a word with objects:
             doneBuilding();
         }
-    } else if (e.keyCode == 69) {
-        // = "E"
+    } else if (e.keyCode == 70) {
+        // = "F"
         // simulate "game end":
         if (testingMode) {
             endGame();
         }
-    } else if (e.keyCode == 188) {
-        // = ","
-        // rotateObjectClockwise();
-    } else if (e.keyCode == 190) {
-        // = "."
-        // rotateObjectCounterClockwise();
+    } else if (e.keyCode == 81) {
+        // = "Q"
+        rotateObject('clockwise');
+    } else if (e.keyCode == 69) {
+        // = "E"
+        rotateObject('counterclockwise');
     }
 });
 
@@ -1023,36 +1040,57 @@ function updatePosition(event) {
         moveY += translateY;
     }
 
+    // $clickedImgBox.css({
+    //     transform: `translate(${moveX}px, ${moveY}px)`
+    // });
+
     $clickedImgBox.css({
-        transform: `translate(${moveX}px, ${moveY}px)`
+        transform: `translate(${moveX}px, ${moveY}px) rotate(${transformRotate}deg)`
     });
 
     updateObjectsForOtherPlayers();
 }
 
 // UNDER CONSTRUCTION......
-// let transformRotateC;
-// let rotateC = 45;
 //
-// function rotateObjectClockwise() {
-//     const transformProps = $clickedImgBox.css("transform");
-//     console.log('transformProps', transformProps);
-//
-//     // var values = transformProps.split("(")[1],
-//     //     values = values.split(")")[0],
-//     //     values = values.split(",");
-//
-//     // transformRotateC = Number(values[4]);
-//     // console.log('transformProps.split:', values);
-//
-//     if ($clickedImgBox.hasClass("rotated")) {
-//         rotateC += transformRotateC;
-//     }
-//
-//     $clickedImgBox.css({
-//         transform: `rotate(${rotateC}deg`
-//     });
-// }
+function rotateObject(direction) {
+    if ($clickedImgBox.hasClass("selected")) {
+        let rotate
+        if (direction == 'clockwise') {
+            rotate = 5;
+        } else if (direction == 'counterclockwise') {
+            rotate = -5;
+        }
+        console.log('$clickedImgBox while rotateObject(): ', $clickedImgBox);
+
+        // add new rotation to excisting transform rotate property:
+        transformRotate += rotate;
+
+        $clickedImgBox.css({
+            transform: `translate(${moveX}px, ${moveY}px) rotate(${transformRotate}deg)`
+        });
+
+        updateObjectsForOtherPlayers();
+    }
+
+    // let transformProps = $clickedImgBox.css("transform");
+    // console.log('transformProps: ', transformProps);
+
+    // var values = transformProps.split("(")[1],
+    //     values = values.split(")")[0],
+    //     values = values.split(",");
+    //
+    // translateX = Number(values[4]);
+    // translateY = Number(values[5]);
+
+    // get the transform/rotate properties:
+    // let a= Number(values[0]);
+    // let b= Number(values[1]);
+
+    // let angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+    // console.log('Rotate: '+ angle + 'deg');
+
+}
 
 function updateObjectsForOtherPlayers() {
     // pass objects with new coordinates to all players:
