@@ -1061,7 +1061,7 @@ function rotateObject(direction) {
         } else if (direction == 'counterclockwise') {
             rotate = -5;
         }
-        console.log('$clickedImgBox while rotateObject(): ', $clickedImgBox);
+        // console.log('$clickedImgBox while rotateObject(): ', $clickedImgBox);
 
         // add new rotation to excisting transform rotate property:
         transformRotate += rotate;
@@ -1072,24 +1072,6 @@ function rotateObject(direction) {
 
         updateObjectsForOtherPlayers();
     }
-
-    // let transformProps = $clickedImgBox.css("transform");
-    // console.log('transformProps: ', transformProps);
-
-    // var values = transformProps.split("(")[1],
-    //     values = values.split(")")[0],
-    //     values = values.split(",");
-    //
-    // translateX = Number(values[4]);
-    // translateY = Number(values[5]);
-
-    // get the transform/rotate properties:
-    // let a= Number(values[0]);
-    // let b= Number(values[1]);
-
-    // let angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-    // console.log('Rotate: '+ angle + 'deg');
-
 }
 
 function updateObjectsForOtherPlayers() {
@@ -1151,24 +1133,12 @@ function guessWordFromCard(e) {
 }
 
 function endGame() {
-    // let playerPiecesHTML = $("#joined-players")[0].innerHTML;
-    // console.log('playerPiecesHTML: ', playerPiecesHTML);
-    //
-    // let playersList = playersContainer.getElementsByClassName(
-    //     "player"
-    // );
-    //
-    // let playerArray = Array.from(playersList);
-
-    socket.emit("end game", {
-        // playerArray: playerArray,
-        // playerPiecesHTML: playerPiecesHTML
-    });
+    socket.emit("end game");
 }
 
 function gameEnds(data) {
     console.log(data.message);
-    console.log(data.rankingArray);
+    // console.log(data.rankingArray);
     console.log(`player "${data.winner}" wins!`);
 
     $("#main-game").addClass("hidden");

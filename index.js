@@ -181,18 +181,13 @@ function getWinner() {
 
     let ranking = [];
     for (let player in playerPointsTotal) {
-        console.log(player, ":", playerPointsTotal[player]);
-        // let playerElement =
-        //     `<div class="player ${player}" id="${player}">
-        //         <div class="player-name">${player}</div>
-        //         <div class="player-points">${playerPointsTotal[player]}</div>
-        //     </div>`;
+        // console.log(player, ":", playerPointsTotal[player]);
         let playerPontsObj = {
             player: player,
             points: playerPointsTotal[player]
         };
         ranking.push(playerPontsObj);
-        console.log('playerPontsObj in getWinner loop:', playerPontsObj);
+        // console.log('playerPontsObj in getWinner loop:', playerPontsObj);
     }
 
     // sort array in place by points, descending:
@@ -213,7 +208,7 @@ function getWinner() {
 
 io.on("connection", function(socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
-    console.log('joinedPlayers on connection: ', joinedPlayers);
+    // console.log('joinedPlayers on connection: ', joinedPlayers);
 
     // joinedPlayers[socket.id] = "";
 
@@ -237,14 +232,14 @@ io.on("connection", function(socket) {
             joinedPlayers[socket.id] = data.selectedPieceId;
 
             io.sockets.emit("add selected piece", data.selectedPieceId);
-            console.log("selectedPieces: ", selectedPieces);
+            // console.log("selectedPieces: ", selectedPieces);
         }
     });
 
     socket.on("game started", function(data) {
         currentPlayer = data.startPlayer;
         selectedPieces = data.joinedPlayerIds;
-        // console.log("joined players at game start: ", selectedPieces);
+        console.log("joined players at game start: ", selectedPieces);
         let msg = `"${data.startPlayer}" started the game and starts with building!`;
         // console.log(msg);
 
