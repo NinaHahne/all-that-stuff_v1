@@ -643,7 +643,7 @@ function addPoints(data) {
 }
 
 // §§ sockets - start menu: ----------------------------------------
-socket.on("welcome", function(data) {
+socket.on("connected", function(data) {
     selectedPieceId = sessionStorage.getItem("selectedPieceId");
 
     sessionStorage.setItem("mySocketId", data.socketId);
@@ -982,7 +982,7 @@ function discardAndRefillObjects() {
     let activeObjectsHTML = $("#objects")[0].innerHTML;
     let queuedObjectsHTML = $("#queue")[0].innerHTML;
 
-    socket.emit("next player's turn", {
+    socket.emit("next turn", {
         activePlayer: activePlayer,
         activeObjects: activeObjectsHTML,
         queuedObjects: queuedObjectsHTML
