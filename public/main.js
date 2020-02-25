@@ -35,6 +35,8 @@ const $joinedPlayersContainer = $("#joined-players");
 
 const $constructionArea = $("#construction-area");
 const $message = $("#construction-area").find(".message");
+const $instructions = $('#instructions');
+
 let [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
     $constructionArea
 );
@@ -925,9 +927,19 @@ $("#card-deck").on("mousedown", ".table-row", function(e) {
 
 $("#done-btn").on("click", doneBuilding);
 
+$("#help-btn").on("click", toggleHelp);
+
 $("#play-again-btn").on("click", () => window.location.reload(false));
 
 // §§ functions - main game ***********************************
+function toggleHelp() {
+    if ($instructions.hasClass('hidden')) {
+        $instructions.removeClass('hidden');
+    } else {
+        $instructions.addClass('hidden');
+    }
+}
+
 function changeObjectImage(imgBox) {
     if (!$(imgBox).hasClass("only1")) {
         // console.log('more than one image!');

@@ -20,21 +20,6 @@
 
             <section id="joined-players"></section>
 
-            <section id="instructions" class="hidden">
-                    <!-- <div class="stuff-logo">
-                    <h2>All&nbsp;That</h2>
-                    <h1>Stuff</h1>
-                </div> -->
-                <h2>Instructions</h2>
-                <p>will be fully playable soon...<br>so far you can:</p>
-                <ul>
-                    <li><strong>drag&drop</strong> objects to the grey construction area</li>
-                    <li><strong>double-click</strong> objects to switch perspective <small>(only for some objects)</small> </li>
-                    <li>press <span>enter</span> to start next turn <small>(empty construction area and refill objects)</small> </li>
-                    <li>press <span>S</span> to toggle sound <small>(same sound/different sound for every object)</small></li>
-                    <li>press <span>M</span> to mute sounds</li>
-                </ul>
-            </section>
 
             <!-- <section id="left-side">
 
@@ -60,8 +45,20 @@
             </section>
 
             <section id="construction-area">
-                <button id="done-btn" class="hidden">done!</button>
                 <div class="hidden message">...under construction...</div>
+                <section id="instructions" class="hidden">
+                    <h3>Instructions:</h3>
+                    <ul>
+                        <li><strong>drag&drop</strong> objects to the construction area</li>
+                        <li><strong>double-click</strong> objects to switch perspective <small>(only for some objects)</small></li>
+                        <li>press <span>Q</span> or <span>E</span> to rotate the last clicked object in the construction area</li>
+                        <!-- <li>press <span>enter</span> to start next turn <small>(empty construction area and refill objects)</small> </li> -->
+                        <li>press <span>S</span> to toggle between two sound modes <small>(universal vs. object specific)</small></li>
+                        <li>press <span>M</span> to mute sounds</li>
+                    </ul>
+                </section>
+                <button id="done-btn" class="hidden">done!</button>
+                <button id="help-btn">?</button>
             </section>
 
             <section id="objects"></section>

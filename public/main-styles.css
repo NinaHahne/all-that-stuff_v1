@@ -242,7 +242,7 @@ button:focus {
     font-size: 0; /* to remove white space between the ticker elements, that causes ticker to jump in the first round*/
     height: 300px;
 }
-/* ---------MAIN SCREEN ------------- */
+/* §§ ---------MAIN SCREEN ------------- */
 .hidden {
     visibility: hidden;
 }
@@ -250,8 +250,17 @@ button:focus {
 /* instructions --------------------- */
 #instructions {
     position: absolute;
-    width: 470px;
-    margin-left: 6px;
+    top: 80px;
+    margin: 5px;
+}
+
+#instructions h3 {
+    margin: 0 0 10px 0;
+    font-size: 32px;
+}
+
+#instructions ul {
+    margin: 10px 0px;
 }
 
 #instructions li {
@@ -430,6 +439,14 @@ small {
     border-radius: 5px 15px 5px 15px;
     position: absolute;
     left: 5px;
+    bottom: 5px;
+}
+
+#help-btn {
+    margin: 5px 5px;
+    border-radius: 15px 5px 15px 5px;
+    position: absolute;
+    right: 5px;
     bottom: 5px;
 }
 
