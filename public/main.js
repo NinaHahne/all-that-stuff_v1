@@ -587,9 +587,9 @@ function gameHasBeenStarted(data) {
 }
 
 function someOneGuessed(data) {
-    console.log("someone guessed");
+    // console.log("someone guessed");
     let $highestFreePointBox = $pointsIfCorrect.children().not('.claimed').first();
-    console.log('highestFreePointBox:', $highestFreePointBox);
+    // console.log('highestFreePointBox:', $highestFreePointBox);
     $highestFreePointBox.addClass(`claimed ${data.guessingPlayer}`);
     if (!muted) {
         plop.play();
