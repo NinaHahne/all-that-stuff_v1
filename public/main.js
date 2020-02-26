@@ -252,6 +252,7 @@ let muted = false;
 // §§ START MENU ************************************************
 shuffleObjects(objects);
 moveObjects();
+preloadObjectImages();
 
 // §§ event listeners - start menu: -----------------------------
 playButton.addEventListener("click", function() {
@@ -302,6 +303,35 @@ $("#start-menu").on("click", ".player", e => {
 });
 
 // §§ functions- start menu: ----------------------------------------
+function preloadObjectImages() {
+    const objectsArray = Array.from(objectList);
+    objectsArray.forEach((object) => {
+        if (!$(object).hasClass("only1")) {
+            // console.log('more than one image!');
+            const img = object.querySelector("img");
+            // console.log(img.id);
+            // console.log(img.src);
+            const srcNameV = img.src.split(".png")[0];
+            const newSrcBase = srcNameV.substring(0, srcNameV.length - 1);
+            // console.log('active image version: ', srcNameV[srcNameV.length - 1]);
+            if ($(object).hasClass("more2")) {
+                let imgSrc2 = newSrcBase + 2 + ".png";
+                let newImageV2 = new Image();
+                newImageV2.src = imgSrc2;
+
+            } else if ($(object).hasClass("more3")) {
+                let imgSrc2 = newSrcBase + 2 + ".png";
+                let imgSrc3 = newSrcBase + 3 + ".png";
+                let newImageV2 = new Image();
+                newImageV2.src = imgSrc2;
+                let newImageV3 = new Image();
+                newImageV3.src = imgSrc3;
+            }
+        }
+    });
+
+}
+
 function selectedPiece(pieceId) {
 
     if (myPlayerName && pieceId) {
@@ -387,7 +417,6 @@ function removePlayer(pieceId) {
     }
 }
 
-// §§ functions- main game: ----------------------------------------
 function moveObjects() {
     // left = left - 2;
     left--;
@@ -409,82 +438,6 @@ function moveObjects() {
 function shuffleObjects(objects) {
     for (let i = objects.children.length; i >= 0; i--) {
         objects.appendChild(objects.children[(Math.random() * i) | 0]);
-    }
-}
-
-function changeTurn(data) {
-    $(`#${data.activePlayer}`).removeClass("myTurn");
-    $("#construction-area").removeClass(data.activePlayer);
-
-    $(`#${data.nextPlayer}`).addClass("myTurn");
-    $("#construction-area").addClass(data.nextPlayer);
-
-    $(`.table-row[key=${correctAnswer}]`).removeClass(activePlayer);
-
-    // reset guess markers:
-    let $guessesBoxesList = $(`.table-row`).find(".guesses");
-    for (let i = 0; i < $guessesBoxesList.length; i++) {
-        $guessesBoxesList[i].innerHTML = "";
-    }
-
-    // create "points if correct" boxes:
-    // reset from previous game:
-    $pointsIfCorrect[0].innerHTML = '';
-    let highestAchievablePoint = players.length - 1;
-    for (let i = highestAchievablePoint; i > 0; i--) {
-        let points = i;
-        if (i > 5) {
-            points = 5;
-        }
-        let elem = `<div class="points">${points}</div>`;
-        $pointsIfCorrect.append(elem);
-    }
-
-    activePlayer = data.nextPlayer;
-    sessionStorage.setItem("activePlayer", activePlayer);
-
-    correctAnswer = data.correctAnswer;
-    sessionStorage.setItem("correctAnswer", correctAnswer);
-
-    doneBtnPressed = false;
-    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
-
-    myGuess = "";
-    sessionStorage.setItem("myGuess", myGuess);
-
-    $objects[0].innerHTML = data.activeObjects;
-    $queue[0].innerHTML = data.queuedObjects;
-
-    // new word card:
-    cardTitle[0].innerHTML = data.newCard.title;
-    let cardItems = data.newCard.items;
-    for (let i = 0; i < cardItems.length; i++) {
-        items[i].innerHTML = cardItems[i];
-    }
-
-    $message.removeClass("hidden");
-
-    // next turn is my turn:
-    if (data.nextPlayer == selectedPieceId) {
-        console.log(`you drew card number ${data.newCard.id}.`);
-        console.log(`please build item number ${data.correctAnswer}`);
-        $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
-        $("#done-btn").removeClass("hidden");
-        $message[0].innerText = `it's your turn!`;
-        $message.addClass("bold");
-        itsMyTurn = true;
-        sessionStorage.setItem("itsMyTurn", itsMyTurn);
-    } else {
-        // next turn is not my turn:
-        $("#done-btn").addClass("hidden");
-        $message.removeClass("bold");
-        $message[0].innerText = "...under construction...";
-        itsMyTurn = false;
-        sessionStorage.setItem("itsMyTurn", itsMyTurn);
-    }
-
-    if (!muted) {
-        startGong.play();
     }
 }
 
@@ -644,63 +597,6 @@ function gameHasBeenStarted(data) {
     // numberOfRoundsLeft--;
 }
 
-function someOneGuessed(data) {
-    // console.log("someone guessed");
-    let $highestFreePointBox = $pointsIfCorrect.children().not('.claimed').first();
-    // console.log('highestFreePointBox:', $highestFreePointBox);
-    $highestFreePointBox.addClass(`claimed ${data.guessingPlayer}`);
-    if (!muted) {
-        plop.play();
-    }
-}
-
-function showAnswers(data) {
-    // console.log("guessed answers: ", data.guessedAnswers);
-    // console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
-    // console.log("actualPlayerPoints: ", data.actualPlayerPoints);
-    // console.log("playerPointsTotal: ", data.playerPointsTotal);
-    if (!itsMyTurn) {
-        $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
-    }
-    // show answers of all guessers:
-    for (let player in data.guessedAnswers) {
-        let $guessesBoxInCardItem = $(
-            `.table-row[key=${data.guessedAnswers[player]}]`
-        ).find(".guesses");
-
-        let newGuess = `<div class="guess ${player}"></div>`;
-
-        $guessesBoxInCardItem.append(newGuess);
-        // empty guesses div for next turn.... also for startGame?
-    }
-    if (!muted) {
-        // pop sound for displaying all answers:
-        plop.play();
-        // drumroll until showCorrectAnswer:
-        // adding 700ms..
-        setTimeout(() => {
-            drumroll.play();
-        }, 700);
-    }
-}
-
-function showCorrectAnswer(data) {
-    // show correct answer:
-    $(`.table-row[key=${data.correctAnswer}]`).addClass(activePlayer);
-}
-
-function addPoints(data) {
-    for (let player in data.playerPointsTotal) {
-        let $piece = $("#" + player);
-        let $playerPoints = $piece.find(".player-points");
-        $playerPoints[0].innerText = data.playerPointsTotal[player];
-    }
-    // for the first round:
-    $(".player-points").removeClass("hidden");
-    if (!muted) {
-        bubblePop1.play();
-    }
-}
 
 // §§ sockets - start menu: ----------------------------------------
 socket.on("welcome", function(data) {
@@ -770,56 +666,6 @@ socket.on("next turn", function(nextPlayerData) {
 
 // §§ MAIN GAME ************************************************
 
-// function getConstructionAreaBorders() {
-//     borderTop = $constructionArea.offset().top;
-//     borderBottom = borderTop + $constructionArea.height();
-//     borderLeft = $constructionArea.offset().left;
-//     borderRight = borderLeft + $constructionArea.width();
-//     // console.log('borderTop: ', borderTop);
-//     // console.log('borderRight: ', borderRight);
-//     // console.log('borderBottom: ', borderBottom);
-//     // console.log('borderLeft: ', borderLeft);
-// };
-// getConstructionAreaBorders();
-
-// function getBodyBorders() {
-//     bodyBorderTop = $body.offset().top;
-//     bodyBorderBottom = bodyBorderTop + $body.height();
-//     bodyBorderLeft = $body.offset().left;
-//     bodyBorderRight = bodyBorderLeft + $body.width();
-//     // console.log('bodyBorderTop: ', bodyBorderTop);
-//     // console.log('bodyBorderRight: ', bodyBorderRight);
-//     // console.log('bodyBorderBottom: ', bodyBorderBottom);
-//     // console.log('bodyBorderLeft: ', bodyBorderLeft);
-// };
-// getBodyBorders();
-
-function get$objBorders($obj) {
-    let top = $obj.offset().top;
-    let bottom = top + $obj.height();
-    let left = $obj.offset().left;
-    let right = left + $obj.width();
-    return [top, bottom, left, right];
-}
-
-function getObjectPositions() {
-    $objects.children().each(function() {
-        // position() gives position relative to positioned parent
-        let objTop = $(this).position().top;
-        let objLeft = $(this).position().left;
-        // console.log('objTop: ', objTop, 'objLeft: ', objLeft);
-        $(this).css({
-            // position: 'absolute',
-            top: objTop + "px",
-            left: objLeft + "px"
-        });
-    });
-    $objects.children(".img-box").css({
-        position: "absolute"
-    });
-}
-// getObjectPositions();
-
 // §§ event listeners - main game ***********************************
 window.addEventListener("resize", () => {
     [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
@@ -862,8 +708,8 @@ $(document).on("mousedown", ".img-box", function(e) {
             const transformProps = $(".move").css("transform");
             console.log('transformProps: ', transformProps);
             var values = transformProps.split("(")[1],
-                values = values.split(")")[0],
-                values = values.split(",");
+            values = values.split(")")[0],
+            values = values.split(",");
 
             translateX = Number(values[4]);
             translateY = Number(values[5]);
@@ -1001,7 +847,193 @@ $("#help-btn").on("click", toggleHelp);
 
 $("#play-again-btn").on("click", () => window.location.reload(false));
 
-// §§ functions - main game ***********************************
+// §§ functions- main game: ----------------------------------------
+
+// function getConstructionAreaBorders() {
+//     borderTop = $constructionArea.offset().top;
+//     borderBottom = borderTop + $constructionArea.height();
+//     borderLeft = $constructionArea.offset().left;
+//     borderRight = borderLeft + $constructionArea.width();
+//     // console.log('borderTop: ', borderTop);
+//     // console.log('borderRight: ', borderRight);
+//     // console.log('borderBottom: ', borderBottom);
+//     // console.log('borderLeft: ', borderLeft);
+// };
+// getConstructionAreaBorders();
+
+// function getBodyBorders() {
+//     bodyBorderTop = $body.offset().top;
+//     bodyBorderBottom = bodyBorderTop + $body.height();
+//     bodyBorderLeft = $body.offset().left;
+//     bodyBorderRight = bodyBorderLeft + $body.width();
+//     // console.log('bodyBorderTop: ', bodyBorderTop);
+//     // console.log('bodyBorderRight: ', bodyBorderRight);
+//     // console.log('bodyBorderBottom: ', bodyBorderBottom);
+//     // console.log('bodyBorderLeft: ', bodyBorderLeft);
+// };
+// getBodyBorders();
+
+function changeTurn(data) {
+    $(`#${data.activePlayer}`).removeClass("myTurn");
+    $("#construction-area").removeClass(data.activePlayer);
+
+    $(`#${data.nextPlayer}`).addClass("myTurn");
+    $("#construction-area").addClass(data.nextPlayer);
+
+    $(`.table-row[key=${correctAnswer}]`).removeClass(activePlayer);
+
+    // reset guess markers:
+    let $guessesBoxesList = $(`.table-row`).find(".guesses");
+    for (let i = 0; i < $guessesBoxesList.length; i++) {
+        $guessesBoxesList[i].innerHTML = "";
+    }
+
+    // create "points if correct" boxes:
+    // reset from previous game:
+    $pointsIfCorrect[0].innerHTML = '';
+    let highestAchievablePoint = players.length - 1;
+    for (let i = highestAchievablePoint; i > 0; i--) {
+        let points = i;
+        if (i > 5) {
+            points = 5;
+        }
+        let elem = `<div class="points">${points}</div>`;
+        $pointsIfCorrect.append(elem);
+    }
+
+    activePlayer = data.nextPlayer;
+    sessionStorage.setItem("activePlayer", activePlayer);
+
+    correctAnswer = data.correctAnswer;
+    sessionStorage.setItem("correctAnswer", correctAnswer);
+
+    doneBtnPressed = false;
+    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
+
+    myGuess = "";
+    sessionStorage.setItem("myGuess", myGuess);
+
+    $objects[0].innerHTML = data.activeObjects;
+    $queue[0].innerHTML = data.queuedObjects;
+
+    // new word card:
+    cardTitle[0].innerHTML = data.newCard.title;
+    let cardItems = data.newCard.items;
+    for (let i = 0; i < cardItems.length; i++) {
+        items[i].innerHTML = cardItems[i];
+    }
+
+    $message.removeClass("hidden");
+
+    // next turn is my turn:
+    if (data.nextPlayer == selectedPieceId) {
+        console.log(`you drew card number ${data.newCard.id}.`);
+        console.log(`please build item number ${data.correctAnswer}`);
+        $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
+        $("#done-btn").removeClass("hidden");
+        $message[0].innerText = `it's your turn!`;
+        $message.addClass("bold");
+        itsMyTurn = true;
+        sessionStorage.setItem("itsMyTurn", itsMyTurn);
+    } else {
+        // next turn is not my turn:
+        $("#done-btn").addClass("hidden");
+        $message.removeClass("bold");
+        $message[0].innerText = "...under construction...";
+        itsMyTurn = false;
+        sessionStorage.setItem("itsMyTurn", itsMyTurn);
+    }
+
+    if (!muted) {
+        startGong.play();
+    }
+}
+
+function someOneGuessed(data) {
+    // console.log("someone guessed");
+    let $highestFreePointBox = $pointsIfCorrect.children().not('.claimed').first();
+    // console.log('highestFreePointBox:', $highestFreePointBox);
+    $highestFreePointBox.addClass(`claimed ${data.guessingPlayer}`);
+    if (!muted) {
+        plop.play();
+    }
+}
+
+function showAnswers(data) {
+    // console.log("guessed answers: ", data.guessedAnswers);
+    // console.log("playerPointsIfCorrect: ", data.playerPointsIfCorrect);
+    // console.log("actualPlayerPoints: ", data.actualPlayerPoints);
+    // console.log("playerPointsTotal: ", data.playerPointsTotal);
+    if (!itsMyTurn) {
+        $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
+    }
+    // show answers of all guessers:
+    for (let player in data.guessedAnswers) {
+        let $guessesBoxInCardItem = $(
+            `.table-row[key=${data.guessedAnswers[player]}]`
+        ).find(".guesses");
+
+        let newGuess = `<div class="guess ${player}"></div>`;
+
+        $guessesBoxInCardItem.append(newGuess);
+        // empty guesses div for next turn.... also for startGame?
+    }
+    if (!muted) {
+        // pop sound for displaying all answers:
+        plop.play();
+        // drumroll until showCorrectAnswer:
+        // adding 700ms..
+        setTimeout(() => {
+            drumroll.play();
+        }, 700);
+    }
+}
+
+function showCorrectAnswer(data) {
+    // show correct answer:
+    $(`.table-row[key=${data.correctAnswer}]`).addClass(activePlayer);
+}
+
+function addPoints(data) {
+    for (let player in data.playerPointsTotal) {
+        let $piece = $("#" + player);
+        let $playerPoints = $piece.find(".player-points");
+        $playerPoints[0].innerText = data.playerPointsTotal[player];
+    }
+    // for the first round:
+    $(".player-points").removeClass("hidden");
+    if (!muted) {
+        bubblePop1.play();
+    }
+}
+
+
+function get$objBorders($obj) {
+    let top = $obj.offset().top;
+    let bottom = top + $obj.height();
+    let left = $obj.offset().left;
+    let right = left + $obj.width();
+    return [top, bottom, left, right];
+}
+
+function getObjectPositions() {
+    $objects.children().each(function() {
+        // position() gives position relative to positioned parent
+        let objTop = $(this).position().top;
+        let objLeft = $(this).position().left;
+        // console.log('objTop: ', objTop, 'objLeft: ', objLeft);
+        $(this).css({
+            // position: 'absolute',
+            top: objTop + "px",
+            left: objLeft + "px"
+        });
+    });
+    $objects.children(".img-box").css({
+        position: "absolute"
+    });
+}
+// getObjectPositions();
+
 function toggleHelp() {
     if ($instructions.hasClass('hidden')) {
         $instructions.removeClass('hidden');
@@ -1015,8 +1047,9 @@ function changeObjectImage(imgBox) {
         // console.log('more than one image!');
         const img = imgBox.querySelector("img");
         // console.log(img.id);
-        // console.log(img.src);
-        const srcNameV = img.src.split(".png")[0];
+        const fileName = img.src.split("objects/")[1];
+        const projectPath = '/objects/'+fileName;
+        const srcNameV = projectPath.split(".png")[0];
         const newSrcBase = srcNameV.substring(0, srcNameV.length - 1);
         // console.log('active image version: ', srcNameV[srcNameV.length - 1]);
         if ($(imgBox).hasClass("more2")) {
@@ -1133,25 +1166,21 @@ function updatePosition(event) {
     updateObjectsForOtherPlayers();
 }
 
-// UNDER CONSTRUCTION......
-//
 function rotateObject(direction) {
     if ($clickedImgBox.hasClass("selected")) {
-        let rotate
+        let rotate;
         if (direction == 'clockwise') {
             rotate = 5;
         } else if (direction == 'counterclockwise') {
             rotate = -5;
         }
         // console.log('$clickedImgBox while rotateObject(): ', $clickedImgBox);
-
         // add new rotation to excisting transform rotate property:
         transformRotate += rotate;
 
         $clickedImgBox.css({
             transform: `translate(${moveX}px, ${moveY}px) rotate(${transformRotate}deg)`
         });
-
         updateObjectsForOtherPlayers();
     }
 }
@@ -1174,6 +1203,7 @@ function objectsAreMoving(data) {
 
 function doneBuilding() {
     // check if there is at least 1 object in the construction area...
+
     let activeObjectsHTML = $("#objects")[0].innerHTML;
     // console.log(activeObjectsHTML);
 
