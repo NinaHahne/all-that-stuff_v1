@@ -50,6 +50,21 @@ let playersObj = {};
 //         guessedAnswer: 2
 //     }
 // };
+// OR.. use a "game state" object for all information:
+const gameState = {
+    players: {}
+};
+// will later look like this:
+// const gameState = {
+//     players: {
+//         "socket.id": {
+//             pieceId: "green",
+//             name: "Bob",
+//             totalPonts: 8,
+//             guessedAnswer: 2
+//         }
+//     }
+// };
 
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
