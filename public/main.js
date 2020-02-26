@@ -176,9 +176,27 @@ let players = [];
 if (sessionStorage.getItem("players")) {
     players = sessionStorage.getItem("players");
 }
+let playerNames = {};
+if (sessionStorage.getItem("playerNames")) {
+    playerNames = sessionStorage.getItem("playerNames");
+}
+// let playersObj = {};
+// players will later be an object like this:
+// let playersObj = {
+//     "pieceId": {
+//         name: "Bob",
+//         totalPoints: 8,
+//         guessedAnswer: 2
+//     }
+// };
+// if (sessionStorage.getItem("playersObj")) {
+//     playersObj = sessionStorage.getItem("playersObj");
+// }
+
 let mySocketId; //should I put this too in the sessionStorage??????
 
 let selectedPieceId = sessionStorage.getItem("selectedPieceId");
+let myPlayerName = sessionStorage.getItem("myPlayerName");
 
 let doneBtnPressed = false;
 if (sessionStorage.getItem("doneBtnPressed")) {
@@ -285,25 +303,62 @@ $("#start-menu").on("click", ".player", e => {
 
 // §§ functions- start menu: ----------------------------------------
 function selectedPiece(pieceId) {
-    sessionStorage.setItem("selectedPieceId", pieceId);
 
-    socket.emit("selected piece", {
-        // userId: myUserId,
-        socketId: mySocketId,
-        selectedPieceId: pieceId
-    });
+    if (myPlayerName && pieceId) {
+        sessionStorage.setItem("selectedPieceId", pieceId);
+
+        socket.emit("selected piece", {
+            socketId: mySocketId,
+            selectedPieceId: pieceId,
+            playerName: myPlayerName
+        });
+    }
 }
 
-function addPlayer(pieceId) {
+function setPlayerName() {
+    try {
+        myPlayerName = askForName();
+        sessionStorage.setItem("myPlayerName", myPlayerName);
+
+        console.log('myPlayerName: ', myPlayerName);
+        // do I need to take care of async behaviour here?
+        setTimeout(() => {
+            sessionStorage.setItem("myPlayerName", myPlayerName);
+        }, 200);
+
+    } catch (err) {
+        console.log(err);
+        setTimeout(() => {
+            alert("please type in a name with 1-10 letters!");
+            setPlayerName();
+        }, 200);
+    }
+}
+
+function askForName() {
+    let playerName = prompt("What's your name? (1-10 letters)");
+    if (
+        playerName.length >= 1 &&
+        playerName.length <= 10
+    ) {
+        return playerName;
+    }
+    throw new Error("Bad name");
+}
+
+function addPlayer(data) {
     // maybe pieceId is undefined at some point? just a guess for the jquery err when reloading page after changing main.js: Uncaught Error: Syntax error, unrecognized expression: # ... at Function.oe.error...
     // error does not occur with this conditional:
-    players.push(pieceId);
-    let $piece = $("#start-menu").find("#" + pieceId);
+
+    players.push(data.selectedPieceId);
+    let $piece = $("#start-menu").find("#" + data.selectedPieceId);
     $piece.addClass("selectedPlayerPiece");
 
     let $playerName = $piece.find(".player-name");
+    $playerName[0].innerText = data.playerName;
+
     // if it was me, selecting a piece:
-    if (pieceId == selectedPieceId) {
+    if (data.selectedPieceId == selectedPieceId) {
         // console.log("$piece: ", $piece);
         $piece.addClass("myPiece");
         // players.push(pieceId);
@@ -312,7 +367,7 @@ function addPlayer(pieceId) {
 
         // inconsistent ERR: Cannot set property 'innerText' of undefined:
 
-        $playerName[0].innerText = "you";
+        // $playerName[0].innerText = "you";
         // console.log('.player-name in $piece: ', $playerName[0]);
     } else {
         // $playerName[0].innerText = "";
@@ -649,6 +704,13 @@ function addPoints(data) {
 // §§ sockets - start menu: ----------------------------------------
 socket.on("welcome", function(data) {
     selectedPieceId = sessionStorage.getItem("selectedPieceId");
+    myPlayerName = sessionStorage.getItem("myPlayerName");
+
+    if (!myPlayerName) {
+        setTimeout(() => {
+            setPlayerName();
+        }, 200);
+    }
 
     sessionStorage.setItem("mySocketId", data.socketId);
     mySocketId = data.socketId;
@@ -657,23 +719,30 @@ socket.on("welcome", function(data) {
     );
     // remember previously selected piece on page reload:
     console.log("your selected piece is: ", selectedPieceId);
-    if (selectedPieceId) {
+    if (selectedPieceId && myPlayerName) {
         selectedPiece(selectedPieceId);
     }
 
     players = data.selectedPieces;
     sessionStorage.setItem("players", players);
+
+    playerNames = data.playerNames;
+    sessionStorage.setItem("playerNames", playerNames);
+
+
     // console.log('players in socket.on("welcome"): ', players);
     for (let i = 0; i < players.length; i++) {
         let $piece = $("#start-menu").find("#" + players[i]);
+        let $playerName = $piece.find(".player-name");
+        $playerName[0].innerText = playerNames[players[i]];
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
     }
 });
 
-socket.on("add selected piece", function(pieceId) {
-    if (pieceId) {
-        addPlayer(pieceId);
+socket.on("add selected piece", function(data) {
+    if (data.selectedPieceId && data.playerName) {
+        addPlayer(data);
     }
     // console.log('players after "add selected piece": ', players);
 });

@@ -23,8 +23,8 @@ server.listen(process.env.PORT || 8080, () =>
 
 // SOCKET.IO***********************************
 // let gameStarted = false;
-let joinedPlayers = {};
-let selectedPieces = [];
+let joinedPlayers = {}; // { socketId: selectedPieceId, ... }
+let selectedPieces = []; // [ pieceId, .... ]
 let currentPlayer;
 
 // card deck: ----------------------
@@ -35,9 +35,21 @@ let newPile = false;
 
 // guessing & points: --------------
 let correctAnswer;
-let guessedAnswers = {};
-let answeringOrder = [];
-let playerPointsTotal = {};
+let guessedAnswers = {}; // { pieceId: <guessed item number> }
+let answeringOrder = []; // [ pieceId, ... ]
+let playerPointsTotal = {}; // { pieceId: <points> }
+let playerNames = {};
+
+// IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
+let playersObj = {};
+// players will later be an object like this:
+// let playersObj = {
+//     "pieceId": {
+//         name: "Bob",
+//         totalPoints: 8,
+//         guessedAnswer: 2
+//     }
+// };
 
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
@@ -219,19 +231,27 @@ io.on("connection", function(socket) {
     socket.emit("welcome", {
         socketId: socket.id,
         // userId: socket.userId,
-        selectedPieces: selectedPieces
+        selectedPieces: selectedPieces,
+        playerNames: playerNames
     });
 
     socket.on("selected piece", function(data) {
         if (data.selectedPieceId) {
             // console.log('joinedPlayers on "selected piece": ', joinedPlayers);
             console.log(
-                `user socket ${data.socketId} joined the game as player '${data.selectedPieceId}'`
+                `${data.playerName} joined the game with the color ${data.selectedPieceId}'`
             );
             selectedPieces.push(data.selectedPieceId);
             joinedPlayers[socket.id] = data.selectedPieceId;
+            playerNames[data.selectedPieceId] = data.playerName;
 
-            io.sockets.emit("add selected piece", data.selectedPieceId);
+            // playersObj[data.selectedPieceId].name = data.playerName;
+
+            // https://hackernoon.com/accessing-nested-objects-in-javascript-f02f1bd6387f
+            // (playersObj[data.selectedPieceId] || {}).name = data.playerName;
+            // console.log('playersObj', playersObj);
+
+            io.sockets.emit("add selected piece", data);
             // console.log("selectedPieces: ", selectedPieces);
         }
     });
