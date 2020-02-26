@@ -324,6 +324,7 @@ function setPlayerName() {
         // do I need to take care of async behaviour here?
         setTimeout(() => {
             sessionStorage.setItem("myPlayerName", myPlayerName);
+            alert(`Welcome to AllThatStuff, ${myPlayerName}. \nPlease pick a color!`);
         }, 200);
 
     } catch (err) {
