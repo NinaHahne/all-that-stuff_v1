@@ -209,11 +209,14 @@ function getWinner() {
     let ranking = [];
     for (let player in playerPointsTotal) {
         // console.log(player, ":", playerPointsTotal[player]);
-        let playerPontsObj = {
+        let name = playerNames[player];
+        console.log('name in getWinner loop: ', name);
+        let playerPointsObj = {
             player: player,
+            name: name,
             points: playerPointsTotal[player]
         };
-        ranking.push(playerPontsObj);
+        ranking.push(playerPointsObj);
         // console.log('playerPontsObj in getWinner loop:', playerPontsObj);
     }
 
