@@ -169,13 +169,13 @@ let itsMyTurn = false;
 //     itsMyTurn = sessionStorage.getItem("itsMyTurn");
 // }
 let activePlayer;
-if (sessionStorage.getItem("activePlayer")) {
-    activePlayer = sessionStorage.getItem("activePlayer");
-}
+// if (sessionStorage.getItem("activePlayer")) {
+//     activePlayer = sessionStorage.getItem("activePlayer");
+// }
 let players = [];
-if (sessionStorage.getItem("players")) {
-    players = sessionStorage.getItem("players");
-}
+// if (sessionStorage.getItem("players")) {
+//     players = sessionStorage.getItem("players");
+// }
 let playerNames = {};
 
 // let playersObj = {};
@@ -275,8 +275,6 @@ playButton.addEventListener("click", function() {
     } else {
         cancelAnimationFrame(myReq);
         let objectArray = Array.from(objectList);
-        // gameStarted = true;
-        // itsMyTurn = true;
         startGame(playerArray, objectArray);
     }
 });
@@ -409,7 +407,7 @@ function removePlayer(pieceId) {
         $piece.removeClass("selectedPlayerPiece");
 
         players = players.filter(item => item !== pieceId);
-        sessionStorage.setItem("players", players);
+        // sessionStorage.setItem("players", players);
     }
 }
 
@@ -438,12 +436,10 @@ function shuffleObjects(objects) {
 }
 
 function startGame(playerArray, objArray) {
-    // whoever starts the game, is also the start player:
-    itsMyTurn = true;
-    // sessionStorage.setItem("itsMyTurn", itsMyTurn);
+    // whoever starts the game, is also the start player
 
     activePlayer = selectedPieceId;
-    sessionStorage.setItem("activePlayer", activePlayer);
+    // sessionStorage.setItem("activePlayer", activePlayer);
 
     $(`#${selectedPieceId}`).addClass("myTurn");
     $("#construction-area").addClass(selectedPieceId);
@@ -485,13 +481,13 @@ function gameHasBeenStarted(data) {
 
     $message.removeClass("hidden");
 
-    // double checking, if it's really the players turn, when the game get's started makes testing easier.. (so I don't have to reload all the pages of the other players)
+    activePlayer = data.startPlayer;
+    // sessionStorage.setItem("activePlayer", activePlayer);
+
+
     if (data.startPlayer != selectedPieceId) {
         itsMyTurn = false;
-        sessionStorage.setItem("itsMyTurn", itsMyTurn);
-
-        activePlayer = data.startPlayer;
-        sessionStorage.setItem("activePlayer", activePlayer);
+        // sessionStorage.setItem("itsMyTurn", itsMyTurn);
 
         $(`#${data.startPlayer}`).addClass("myTurn");
         $("#construction-area").addClass(data.startPlayer);
@@ -514,7 +510,10 @@ function gameHasBeenStarted(data) {
         $message[0].innerText = "...under construction...";
 
         $("#done-btn").addClass("hidden");
-    } else if (itsMyTurn) {
+    } else if (data.startPlayer == selectedPieceId) {
+        itsMyTurn = true;
+        // sessionStorage.setItem("itsMyTurn", itsMyTurn);
+
         console.log(`you drew card number ${data.firstCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
         $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
@@ -617,7 +616,7 @@ socket.on("welcome", function(data) {
     }
 
     players = data.selectedPieces;
-    sessionStorage.setItem("players", players);
+    // sessionStorage.setItem("players", players);
 
     playerNames = data.playerNames;
 
@@ -892,7 +891,7 @@ function changeTurn(data) {
     }
 
     activePlayer = data.nextPlayer;
-    sessionStorage.setItem("activePlayer", activePlayer);
+    // sessionStorage.setItem("activePlayer", activePlayer);
 
     correctAnswer = data.correctAnswer;
     sessionStorage.setItem("correctAnswer", correctAnswer);
@@ -931,7 +930,7 @@ function changeTurn(data) {
         $message[0].innerText = "...under construction...";
         itsMyTurn = false;
     }
-    sessionStorage.setItem("itsMyTurn", itsMyTurn);
+    // sessionStorage.setItem("itsMyTurn", itsMyTurn);
 
     if (!muted) {
         startGong.play();
@@ -1101,6 +1100,7 @@ function discardAndRefillObjects() {
     getObjectPositions();
 
     if (itsMyTurn) {
+        console.log("it was my turn!");
         let activeObjectsHTML = $("#objects")[0].innerHTML;
         let queuedObjectsHTML = $("#queue")[0].innerHTML;
         socket.emit("objects for next turn", {
