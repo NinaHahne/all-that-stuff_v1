@@ -21,7 +21,8 @@ server.listen(process.env.PORT || 8080, () =>
     console.log("port 8080 listening! - AllThatStuff")
 );
 
-// SOCKET.IO***********************************
+// §§ GAME STATE: ********************************
+
 // let gameStarted = false;
 let joinedPlayers = {}; // { socketId: selectedPieceId, ... }
 let selectedPieces = []; // [ pieceId, .... ]
@@ -66,6 +67,7 @@ const gameState = {
 //     }
 // };
 
+// §§ FUNCTIONS ********************************
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
     //shuffles array in place
@@ -105,12 +107,14 @@ function replaceCard() {
 
 function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
     let currentPlayerIndex = selectedPieces.indexOf(activePlayer);
+
     let nextPlayer;
-    if (currentPlayerIndex + 1 <= selectedPieces.length - 1) {
+    if (selectedPieces[currentPlayerIndex + 1]) {
         nextPlayer = selectedPieces[currentPlayerIndex + 1];
-    } else if (currentPlayerIndex + 1 > selectedPieces.length - 1) {
+    } else {
         nextPlayer = selectedPieces[0];
     }
+    
     currentPlayer = nextPlayer;
 
     replaceCard();
@@ -170,8 +174,6 @@ function collectGuesses(data) {
                 pointsCounter--;
             }
 
-            playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
-
         } else if (joinedPlayersLength > 6) {
             // for more than 6 players (max 8):
             // maximum points: 5
@@ -192,6 +194,8 @@ function collectGuesses(data) {
             }
         }
 
+        playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
+
         io.sockets.emit("everyone guessed", {
             correctAnswer: correctAnswer,
             guessedAnswers: guessedAnswers,
@@ -210,7 +214,6 @@ function getWinner() {
     for (let player in playerPointsTotal) {
         // console.log(player, ":", playerPointsTotal[player]);
         let name = playerNames[player];
-        console.log('name in getWinner loop: ', name);
         let playerPointsObj = {
             player: player,
             name: name,
@@ -236,6 +239,7 @@ function getWinner() {
     });
 }
 
+// §§ SOCKET.IO ********************************
 io.on("connection", function(socket) {
     console.log(`socket with the id ${socket.id} is now connected`);
     // console.log('joinedPlayers on connection: ', joinedPlayers);
@@ -288,6 +292,7 @@ io.on("connection", function(socket) {
         // console.log(`${stuffCards.length} cards left.`);
         firstCard = stuffCards.shift();
 
+        // playerPointsTotal = {};
         for (let i = 0; i < selectedPieces.length; i++) {
             playerPointsTotal[selectedPieces[i]] = 0;
         }
@@ -306,7 +311,7 @@ io.on("connection", function(socket) {
         });
     });
 
-    socket.on("next player's turn", function(data) {
+    socket.on("objects for next turn", function(data) {
         nextPlayersTurn(
             data.activePlayer,
             data.activeObjects,
@@ -359,11 +364,13 @@ io.on("connection", function(socket) {
         // console.log('joinedPlayers on "disconnect": ', joinedPlayers);
         console.log(`socket with the id ${socket.id} is now disconnected`);
         let piece = joinedPlayers[socket.id];
-        console.log(`player piece "${piece}" is now free again`);
         selectedPieces = selectedPieces.filter(item => item !== piece);
         if (piece) {
+            console.log(`player piece "${piece}" is now free again`);
             io.sockets.emit("remove selected piece", piece);
             delete joinedPlayers[socket.id];
+            delete playerNames[piece];
+            delete playerPointsTotal[piece];
         }
     });
 });

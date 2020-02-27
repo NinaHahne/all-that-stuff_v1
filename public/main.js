@@ -165,9 +165,9 @@ if (sessionStorage.getItem("gameStarted")) {
     gameStarted = sessionStorage.getItem("gameStarted");
 }
 let itsMyTurn = false;
-if (sessionStorage.getItem("itsMyTurn")) {
-    itsMyTurn = sessionStorage.getItem("itsMyTurn");
-}
+// if (sessionStorage.getItem("itsMyTurn")) {
+//     itsMyTurn = sessionStorage.getItem("itsMyTurn");
+// }
 let activePlayer;
 if (sessionStorage.getItem("activePlayer")) {
     activePlayer = sessionStorage.getItem("activePlayer");
@@ -177,9 +177,7 @@ if (sessionStorage.getItem("players")) {
     players = sessionStorage.getItem("players");
 }
 let playerNames = {};
-if (sessionStorage.getItem("playerNames")) {
-    playerNames = sessionStorage.getItem("playerNames");
-}
+
 // let playersObj = {};
 // players will later be an object like this:
 // let playersObj = {
@@ -287,18 +285,16 @@ $("#start-menu").on("click", ".player", e => {
     // console.log('e.target: ', e.target);
     // console.log('e.currentTarget: ', e.currentTarget);
     // console.log('clicked select players');
-    console.log(
-        "clicked element is already taken: ",
-        $(e.target).hasClass("selectedPlayerPiece")
-    );
+    if ($(e.target).hasClass("selectedPlayerPiece")) {
+        console.log("clicked element is already taken!");
+    }
     // if you haven't yet selected a piece and it's not taken by another player:
     // console.log("your selectedPieceId before clicking: ", selectedPieceId);
     if (!selectedPieceId && !$(e.target).hasClass("selectedPlayerPiece")) {
-        selectedPieceId = $(e.target).attr("id");
+        let pieceId = $(e.target).attr("id");
         // console.log('$(e.target).attr("id") l269: ', $(e.target).attr("id"));
-        sessionStorage.setItem("selectedPieceId", selectedPieceId);
         // console.log("selectedPieceId l271: ", selectedPieceId);
-        selectedPiece(selectedPieceId);
+        selectedPiece(pieceId);
     }
 });
 
@@ -333,8 +329,9 @@ function preloadObjectImages() {
 }
 
 function selectedPiece(pieceId) {
-
+    // console.log('myPlayerName in selectedPiece(): ', myPlayerName);
     if (myPlayerName && pieceId) {
+        selectedPieceId = pieceId;
         sessionStorage.setItem("selectedPieceId", pieceId);
 
         socket.emit("selected piece", {
@@ -349,13 +346,12 @@ function setPlayerName() {
     try {
         myPlayerName = askForName();
         sessionStorage.setItem("myPlayerName", myPlayerName);
+        // console.log('myPlayerName in setPlayerName(): ', myPlayerName);
 
-        console.log('myPlayerName: ', myPlayerName);
         // do I need to take care of async behaviour here?
-        setTimeout(() => {
-            sessionStorage.setItem("myPlayerName", myPlayerName);
-            alert(`Welcome to AllThatStuff, ${myPlayerName}. \nPlease pick a color!`);
-        }, 200);
+        // setTimeout(() => {
+        //     alert(`Welcome to AllThatStuff, ${myPlayerName}. \nPlease pick a color!`);
+        // }, 200);
 
     } catch (err) {
         console.log(err);
@@ -367,7 +363,7 @@ function setPlayerName() {
 }
 
 function askForName() {
-    let playerName = prompt("What's your name? (1-10 letters)");
+    let playerName = prompt("Welcome to AllThatStuff! \nPlease type in your name (1-10 letters) \nand then pick a color.");
     if (
         playerName.length >= 1 &&
         playerName.length <= 10
@@ -392,7 +388,7 @@ function addPlayer(data) {
     if (data.selectedPieceId == selectedPieceId) {
         // console.log("$piece: ", $piece);
         $piece.addClass("myPiece");
-        // players.push(pieceId);
+
         // console.log('$piece[0].innerText: ', $piece[0].innerText);
         // console.log("$playerName: ", $playerName);
 
@@ -444,7 +440,7 @@ function shuffleObjects(objects) {
 function startGame(playerArray, objArray) {
     // whoever starts the game, is also the start player:
     itsMyTurn = true;
-    sessionStorage.setItem("itsMyTurn", itsMyTurn);
+    // sessionStorage.setItem("itsMyTurn", itsMyTurn);
 
     activePlayer = selectedPieceId;
     sessionStorage.setItem("activePlayer", activePlayer);
@@ -615,7 +611,7 @@ socket.on("welcome", function(data) {
         `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
     );
     // remember previously selected piece on page reload:
-    console.log("your selected piece is: ", selectedPieceId);
+    // console.log("your selected piece is: ", selectedPieceId);
     if (selectedPieceId && myPlayerName) {
         selectedPiece(selectedPieceId);
     }
@@ -624,8 +620,6 @@ socket.on("welcome", function(data) {
     sessionStorage.setItem("players", players);
 
     playerNames = data.playerNames;
-    sessionStorage.setItem("playerNames", playerNames);
-
 
     // console.log('players in socket.on("welcome"): ', players);
     for (let i = 0; i < players.length; i++) {
@@ -706,7 +700,7 @@ $(document).on("mousedown", ".img-box", function(e) {
         // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
         if ($clickedImgBox.hasClass("selected")) {
             const transformProps = $(".move").css("transform");
-            console.log('transformProps: ', transformProps);
+            // console.log('transformProps: ', transformProps);
             var values = transformProps.split("(")[1],
             values = values.split(")")[0],
             values = values.split(",");
@@ -723,7 +717,7 @@ $(document).on("mousedown", ".img-box", function(e) {
             // console.log('a: ', a, 'b: ', b, 'c: ', c, 'd: ', d);
 
             transformRotate = Math.round(Math.atan2(b, a) * (180/Math.PI));
-            console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
+            // console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
         }
     }
 });
@@ -800,16 +794,12 @@ $(document).on("keydown", e => {
         }
     } else if (e.keyCode == 13) {
         // = "ENTER"
-        // simulate next turn:
-        if (testingMode) {
-            discardAndRefillObjects();
+        if (itsMyTurn) {
+            doneBuilding();
         }
     } else if (e.keyCode == 32) {
         // = "SPACE"
-        if (itsMyTurn && testingMode) {
-            // simulate "done" with building a word with objects:
-            doneBuilding();
-        }
+        // do something..
     } else if (e.keyCode == 70) {
         // = "F"
         // simulate "game end":
@@ -934,15 +924,14 @@ function changeTurn(data) {
         $message[0].innerText = `it's your turn!`;
         $message.addClass("bold");
         itsMyTurn = true;
-        sessionStorage.setItem("itsMyTurn", itsMyTurn);
     } else {
         // next turn is not my turn:
         $("#done-btn").addClass("hidden");
         $message.removeClass("bold");
         $message[0].innerText = "...under construction...";
         itsMyTurn = false;
-        sessionStorage.setItem("itsMyTurn", itsMyTurn);
     }
+    sessionStorage.setItem("itsMyTurn", itsMyTurn);
 
     if (!muted) {
         startGong.play();
@@ -1111,14 +1100,15 @@ function discardAndRefillObjects() {
     }
     getObjectPositions();
 
-    let activeObjectsHTML = $("#objects")[0].innerHTML;
-    let queuedObjectsHTML = $("#queue")[0].innerHTML;
-
-    socket.emit("next player's turn", {
-        activePlayer: activePlayer,
-        activeObjects: activeObjectsHTML,
-        queuedObjects: queuedObjectsHTML
-    });
+    if (itsMyTurn) {
+        let activeObjectsHTML = $("#objects")[0].innerHTML;
+        let queuedObjectsHTML = $("#queue")[0].innerHTML;
+        socket.emit("objects for next turn", {
+            activePlayer: activePlayer,
+            activeObjects: activeObjectsHTML,
+            queuedObjects: queuedObjectsHTML
+        });
+    }
 }
 
 function updatePosition(event) {
@@ -1275,6 +1265,7 @@ function gameEnds(data) {
     if (!muted) {
         successJingle.play();
     }
+
 }
 
 // §§ sockets - main game: ******************************************
