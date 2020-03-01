@@ -652,9 +652,9 @@ socket.on("game has been started", function(data) {
     }
 });
 
-socket.on("next turn", function(nextPlayerData) {
-    console.log(`it's ${nextPlayerData.nextPlayer}'s turn now!'`);
-    changeTurn(nextPlayerData);
+socket.on("next turn", function(data) {
+    console.log(`it's ${data.nextPlayer}'s turn now!'`);
+    changeTurn(data);
 });
 
 // §§ MAIN GAME ************************************************
@@ -1078,7 +1078,7 @@ function changeObjectImage(imgBox) {
     // console.log(currentObj.images);
 }
 
-function discardAndRefillObjects() {
+function discardAndRefillObjects(data) {
     const numberOfUsedObjects = $(".selected").length;
     // console.log($queue.children().last().attr("class"));
     $objects.children(".img-box").css({
@@ -1099,12 +1099,12 @@ function discardAndRefillObjects() {
     }
     getObjectPositions();
 
-    if (itsMyTurn) {
+    if (data.activePlayer == selectedPieceId) {
         console.log("it was my turn!");
         let activeObjectsHTML = $("#objects")[0].innerHTML;
         let queuedObjectsHTML = $("#queue")[0].innerHTML;
         socket.emit("objects for next turn", {
-            activePlayer: activePlayer,
+            activePlayer: data.activePlayer,
             activeObjects: activeObjectsHTML,
             queuedObjects: queuedObjectsHTML
         });
@@ -1290,7 +1290,7 @@ socket.on("everyone guessed", function(data) {
             setTimeout(() => {
                 addPoints(data);
                 setTimeout(() => {
-                    discardAndRefillObjects();
+                    discardAndRefillObjects(data);
                 }, 1700); // time before change to next turn
             }, 1500); // time before addPoints
         }, 1500); // time before showCorrectAnswer

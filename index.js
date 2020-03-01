@@ -105,8 +105,8 @@ function replaceCard() {
     }
 }
 
-function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
-    let currentPlayerIndex = selectedPieces.indexOf(activePlayer);
+function nextPlayersTurn(data) {
+    let currentPlayerIndex = selectedPieces.indexOf(data.activePlayer);
 
     let nextPlayer;
     if (selectedPieces[currentPlayerIndex + 1]) {
@@ -114,7 +114,7 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
     } else {
         nextPlayer = selectedPieces[0];
     }
-    
+
     currentPlayer = nextPlayer;
 
     replaceCard();
@@ -122,10 +122,10 @@ function nextPlayersTurn(activePlayer, activeObjects, queuedObjects) {
     guessedAnswers = {};
     answeringOrder = [];
     io.sockets.emit("next turn", {
-        activePlayer: activePlayer,
+        activePlayer: data.activePlayer,
         nextPlayer: nextPlayer,
-        activeObjects: activeObjects,
-        queuedObjects: queuedObjects,
+        activeObjects: data.activeObjects,
+        queuedObjects: data.queuedObjects,
         newCard: firstCard,
         correctAnswer: correctAnswer
     });
@@ -197,6 +197,7 @@ function collectGuesses(data) {
         playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
 
         io.sockets.emit("everyone guessed", {
+            activePlayer: currentPlayer,
             correctAnswer: correctAnswer,
             guessedAnswers: guessedAnswers,
             playerPointsIfCorrect: playerPointsIfCorrect,
@@ -312,11 +313,7 @@ io.on("connection", function(socket) {
     });
 
     socket.on("objects for next turn", function(data) {
-        nextPlayersTurn(
-            data.activePlayer,
-            data.activeObjects,
-            data.queuedObjects
-        );
+        nextPlayersTurn(data);
     });
 
     socket.on("done building", function(data) {
