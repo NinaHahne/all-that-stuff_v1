@@ -2,6 +2,7 @@
 // var socket = io();
 var socket = io.connect();
 
+
 // to prevent image dragging for imgs that are dynamically declared:
 // // register onLoad event with anonymous function
 // window.onload = function (e) {
@@ -25,8 +26,8 @@ var socket = io.connect();
 //     e.preventDefault();
 // }
 // ------------------------------------
-
 const testingMode = true;
+
 // §§ ELEMENTS & GLOBAL VARIABLES ********************************
 
 const $objects = $("#objects");
@@ -792,10 +793,14 @@ $(document).on("keydown", e => {
         }
     } else if (e.keyCode == 81) {
         // = "Q"
-        rotateObject('clockwise');
+        if (itsMyTurn) {
+            rotateObject('clockwise');
+        }
     } else if (e.keyCode == 69) {
         // = "E"
-        rotateObject('counterclockwise');
+        if (itsMyTurn) {
+            rotateObject('counterclockwise');
+        }
     }
 });
 
