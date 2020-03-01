@@ -158,7 +158,6 @@ const selectPlayersContainer = document.getElementById("select-players");
 // const playersContainer = document.getElementById("joined-players");
 
 // §§ game/player state: --------------------------
-// let numberOfRoundsLeft;
 
 let gameStarted = false;
 if (sessionStorage.getItem("gameStarted")) {
@@ -576,20 +575,6 @@ function gameHasBeenStarted(data) {
     gameStarted = true;
     sessionStorage.setItem("gameStarted", gameStarted);
 
-    // set number of Rounds:
-    // if (players.length == 3 || players.length == 5 ) {
-    //     numberOfRoundsLeft = 15;
-    // } else if (players.length == 4) {
-    //     numberOfRoundsLeft = 12;
-    // } else if (players.length == 6) {
-    //     numberOfRoundsLeft = 18;
-    // } else if (players.length == 7) {
-    //     numberOfRoundsLeft = 14;
-    // } else if (players.length == 8) {
-    //     numberOfRoundsLeft = 16;
-    // }
-    //
-    // numberOfRoundsLeft--;
 }
 
 

@@ -27,6 +27,8 @@ server.listen(process.env.PORT || 8080, () =>
 let joinedPlayers = {}; // { socketId: selectedPieceId, ... }
 let selectedPieces = []; // [ pieceId, .... ]
 let currentPlayer;
+// number of rounds, depending on number of players:
+let numberOfRoundsLeft;
 
 // card deck: ----------------------
 let stuffCards = [];
@@ -40,6 +42,7 @@ let guessedAnswers = {}; // { pieceId: <guessed item number> }
 let answeringOrder = []; // [ pieceId, ... ]
 let playerPointsTotal = {}; // { pieceId: <points> }
 let playerNames = {};
+
 
 // IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
 let playersObj = {};
@@ -281,10 +284,25 @@ io.on("connection", function(socket) {
 
     socket.on("game started", function(data) {
         currentPlayer = data.startPlayer;
+        // this line makes sure, that selectedPieces (joined players) is in the correct order, like the player pieces are rendered:
         selectedPieces = data.joinedPlayerIds;
         console.log("joined players at game start: ", selectedPieces);
         let msg = `"${data.startPlayer}" started the game and starts with building!`;
         // console.log(msg);
+
+        // set number of rounds:
+        if (selectedPieces.length == 3 || selectedPieces.length == 5 ) {
+            numberOfRoundsLeft = 15;
+        } else if (selectedPieces.length == 4) {
+            numberOfRoundsLeft = 12;
+        } else if (selectedPieces.length == 6) {
+            numberOfRoundsLeft = 18;
+        } else if (selectedPieces.length == 7) {
+            numberOfRoundsLeft = 14;
+        } else if (selectedPieces.length == 8) {
+            numberOfRoundsLeft = 16;
+        }
+        console.log(`${selectedPieces.length} players joined the game. Each player will be the builder ${numberOfRoundsLeft/selectedPieces.length} times!`);
 
         // console.log('cards on "game started": ', cards);
         discardPile = cards;
@@ -313,7 +331,12 @@ io.on("connection", function(socket) {
     });
 
     socket.on("objects for next turn", function(data) {
-        nextPlayersTurn(data);
+        numberOfRoundsLeft--;
+        if (numberOfRoundsLeft == 0) {
+            getWinner();
+        } else {
+            nextPlayersTurn(data);
+        }
     });
 
     socket.on("done building", function(data) {
