@@ -8,8 +8,16 @@
     user-select: none;
 }
 
+html {
+    height: 100%;
+    width: 100%;
+}
+
 body {
-    min-height: 100vh; /* 100% of viewport-height*/
+    /* min-height: 100vh; */
+    height: 100%;
+    width: 100%;
+
     margin: 0;
     font-size: 26px;
     /*font-family: 'Atma', cursive;*/
@@ -85,7 +93,7 @@ header {
 #select-players .player.myPiece {
     transform: scale(1.2);
     border-style: double;
-    border-width: 6px;
+    border-width: 8px;
 }
 
 /* §§ ---------MAIN GAME------------- */
@@ -117,7 +125,7 @@ header {
 #joined-players .player.myPiece {
     transform: unset;
     border-style: double;
-    border-width: 6px;
+    border-width: 8px;
     /* border-style: solid;
     border-width: 3px; */
 }
@@ -1143,4 +1151,42 @@ small {
 
 #ticker-objects .img-box {
     clip-path: unset;
+}
+
+/* §§ MOBILE: */
+/*  https://css-tricks.com/snippets/css/orientation-lock/ */
+/* @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
+  html {
+    transform: rotate(90deg);
+    transform-origin: right bottom;
+    width: 100vh;
+    height: 100vw;
+    overflow-y: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+} */
+
+@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+  html {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #ticker,
+  #ticker-objects {
+      height: 150px;
+      visibility: hidden;
+  }
+  /* #ticker-objects .img-box {
+      transform: scale(0.9);
+  } */
+  #logo-button-box {
+      display: flex;
+     align-items: center;
+  }
+  #stuff-logo {
+      transform: scale(0.8);
+  }
 }
