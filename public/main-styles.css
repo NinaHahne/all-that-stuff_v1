@@ -8,12 +8,14 @@
     user-select: none;
 }
 
-html {
+/* html {
     height: 100%;
     width: 100%;
-}
+} */
 
 body {
+    display: flex;
+    flex-direction: column;
     /* min-height: 100vh; */
     height: 100%;
     width: 100%;
@@ -442,7 +444,6 @@ small {
 #construction-area .message.bold {
     font-weight: bold;
 }
-
 
 #done-btn {
     margin: 5px 5px;
@@ -1169,24 +1170,41 @@ small {
 } */
 
 @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
-  html {
+    /* html {
     width: 100vw;
     height: 100vh;
-  }
-
-  #ticker,
-  #ticker-objects {
-      height: 150px;
-      visibility: hidden;
-  }
-  /* #ticker-objects .img-box {
-      transform: scale(0.9);
   } */
-  #logo-button-box {
-      display: flex;
-     align-items: center;
-  }
-  #stuff-logo {
-      transform: scale(0.8);
-  }
+    header {
+        padding: 10px;
+        height: 100%;
+    }
+
+    .player {
+        width: 10vw;
+        height: 10vw;
+        font-size: 1rem;
+    }
+
+    .stuff-logo {
+        padding-top: 2rem;
+        padding-right: 2rem;
+        padding-left: 2rem;
+        /* font-family: "Life Savers", cursive; */
+        text-align: center;
+    }
+    #logo-button-box {
+        display: flex;
+        align-items: center;
+    }
+    .stuff-logo {
+        transform: scale(0.7);
+    }
+    #ticker,
+    #ticker-objects {
+        height: 150px;
+        visibility: hidden;
+    }
+    /* #ticker-objects .img-box {
+    transform: scale(0.9);
+    } */
 }
