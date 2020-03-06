@@ -646,7 +646,7 @@ socket.on("next turn", function(data) {
 
 // §§ MAIN GAME ************************************************
 
-// §§ event listeners - main game ***********************************
+// §§ event listeners - main game ---------------------------------
 window.addEventListener("resize", () => {
     [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
         $constructionArea
@@ -654,111 +654,23 @@ window.addEventListener("resize", () => {
     // [bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight] = get$objBorders($body);
     // console.log(bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight);
 });
+let touch = true;
 
-$(document).on("mousedown", ".img-box", function(e) {
-    if (gameStarted && itsMyTurn) {
-        objectClicked = true;
-        $clickedImgBox = $(this);
-        // reset transform rotate:
-        transformRotate = 0;
-        // console.log($clickedImgBox);
-        // show name of clicked object:
-        $clickedImgId = $clickedImgBox.find("img").attr("id");
-        console.log($clickedImgId);
-        $clickedImgBox.addClass("move");
-        startX = e.clientX;
-        startY = e.clientY;
-        // get the clicked object to the very front:
-        // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
-        let highestZIndex = 0;
-        $(".selected").each(function() {
-            const currentZIndex = Number($(this).css("z-index"));
-            if (currentZIndex > highestZIndex) {
-                highestZIndex = currentZIndex;
-            }
-        });
-        $clickedImgBox.css({
-            "z-index": highestZIndex + 1
-        });
+// touch events:
+$(document).on("touchstart", ".img-box", e => {handleMouseDown(e, touch);});
 
-        //  https://css-tricks.com/get-value-of-css-rotation-through-javascript/
+$(document).on("touchmove", e => {handleMouseMove(e, touch);});
 
-        // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
-        if ($clickedImgBox.hasClass("selected")) {
-            const transformProps = $(".move").css("transform");
-            // console.log('transformProps: ', transformProps);
-            var values = transformProps.split("(")[1],
-            values = values.split(")")[0],
-            values = values.split(",");
+$(document).on("touchend", e => {handleMouseUp(e, touch);});
 
-            translateX = Number(values[4]);
-            translateY = Number(values[5]);
-            // console.log('translateX: ', translateX, 'translateY: ', translateY);
-            
-            // set move props of clicked object to current values, in case it will be moved or rotated later:
-            moveX = translateX;
-            moveY = translateY;
+// mouse events:
+$(document).on("mousedown", ".img-box", handleMouseDown);
 
-            // get the transform/rotate properties:
-            let a= Number(values[0]);
-            let b= Number(values[1]);
-            // let c= Number(values[2]);
-            // let d= Number(values[3]);
-            // console.log('a: ', a, 'b: ', b, 'c: ', c, 'd: ', d);
+$(document).on("mousemove", handleMouseMove);
 
-            transformRotate = Math.round(Math.atan2(b, a) * (180/Math.PI));
-            // console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
-        }
-    }
-});
+$(document).on("mouseup", handleMouseUp);
 
-$(document).on("mousemove", function(e) {
-    if (objectClicked) {
-        updatePosition(e);
-    }
-});
-
-$(document).on("mouseup", function(e) {
-    if (objectClicked) {
-        // console.log('drop object here:');
-        // console.log('cursorposition X: ', e.clientX);
-        // console.log('cursorposition Y: ', e.clientY);
-        const $clickedImgBox = $(".move");
-        const posX = e.clientX;
-        const posY = e.clientY;
-        if (!muted && objectMoved) {
-            if (uniSound) {
-                universalDropSound.play();
-            } else {
-                const currentObj = objObj.find(
-                    obj => obj.name === $clickedImgId
-                );
-                new Audio("./sounds/" + currentObj.sound).play();
-            }
-        }
-        //only if object is dropped (when cursor is) inside the construction area:
-        if (
-            borderLeft < posX &&
-            posX < borderRight &&
-            borderTop < posY &&
-            posY < borderBottom
-        ) {
-            $clickedImgBox.addClass("selected");
-            // if dropped ouside construction area, put it back to it's original position:
-        } else {
-            $clickedImgBox.removeClass("selected");
-            // reset object position::
-            $clickedImgBox.css({
-                transform: `translate(${0}px, ${0}px)`
-            });
-        }
-        $clickedImgBox.removeClass("move");
-        objectClicked = false;
-        objectMoved = false;
-        updateObjectsForOtherPlayers();
-    }
-});
-
+// key & mouse & touch events:
 // toggle sound / mute / discard used objects and refill:
 $(document).on("keydown", e => {
     if (e.keyCode == 83) {
@@ -830,6 +742,123 @@ $("#done-btn").on("click", doneBuilding);
 $("#help-btn").on("click", toggleHelp);
 
 $("#play-again-btn").on("click", () => window.location.reload(false));
+
+// §§ event listener functions - main game ------------------------
+function handleMouseDown(e, touch) {
+    if (touch) {
+        // e.preventDefault();
+        console.log('touchstart!');
+    }
+    if (gameStarted && itsMyTurn) {
+        objectClicked = true;
+        $clickedImgBox = $(this);
+        // reset transform rotate:
+        transformRotate = 0;
+        // console.log($clickedImgBox);
+        // show name of clicked object:
+        $clickedImgId = $clickedImgBox.find("img").attr("id");
+        console.log($clickedImgId);
+        $clickedImgBox.addClass("move");
+        startX = e.clientX;
+        startY = e.clientY;
+        // get the clicked object to the very front:
+        // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
+        let highestZIndex = 0;
+        $(".selected").each(function() {
+            const currentZIndex = Number($(this).css("z-index"));
+            if (currentZIndex > highestZIndex) {
+                highestZIndex = currentZIndex;
+            }
+        });
+        $clickedImgBox.css({
+            "z-index": highestZIndex + 1
+        });
+
+        //  https://css-tricks.com/get-value-of-css-rotation-through-javascript/
+
+        // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
+        if ($clickedImgBox.hasClass("selected")) {
+            const transformProps = $(".move").css("transform");
+            // console.log('transformProps: ', transformProps);
+            var values = transformProps.split("(")[1],
+            values = values.split(")")[0],
+            values = values.split(",");
+
+            translateX = Number(values[4]);
+            translateY = Number(values[5]);
+            // console.log('translateX: ', translateX, 'translateY: ', translateY);
+
+            // set move props of clicked object to current values, in case it will be moved or rotated later:
+            moveX = translateX;
+            moveY = translateY;
+
+            // get the transform/rotate properties:
+            let a= Number(values[0]);
+            let b= Number(values[1]);
+            // let c= Number(values[2]);
+            // let d= Number(values[3]);
+            // console.log('a: ', a, 'b: ', b, 'c: ', c, 'd: ', d);
+
+            transformRotate = Math.round(Math.atan2(b, a) * (180/Math.PI));
+            // console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
+        }
+    }
+}
+
+function handleMouseMove(e, touch) {
+    if (touch) {
+        // e.preventDefault();
+        console.log('touchmove!');
+    }
+    if (objectClicked) {
+        updatePosition(e);
+    }
+}
+
+function handleMouseUp(e, touch) {
+    if (touch) {
+        // e.preventDefault();
+        console.log('touchend!');
+    }
+    if (objectClicked) {
+        // console.log('drop object here:');
+        // console.log('cursorposition X: ', e.clientX);
+        // console.log('cursorposition Y: ', e.clientY);
+        const $clickedImgBox = $(".move");
+        const posX = e.clientX;
+        const posY = e.clientY;
+        if (!muted && objectMoved) {
+            if (uniSound) {
+                universalDropSound.play();
+            } else {
+                const currentObj = objObj.find(
+                    obj => obj.name === $clickedImgId
+                );
+                new Audio("./sounds/" + currentObj.sound).play();
+            }
+        }
+        //only if object is dropped (when cursor is) inside the construction area:
+        if (
+            borderLeft < posX &&
+            posX < borderRight &&
+            borderTop < posY &&
+            posY < borderBottom
+        ) {
+            $clickedImgBox.addClass("selected");
+            // if dropped ouside construction area, put it back to it's original position:
+        } else {
+            $clickedImgBox.removeClass("selected");
+            // reset object position::
+            $clickedImgBox.css({
+                transform: `translate(${0}px, ${0}px)`
+            });
+        }
+        $clickedImgBox.removeClass("move");
+        objectClicked = false;
+        objectMoved = false;
+        updateObjectsForOtherPlayers();
+    }
+}
 
 // §§ functions- main game: ----------------------------------------
 
