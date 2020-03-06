@@ -37,12 +37,17 @@ body {
     background-attachment: fixed;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 /* §§ ---------START MENU------------- */
 #start-menu {
     position: absolute;
     top: 0;
     left: 0;
-    height: 100vh;
+    /* height: 100vh; */
+    height: 100%;
     width: 100%;
     z-index: 100;
 }
@@ -98,14 +103,126 @@ header {
     border-width: 8px;
 }
 
+/* §§ stuff-logo styles */
+.stuff-logo {
+    padding-top: 2rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    /* font-family: "Life Savers", cursive; */
+    text-align: center;
+}
+
+.stuff-logo h1 {
+    font-size: 8rem;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+}
+
+.stuff-logo h2 {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* §§ button styles */
+.buttonBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+    display: inline-block;
+    padding: 0.5rem;
+    font-size: 26px;
+    text-align: center;
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 8px;
+    border: 2px solid black;
+    cursor: pointer;
+    font-family: "Life Savers", cursive;
+    font-weight: 700;
+    margin: 5px 0px;
+    z-index: 2000;
+}
+
+button:hover {
+    background-color: black;
+    color: white;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+button:active {
+    transform: translateY(2px);
+    /* -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s; */
+}
+
+button:focus {
+    outline: none;
+}
+
+/* §§ object ticker styles------------------ */
+#ticker {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    overflow-x: hidden;
+    height: 300px;
+}
+
+#ticker-objects {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    /* position: absolute; */
+    bottom: 10px;
+    left: 0;
+    white-space: nowrap;
+    font-size: 0; /* to remove white space between the ticker elements, that causes ticker to jump in the first round*/
+    height: 300px;
+}
+
 /* §§ ---------MAIN GAME------------- */
 #main-game {
     height: 100vh;
+    /* height: 100%; */
+    width: 100%;
+    display: flex;
+    padding-bottom: 100px;
+    align-items: flex-end;
+    position: relative;
+}
+
+#main-left-center {
+    flex-grow: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#card-points-construction {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1vh;
+    margin-right: 8px;
+    margin-left: 10px;
+}
+
+#card-points {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 #joined-players {
     display: flex;
-    width: 65%;
+    width: 100%;
     justify-content: space-around;
     margin-top: 20px;
 }
@@ -172,94 +289,7 @@ header {
     border-color: rgb(213, 0, 102);
 }
 
-/* §§ stuff-logo styles */
-.stuff-logo {
-    padding-top: 2rem;
-    padding-right: 2rem;
-    padding-left: 2rem;
-    /* font-family: "Life Savers", cursive; */
-    text-align: center;
-}
-
-.stuff-logo h1 {
-    font-size: 8rem;
-    font-weight: 800;
-    margin-top: 0;
-    margin-bottom: 1.2rem;
-}
-
-.stuff-logo h2 {
-    font-size: 5rem;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-/* §§ button styles */
-.buttonBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-button {
-    display: inline-block;
-    padding: 0.5rem;
-    font-size: 26px;
-    text-align: center;
-    color: black;
-    background-color: rgba(255, 255, 255, 0);
-    border-radius: 8px;
-    border: 2px solid black;
-    cursor: pointer;
-    font-family: "Life Savers", cursive;
-    font-weight: 700;
-    margin: 5px 0px;
-}
-
-button:hover {
-    background-color: black;
-    color: white;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-}
-
-button:active {
-    transform: translateY(2px);
-    /* -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s; */
-}
-
-button:focus {
-    outline: none;
-}
-
-/* object ticker styles------------------ */
-#ticker {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
-    overflow-x: hidden;
-    height: 300px;
-}
-
-#ticker-objects {
-    display: flex;
-    align-items: center;
-    position: fixed;
-    /* position: absolute; */
-    bottom: 10px;
-    left: 0;
-    white-space: nowrap;
-    font-size: 0; /* to remove white space between the ticker elements, that causes ticker to jump in the first round*/
-    height: 300px;
-}
-/* §§ ---------MAIN SCREEN ------------- */
-.hidden {
-    visibility: hidden;
-}
-
-/* instructions --------------------- */
+/* §§ instructions --------------------- */
 #instructions {
     position: absolute;
     top: 80px;
@@ -293,9 +323,9 @@ button:focus {
 
 /* §§ cards --------------------- */
 #card-deck {
-    position: absolute;
-    top: 140px;
-    left: 25px;
+    position: relative;
+    /* top: 140px;
+    left: 25px; */
     width: 440px;
 }
 
@@ -383,10 +413,7 @@ small {
 #points-container {
     display: flex;
     flex-direction: column;
-    position: absolute;
-    bottom: 100px;
-    height: 130px;
-    left: 25px;
+    position: relative;
 }
 
 #points-container h3 {
@@ -415,9 +442,9 @@ small {
 
 /* §§ construction area & object containers ------------------*/
 #construction-area {
-    position: absolute;
-    bottom: 112px;
-    right: 632px;
+    position: relative;
+    /* bottom: 112px;
+    right: 632px; */
     height: 680px;
     width: 720px;
     padding: 4px;
@@ -451,6 +478,7 @@ small {
     position: absolute;
     left: 5px;
     bottom: 5px;
+    z-index: 1500;
 }
 
 #help-btn {
@@ -459,23 +487,26 @@ small {
     position: absolute;
     right: 5px;
     bottom: 5px;
+    /* z-index: 1500; */
 }
 
 #objects {
+    flex-shrink: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    /* align-items: center; */
-    position: absolute;
+    /* position: absolute;
     bottom: 102px;
-    right: 0;
+    right: 0; */
+    position: relative;
     height: 840px;
     width: 620px;
     padding: 10px 2px;
     border: 3px lightgrey dashed;
     border-radius: 10px;
     margin-right: 4px;
+    margin-bottom: 1vh;
 }
 #queue {
     display: flex;
@@ -1173,13 +1204,39 @@ small {
     /* html {
     width: 100vw;
     height: 100vh;
-  } */
-    header {
+    } */
+    
+    html, body {
+        min-width: 1820px;
+        min-height: 950px;
+        position: absolute;
+    }
+
+    #main-game {
+        height: 100%;
+        /* padding-bottom: unset; */
+    }
+
+    .cardtitle {
+        font-size: 40px;
+    }
+
+    .table-row * {
+        font-size: 38px;
+    }
+
+    #queue,
+    #queue-overlay {
+        position: fixed;
+        bottom: 0;
+    }
+
+    /* header {
         padding: 10px;
         height: 100%;
     }
 
-    .player {
+    header .player {
         width: 10vw;
         height: 10vw;
         font-size: 1rem;
@@ -1189,22 +1246,21 @@ small {
         padding-top: 2rem;
         padding-right: 2rem;
         padding-left: 2rem;
-        /* font-family: "Life Savers", cursive; */
         text-align: center;
     }
+
     #logo-button-box {
         display: flex;
         align-items: center;
     }
+
     .stuff-logo {
         transform: scale(0.7);
     }
+
     #ticker,
     #ticker-objects {
         height: 150px;
         visibility: hidden;
-    }
-    /* #ticker-objects .img-box {
-    transform: scale(0.9);
     } */
 }
