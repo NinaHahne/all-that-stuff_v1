@@ -694,6 +694,10 @@ $(document).on("mousedown", ".img-box", function(e) {
             translateX = Number(values[4]);
             translateY = Number(values[5]);
             // console.log('translateX: ', translateX, 'translateY: ', translateY);
+            
+            // set move props of clicked object to current values, in case it will be moved or rotated later:
+            moveX = translateX;
+            moveY = translateY;
 
             // get the transform/rotate properties:
             let a= Number(values[0]);
