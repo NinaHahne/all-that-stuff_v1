@@ -6,6 +6,8 @@
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+    /* disable double-tap zoom on any element: */
+    /* touch-action: manipulation; */
 }
 
 /* html {
@@ -336,6 +338,7 @@ button:focus {
     align-items: flex-start;
     font-weight: 700;
     width: 100%;
+    touch-action: manipulation;
 }
 
 .table-row,
@@ -344,7 +347,7 @@ button:focus {
     width: 100%;
     /* to allow the guesses-box to position itself to the right:  */
     position: relative;
-    align-items: center;
+    /* align-items: center; */
 }
 
 .cardtitle {
@@ -619,6 +622,7 @@ small {
     text-align: center;
     margin: 2px;
     z-index: 1;
+    touch-action: manipulation;
 }
 
 #ticker-objects .img-box {
@@ -1205,7 +1209,7 @@ small {
     width: 100vw;
     height: 100vh;
     } */
-    
+
     html, body {
         min-width: 1820px;
         min-height: 950px;
@@ -1223,6 +1227,10 @@ small {
 
     .table-row * {
         font-size: 38px;
+    }
+
+    .table-row small {
+        font-size: 30px;
     }
 
     #queue,

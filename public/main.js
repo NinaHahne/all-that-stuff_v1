@@ -654,14 +654,27 @@ window.addEventListener("resize", () => {
     // [bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight] = get$objBorders($body);
     // console.log(bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight);
 });
-let touch = true;
 
 // touch events:
+$('img').on("contextmenu", e => {
+    e.preventDefault();
+});
+
+$('.wordcard').on("contextmenu", e => {
+    e.preventDefault();
+});
+
+$('#construction-area').on("contextmenu", e => {
+    e.preventDefault();
+});
+
+let touch = true;
 $(document).on("touchstart", ".img-box", e => {handleMouseDown(e, touch);});
 
 $(document).on("touchmove", e => {handleMouseMove(e, touch);});
 
 $(document).on("touchend", e => {handleMouseUp(e, touch);});
+
 
 // mouse events:
 $(document).on("mousedown", ".img-box", handleMouseDown);
@@ -745,13 +758,16 @@ $("#play-again-btn").on("click", () => window.location.reload(false));
 
 // §§ event listener functions - main game ------------------------
 function handleMouseDown(e, touch) {
-    if (touch) {
-        // e.preventDefault();
-        console.log('touchstart!');
-    }
     if (gameStarted && itsMyTurn) {
+        if (touch) {
+            // e.preventDefault();
+            // e.preventDefault && e.preventDefault();
+            // console.log('touchstart!');
+        }
         objectClicked = true;
-        $clickedImgBox = $(this);
+        // $clickedImgBox = $(this) || e.currentTarget;
+        $clickedImgBox = $(e.currentTarget);
+
         // reset transform rotate:
         transformRotate = 0;
         // console.log($clickedImgBox);
@@ -759,8 +775,10 @@ function handleMouseDown(e, touch) {
         $clickedImgId = $clickedImgBox.find("img").attr("id");
         console.log($clickedImgId);
         $clickedImgBox.addClass("move");
-        startX = e.clientX;
-        startY = e.clientY;
+        // start position if mouse event || touch event:
+        startX = e.clientX || e.touches[0].clientX;
+        startY = e.clientY || e.touches[0].clientY;
+        // console.log('startX in handleMouseDown: ', startX);
         // get the clicked object to the very front:
         // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
         let highestZIndex = 0;
@@ -806,27 +824,27 @@ function handleMouseDown(e, touch) {
 }
 
 function handleMouseMove(e, touch) {
-    if (touch) {
-        // e.preventDefault();
-        console.log('touchmove!');
-    }
     if (objectClicked) {
+        if (touch) {
+            e.preventDefault();
+            // e.preventDefault && e.preventDefault();
+            // console.log('touchmove!');
+        }
         updatePosition(e);
     }
 }
 
 function handleMouseUp(e, touch) {
-    if (touch) {
-        // e.preventDefault();
-        console.log('touchend!');
-    }
     if (objectClicked) {
-        // console.log('drop object here:');
-        // console.log('cursorposition X: ', e.clientX);
-        // console.log('cursorposition Y: ', e.clientY);
+        if (touch) {
+            e.preventDefault();
+            // e.preventDefault && e.preventDefault();
+            // console.log('touchend!');
+        }
         const $clickedImgBox = $(".move");
-        const posX = e.clientX;
-        const posY = e.clientY;
+        // new position if mouse event || touch event:
+        const posX = e.clientX || e.changedTouches[0].clientX;
+        const posY = e.clientY || e.changedTouches[0].clientY;
         if (!muted && objectMoved) {
             if (uniSound) {
                 universalDropSound.play();
@@ -861,30 +879,6 @@ function handleMouseUp(e, touch) {
 }
 
 // §§ functions- main game: ----------------------------------------
-
-// function getConstructionAreaBorders() {
-//     borderTop = $constructionArea.offset().top;
-//     borderBottom = borderTop + $constructionArea.height();
-//     borderLeft = $constructionArea.offset().left;
-//     borderRight = borderLeft + $constructionArea.width();
-//     // console.log('borderTop: ', borderTop);
-//     // console.log('borderRight: ', borderRight);
-//     // console.log('borderBottom: ', borderBottom);
-//     // console.log('borderLeft: ', borderLeft);
-// };
-// getConstructionAreaBorders();
-
-// function getBodyBorders() {
-//     bodyBorderTop = $body.offset().top;
-//     bodyBorderBottom = bodyBorderTop + $body.height();
-//     bodyBorderLeft = $body.offset().left;
-//     bodyBorderRight = bodyBorderLeft + $body.width();
-//     // console.log('bodyBorderTop: ', bodyBorderTop);
-//     // console.log('bodyBorderRight: ', bodyBorderRight);
-//     // console.log('bodyBorderBottom: ', bodyBorderBottom);
-//     // console.log('bodyBorderLeft: ', bodyBorderLeft);
-// };
-// getBodyBorders();
 
 function changeTurn(data) {
     $(`#${data.activePlayer}`).removeClass("myTurn");
@@ -1135,32 +1129,40 @@ function discardAndRefillObjects(data) {
     }
 }
 
-function updatePosition(event) {
+function updatePosition(e) {
     objectMoved = true;
     const $clickedImgBox = $(".move");
 
-    moveX = event.clientX - startX;
-    moveY = event.clientY - startY;
+    if (e.clientX) {
+        // if mouse event:
+        moveX = e.clientX - startX;
+        moveY = e.clientY - startY;
+    } else {
+        // if touch event:
+        moveX = e.changedTouches[0].clientX - startX;
+        moveY = e.changedTouches[0].clientY - startY;
+    }
+
 
     // // only update position, if object is inside body:
     // let [top, bottom, left, right] = get$objBorders($clickedImgBox);
     //
     // if (bodyBorderLeft < left && right < bodyBorderRight) {
-    //     moveX = event.clientX - startX - ignoreX;
+    //     moveX = e.clientX - startX - ignoreX;
     // } else {
     //     // ---------- check here in which direction the mousemove is heading and update if direction is away from the body-border
     //     console.log('object outside X body!');
-    //     // console.log(event.clientX);
-    //     ignoreX = event.clientX;
+    //     // console.log(e.clientX);
+    //     ignoreX = e.clientX;
     // }
     //
     // if (bodyBorderTop < top && bottom < bodyBorderBottom) {
-    //     moveY = event.clientY - startY - ignoreY;
+    //     moveY = e.clientY - startY - ignoreY;
     // } else {
     //     // ---------- check here in which direction the mousemove is heading and update if direction is away from the body-border
     //     console.log('object outside Y body!');
-    //     // console.log(event.clientY);
-    //     ignoreY = event.clientY;
+    //     // console.log(e.clientY);
+    //     ignoreY = e.clientY;
     // }
 
     // to move an object, that's already in the construction area, check the transform props and calculate with them:
@@ -1168,10 +1170,6 @@ function updatePosition(event) {
         moveX += translateX;
         moveY += translateY;
     }
-
-    // $clickedImgBox.css({
-    //     transform: `translate(${moveX}px, ${moveY}px)`
-    // });
 
     $clickedImgBox.css({
         transform: `translate(${moveX}px, ${moveY}px) rotate(${transformRotate}deg)`
