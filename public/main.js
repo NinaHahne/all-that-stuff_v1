@@ -760,7 +760,7 @@ $("#play-again-btn").on("click", () => window.location.reload(false));
 function handleMouseDown(e, touch) {
     if (gameStarted && itsMyTurn) {
         if (touch) {
-            // e.preventDefault();
+            e.preventDefault();
             // e.preventDefault && e.preventDefault();
             // console.log('touchstart!');
         }

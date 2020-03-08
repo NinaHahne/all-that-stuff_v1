@@ -7,7 +7,7 @@
     -o-user-select: none;
     user-select: none;
     /* disable double-tap zoom on any element: */
-    /* touch-action: manipulation; */
+    touch-action: manipulation;
 }
 
 /* html {
@@ -20,9 +20,13 @@ body {
     flex-direction: column;
     /* min-height: 100vh; */
     height: 100%;
+    min-height: 950px;
     width: 100%;
+    min-width: 1820px;
 
     margin: 0;
+    padding: 0;
+
     font-size: 26px;
     /*font-family: 'Atma', cursive;*/
     /*font-family: 'Special Elite', cursive;*/
@@ -211,9 +215,9 @@ button:focus {
 #card-points-construction {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1vh;
-    margin-right: 8px;
-    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 12px;
 }
 
 #card-points {
@@ -503,13 +507,13 @@ small {
     bottom: 102px;
     right: 0; */
     position: relative;
-    height: 840px;
+    height: 830px;
     width: 620px;
     padding: 10px 2px;
     border: 3px lightgrey dashed;
     border-radius: 10px;
-    margin-right: 4px;
-    margin-bottom: 1vh;
+    margin-right: 12px;
+    margin-bottom: 10px;
 }
 #queue {
     display: flex;
@@ -1210,10 +1214,12 @@ small {
     height: 100vh;
     } */
 
-    html, body {
-        min-width: 1820px;
+    html,
+    body {
+        width: 1820px;
         min-height: 950px;
         position: absolute;
+        overflow: hidden;
     }
 
     #main-game {
@@ -1222,15 +1228,33 @@ small {
     }
 
     .cardtitle {
-        font-size: 40px;
-    }
-
-    .table-row * {
         font-size: 38px;
     }
 
+    .table-row {
+        margin-bottom: 8px;
+    }
+
+    .table-row *,
+    #points-container h3 {
+        font-size: 36px;
+    }
+
     .table-row small {
-        font-size: 30px;
+        font-size: 28px;
+    }
+
+    #points-if-correct {
+        font-size: 34px;
+    }
+
+    #construction-area .message {
+        font-size: 40px;
+    }
+
+    #done-btn,
+    #help-btn {
+        font-size: 32px;
     }
 
     #queue,
@@ -1238,37 +1262,17 @@ small {
         position: fixed;
         bottom: 0;
     }
+}
 
-    /* header {
-        padding: 10px;
-        height: 100%;
+/* for Samsung Galaxy S8: */
+@media screen and (min-device-height: 360px) and (min-device-width: 740px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: landscape) {
+    html,
+    body {
+        width: 1960px;
     }
 
-    header .player {
-        width: 10vw;
-        height: 10vw;
-        font-size: 1rem;
+    #card-deck {
+        width: 570px;
     }
 
-    .stuff-logo {
-        padding-top: 2rem;
-        padding-right: 2rem;
-        padding-left: 2rem;
-        text-align: center;
-    }
-
-    #logo-button-box {
-        display: flex;
-        align-items: center;
-    }
-
-    .stuff-logo {
-        transform: scale(0.7);
-    }
-
-    #ticker,
-    #ticker-objects {
-        height: 150px;
-        visibility: hidden;
-    } */
 }
