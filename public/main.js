@@ -517,7 +517,7 @@ function gameHasBeenStarted(data) {
 
         console.log(`you drew card number ${data.firstCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
-        $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
+        $(`.highlight[key=${data.correctAnswer}]`).addClass(selectedPieceId);
         $("#done-btn").removeClass("hidden");
 
         $message.addClass("bold");
@@ -887,7 +887,7 @@ function changeTurn(data) {
     $(`#${data.nextPlayer}`).addClass("myTurn");
     $("#construction-area").addClass(data.nextPlayer);
 
-    $(`.table-row[key=${correctAnswer}]`).removeClass(activePlayer);
+    $(`.highlight[key=${correctAnswer}]`).removeClass(activePlayer);
 
     // reset guess markers:
     let $guessesBoxesList = $(`.table-row`).find(".guesses");
@@ -936,7 +936,7 @@ function changeTurn(data) {
     if (data.nextPlayer == selectedPieceId) {
         console.log(`you drew card number ${data.newCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
-        $(`.table-row[key=${data.correctAnswer}]`).addClass(selectedPieceId);
+        $(`.highlight[key=${data.correctAnswer}]`).addClass(selectedPieceId);
         $("#done-btn").removeClass("hidden");
         $message[0].innerText = `it's your turn!`;
         $message.addClass("bold");
@@ -971,7 +971,7 @@ function showAnswers(data) {
     // console.log("actualPlayerPoints: ", data.actualPlayerPoints);
     // console.log("playerPointsTotal: ", data.playerPointsTotal);
     if (!itsMyTurn) {
-        $(`.table-row[key=${myGuess}]`).removeClass(selectedPieceId);
+        $(`.highlight[key=${myGuess}]`).removeClass(selectedPieceId);
     }
     // show answers of all guessers:
     for (let player in data.guessedAnswers) {
@@ -997,7 +997,7 @@ function showAnswers(data) {
 
 function showCorrectAnswer(data) {
     // show correct answer:
-    $(`.table-row[key=${data.correctAnswer}]`).addClass(activePlayer);
+    $(`.highlight[key=${data.correctAnswer}]`).addClass(activePlayer);
 }
 
 function addPoints(data) {
@@ -1248,7 +1248,7 @@ function guessWordFromCard(e) {
         sessionStorage.setItem("myGuess", myGuess);
 
         // console.log('you clicked on: ', myGuess);
-        $(e.currentTarget).addClass(`${selectedPieceId}`);
+        $(`.highlight[key=${myGuess}]`).addClass(`${selectedPieceId}`);
         socket.emit("made a guess", {
             guessingPlayer: selectedPieceId,
             guessedItem: myGuess
