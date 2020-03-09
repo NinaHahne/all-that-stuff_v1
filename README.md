@@ -12,7 +12,9 @@ HTML5, CSS3, JavaScript, jQuery, Socket.IO
 ## Preview
 ### START MENU
 <img src="./public/preview/start_menu.gif" alt="start-menu-gif">
+
 ### MAIN GAME
+
 BUILDING:
 <img src="./public/preview/my-turn_building.gif" alt="building-gif">
 
