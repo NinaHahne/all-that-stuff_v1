@@ -7,7 +7,7 @@ multi-player browser word guessing game
 * Live update of moving elements for all players
 
 ## Technologies
-JavaScript, HTML5, CSS3, jQuery, Socket.IO
+HTML5, CSS3, JavaScript, jQuery, Socket.IO
 
 ## Preview
 ### START MENU
