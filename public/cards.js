@@ -13,7 +13,7 @@ let items = document.getElementsByClassName("item");
 
 //INSTEAD: request.addEventListener('readystatechange', function(){}...).. but there is a less tedious way: jQuery.ajax
 
-let requestURL = "http://www.allthatstuff.fun/cards_enUS.json";
+let requestURL = "https://www.allthatstuff.fun/cards_enUS.json";
 let request = new XMLHttpRequest();
 request.open("GET", requestURL);
 request.responseType = "json";
