@@ -5,7 +5,7 @@ const app = express();
 // for socket.io:
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
-    origins: "localhost:8080 http://192.168.0.14:8080:*"
+    origins: "localhost:8080 http://192.168.0.14:8080:* http://192.168.2.112:8080:*"
 });
 
 // cards:
