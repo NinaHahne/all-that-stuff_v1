@@ -11,12 +11,14 @@ HTML5, CSS3, JavaScript, jQuery, Socket.IO
 
 ## Preview
 ### START MENU
-<img src="public/start_menu.gif" alt="start-menu-gif">
+<img src="./public/preview/start_menu.gif" alt="start-menu-gif">
 ### MAIN GAME
-#### BUILDING:
-<img src="public/my-turn_building.gif" alt="building-gif">
-#### GUESSING:
-<img src="public/guessing.gif" alt="guessing-gif">
+BUILDING:
+<img src="./public/preview/my-turn_building.gif" alt="building-gif">
+
+GUESSING:
+<img src="./public/preview/guessing.gif" alt="guessing-gif">
+
 ### GAME END
 
 ## Links & more
