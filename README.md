@@ -3,9 +3,8 @@ multi-player browser word guessing game
 
 ## Features
 * Players take turns
-* select and drag&drop elements to
-* make the other players guess a word
-* live update of moving elements for all players
+* Select and drag&drop elements to make the other players guess a word
+* Live update of moving elements for all players
 
 ## Technologies
 JavaScript, HTML5, CSS3, jQuery, Socket.IO
