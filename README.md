@@ -11,17 +11,22 @@ HTML5, CSS3, JavaScript, jQuery, Socket.IO
 
 ## Preview
 ### START MENU
-<img src="./public/preview/start_menu.gif" alt="start-menu-gif">
+<img src="./public/preview/start_menu.gif" alt="start menu preview animation">
 
 ### MAIN GAME
 
 BUILDING:
-<img src="./public/preview/my-turn_building.gif" alt="building-gif">
+<img src="./public/preview/my-turn_building.gif" alt="building preview animation">
 
 GUESSING:
-<img src="./public/preview/guessing.gif" alt="guessing-gif">
+<img src="./public/preview/guessing.gif" alt="guessing preview animation">
+
+NEXT TURN:
+<img src="./public/preview/next-turn.gif" alt="next turn preview animation">
 
 ### GAME END
+
+<img src="./public/preview/game-end.gif" alt="game end preview animation">
 
 ## Links & more
 * look at the [word cards](http://www.allthatstuff.fun/cards)
