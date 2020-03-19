@@ -2,7 +2,7 @@
 // var socket = io();
 var socket = io.connect();
 
-const testingMode = true;
+const testingMode = false;
 
 // // to prevent image dragging for imgs that are dynamically declared:
 // // register onLoad event
