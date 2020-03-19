@@ -4,28 +4,73 @@ var socket = io.connect();
 
 const testingMode = true;
 
-// to prevent image dragging for imgs that are dynamically declared:
-// register onLoad event with anonymous function
-window.onload = function (e) {
-    let evt = e || window.event,// define event (cross browser)
-        imgs,                   // images collection
-        i;                      // used in local loop
-    // if preventDefault exists, then define onmousedown event handlers
-    if (evt.preventDefault) {
-        // collect all images on the page
-        imgs = document.getElementsByTagName('img');
-        // loop through fetched images
-        for (i = 0; i < imgs.length; i++) {
-            // and define onmousedown event handler
-            imgs[i].onmousedown = disableDragging;
+// // to prevent image dragging for imgs that are dynamically declared:
+// // register onLoad event
+// window.onload = disableDraggingOnLoad;
+//
+// function disableDraggingOnLoad(e) {
+//     let evt = e || window.event,// define event (cross browser)
+//         imgs,                   // images collection
+//         i;                      // used in local loop
+//     // if preventDefault exists, then define onmousedown event handlers
+//     console.log('evt: ', evt);
+//     if (evt.preventDefault) {
+//         // collect all images on the page
+//         imgs = document.getElementsByTagName('img');
+//         // loop through fetched images
+//         for (i = 0; i < imgs.length; i++) {
+//             // and define onmousedown event handler/ disable img dragging
+//             imgs[i].onmousedown = e => {
+//                 e.preventDefault();
+//             };
+//         }
+//     }
+// }
+
+// §§ prevent img dragging in firefox--------------------------------
+
+// https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+
+// MutationObserver for everytime the objects are refilled (on game start and new turns):
+
+// Select the node that will be observed for mutations
+const targetNode = document.getElementById('objects');
+
+// Options for the observer (which mutations to observe)
+const config = { attributes: false, childList: true, subtree: false };
+
+// Callback function to execute when mutations are observed
+const callback = function(mutationsList, observer) {
+    let newImages;
+    // Use traditional 'for loops' for IE 11
+    for(let mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+            // console.log('A child node has been added or removed.');
+            newImages = true;
         }
+        // else if (mutation.type === 'attributes') {
+        //     console.log('The ' + mutation.attributeName + ' attribute was modified.');
+        // }
+    }
+    if (newImages) {
+        // collect all images on the page
+        let imgs = targetNode.getElementsByTagName('img');
+        for (let i = 0; i < imgs.length; i++) {
+            // and define onmousedown event handler / disable img dragging:
+            // console.log('onmousedown event handler is defined for ', imgs[i]);
+            imgs[i].onmousedown = e => {
+                e.preventDefault();
+            };
+        }
+
     }
 };
 
-// disable image dragging
-function disableDragging(e) {
-    e.preventDefault();
-}
+// Create an observer instance linked to the callback function
+const observer = new MutationObserver(callback);
+
+// Start observing the target node for configured mutations
+observer.observe(targetNode, config);
 
 // ------------------------------------
 
@@ -799,8 +844,8 @@ function handleMouseDown(e, touch) {
             const transformProps = $(".move").css("transform");
             // console.log('transformProps: ', transformProps);
             var values = transformProps.split("(")[1],
-            values = values.split(")")[0],
-            values = values.split(",");
+                values = values.split(")")[0],
+                values = values.split(",");
 
             translateX = Number(values[4]);
             translateY = Number(values[5]);
