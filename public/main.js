@@ -207,9 +207,9 @@ const selectPlayersContainer = document.getElementById("select-players");
 // §§ game/player state: --------------------------
 
 let gameStarted = false;
-if (sessionStorage.getItem("gameStarted")) {
-    gameStarted = sessionStorage.getItem("gameStarted");
-}
+// if (sessionStorage.getItem("gameStarted")) {
+//     gameStarted = sessionStorage.getItem("gameStarted");
+// }
 let itsMyTurn = false;
 // if (sessionStorage.getItem("itsMyTurn")) {
 //     itsMyTurn = sessionStorage.getItem("itsMyTurn");
@@ -243,17 +243,17 @@ let selectedPieceId = sessionStorage.getItem("selectedPieceId");
 let myPlayerName = sessionStorage.getItem("myPlayerName");
 
 let doneBtnPressed = false;
-if (sessionStorage.getItem("doneBtnPressed")) {
-    doneBtnPressed = sessionStorage.getItem("doneBtnPressed");
-}
+// if (sessionStorage.getItem("doneBtnPressed")) {
+//     doneBtnPressed = sessionStorage.getItem("doneBtnPressed");
+// }
 let myGuess;
-if (sessionStorage.getItem("myGuess")) {
-    myGuess = sessionStorage.getItem("myGuess");
-}
+// if (sessionStorage.getItem("myGuess")) {
+//     myGuess = sessionStorage.getItem("myGuess");
+// }
 let correctAnswer;
-if (sessionStorage.getItem("correctAnswer")) {
-    correctAnswer = sessionStorage.getItem("correctAnswer");
-}
+// if (sessionStorage.getItem("correctAnswer")) {
+//     correctAnswer = sessionStorage.getItem("correctAnswer");
+// }
 
 // card deck: ----------------------------------
 let cardTitle = document.getElementsByClassName("cardtitle");
@@ -309,7 +309,11 @@ playButton.addEventListener("click", function() {
     let playerArray = Array.from(joinedPlayersList);
     // console.log(Array.isArray(objectList));
     // console.log(Array.isArray(objectArray));
-    if (!selectedPieceId) {
+    if (gameStarted) {
+        setTimeout(() => {
+            window.alert("game has already started, please try again later");
+        }, 200);
+    } else if (!selectedPieceId) {
         let msg = "please pick a color before you start the game.";
         window.alert(msg);
         // do something prettier instead of the alert
@@ -418,9 +422,6 @@ function askForName() {
 }
 
 function addPlayer(data) {
-    // maybe pieceId is undefined at some point? just a guess for the jquery err when reloading page after changing main.js: Uncaught Error: Syntax error, unrecognized expression: # ... at Function.oe.error...
-    // error does not occur with this conditional:
-
     players.push(data.selectedPieceId);
     let $piece = $("#start-menu").find("#" + data.selectedPieceId);
     $piece.addClass("selectedPlayerPiece");
@@ -482,8 +483,7 @@ function shuffleObjects(objects) {
 }
 
 function startGame(playerArray, objArray) {
-    // whoever starts the game, is also the start player
-
+    // whoever starts the game, is also the start player:
     activePlayer = selectedPieceId;
     // sessionStorage.setItem("activePlayer", activePlayer);
 
@@ -492,7 +492,7 @@ function startGame(playerArray, objArray) {
 
     // to get the id of joined players in the order they are rendered:
     let joinedPlayerIds = playerArray.map(elem => elem.id);
-    // console.log(joinedPlayerIds);
+    console.log('joinedPlayerIds: ', joinedPlayerIds);
     $joinedPlayersContainer.append(playerArray);
 
     let activeObjects = objArray.slice(0, 10);
@@ -510,8 +510,8 @@ function startGame(playerArray, objArray) {
     // console.log('activeObjectsHTML: ', activeObjectsHTML);
     // console.log('queuedObjectsHTML: ', queuedObjectsHTML);
 
-    gameStarted = true;
-    sessionStorage.setItem("gameStarted", gameStarted);
+    // gameStarted = true;
+    // sessionStorage.setItem("gameStarted", gameStarted);
 
     socket.emit("game started", {
         startPlayer: selectedPieceId,
@@ -523,13 +523,16 @@ function startGame(playerArray, objArray) {
 
 function gameHasBeenStarted(data) {
     doneBtnPressed = false;
-    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
+    // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 
     $message.removeClass("hidden");
 
     activePlayer = data.startPlayer;
     // sessionStorage.setItem("activePlayer", activePlayer);
 
+    console.log('gameHasBeenStarted');
+    console.log('data.startPlayer: ', data.startPlayer);
+    console.log('selectedPieceId: ', selectedPieceId);
 
     if (data.startPlayer != selectedPieceId) {
         itsMyTurn = false;
@@ -613,14 +616,14 @@ function gameHasBeenStarted(data) {
     }
 
     correctAnswer = data.correctAnswer;
-    sessionStorage.setItem("correctAnswer", correctAnswer);
+    // sessionStorage.setItem("correctAnswer", correctAnswer);
 
     if (!muted) {
         startGong.play();
     }
 
     gameStarted = true;
-    sessionStorage.setItem("gameStarted", gameStarted);
+    // sessionStorage.setItem("gameStarted", gameStarted);
 
 }
 
@@ -630,22 +633,35 @@ socket.on("welcome", function(data) {
     selectedPieceId = sessionStorage.getItem("selectedPieceId");
     myPlayerName = sessionStorage.getItem("myPlayerName");
 
-    if (!myPlayerName) {
-        setTimeout(() => {
-            setPlayerName();
-        }, 200);
-    }
-
     sessionStorage.setItem("mySocketId", data.socketId);
     mySocketId = data.socketId;
     console.log(
         `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
     );
-    // remember previously selected piece on page reload:
-    // console.log("your selected piece is: ", selectedPieceId);
-    if (selectedPieceId && myPlayerName) {
-        selectedPiece(selectedPieceId);
+
+
+    // to check, if the game has already started:
+    gameStarted = data.gameStarted;
+
+    if (!gameStarted) {
+        if (!myPlayerName) {
+            setTimeout(() => {
+                setPlayerName();
+            }, 200);
+        }
+
+        // remember previously selected piece on page reload:
+        // console.log("your selected piece is: ", selectedPieceId);
+        if (selectedPieceId && myPlayerName) {
+            // In case of a replay, I should also check here, if the selected piece has been taken by a new player in the meantime....
+            selectedPiece(selectedPieceId);
+        }
+    } else {
+        setTimeout(() => {
+            window.alert("game has already started, please try again later");
+        }, 200);
     }
+
 
     players = data.selectedPieces;
     // sessionStorage.setItem("players", players);
@@ -678,8 +694,8 @@ socket.on("game has been started", function(data) {
     console.log(data.message);
     // console.log('data.activeObjects: ', data.activeObjects);
     // console.log('data.queuedObjects: ', data.queuedObjects);
-    // only if player joined:
-    if (selectedPieceId) {
+    // only if player joined (& in case of a second game, if player pressed "play again"):
+    if (selectedPieceId && !gameStarted) {
         gameHasBeenStarted(data);
     }
 });
@@ -957,13 +973,13 @@ function changeTurn(data) {
     // sessionStorage.setItem("activePlayer", activePlayer);
 
     correctAnswer = data.correctAnswer;
-    sessionStorage.setItem("correctAnswer", correctAnswer);
+    // sessionStorage.setItem("correctAnswer", correctAnswer);
 
     doneBtnPressed = false;
-    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
+    // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 
     myGuess = "";
-    sessionStorage.setItem("myGuess", myGuess);
+    // sessionStorage.setItem("myGuess", myGuess);
 
     $objects[0].innerHTML = data.activeObjects;
     $queue[0].innerHTML = data.queuedObjects;
@@ -1284,13 +1300,13 @@ function buildingIsDone(data) {
         $message[0].innerText = `done!`;
     }
     doneBtnPressed = true;
-    sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
+    // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 }
 
 function guessWordFromCard(e) {
     if (!myGuess & doneBtnPressed) {
         myGuess = e.currentTarget.getAttribute("key");
-        sessionStorage.setItem("myGuess", myGuess);
+        // sessionStorage.setItem("myGuess", myGuess);
 
         // console.log('you clicked on: ', myGuess);
         $(`.highlight[key=${myGuess}]`).addClass(`${selectedPieceId}`);
