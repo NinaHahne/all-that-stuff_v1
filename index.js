@@ -23,7 +23,7 @@ server.listen(process.env.PORT || 8080, () =>
 
 // §§ GAME STATE: ********************************
 
-// let gameStarted = false;
+let gameStarted = false;
 let joinedPlayers = {}; // { socketId: selectedPieceId, ... }
 let selectedPieces = []; // [ pieceId, .... ]
 let currentPlayer;
@@ -144,7 +144,8 @@ function collectGuesses(data) {
     answeringOrder.push(data.guessingPlayer);
 
     let guessedAnswersLength = Object.keys(guessedAnswers).length;
-    let joinedPlayersLength = Object.keys(joinedPlayers).length;
+    // let joinedPlayersLength = Object.keys(joinedPlayers).length;
+    let joinedPlayersLength = selectedPieces.length;
 
     // console.log('joinedPlayersLength: ', joinedPlayersLength);
     // console.log('guessedAnswersLength: ', guessedAnswersLength);
@@ -235,6 +236,10 @@ function getWinner() {
     let winner = ranking[0].player;
     console.log(winner, 'wins!');
 
+    // reset selectedPieces for next game:
+    selectedPieces = [];
+    gameStarted = false;
+
     let msg = `game is over`;
     io.sockets.emit("game ends", {
         message: msg,
@@ -244,7 +249,7 @@ function getWinner() {
 }
 
 // §§ SOCKET.IO ********************************
-io.on("connection", function(socket) {
+io.on("connection", socket => {
     console.log(`socket with the id ${socket.id} is now connected`);
     // console.log('joinedPlayers on connection: ', joinedPlayers);
 
@@ -258,10 +263,11 @@ io.on("connection", function(socket) {
         socketId: socket.id,
         // userId: socket.userId,
         selectedPieces: selectedPieces,
-        playerNames: playerNames
+        playerNames: playerNames,
+        gameStarted: gameStarted
     });
 
-    socket.on("selected piece", function(data) {
+    socket.on("selected piece", data => {
         if (data.selectedPieceId) {
             // console.log('joinedPlayers on "selected piece": ', joinedPlayers);
             console.log(
@@ -282,7 +288,7 @@ io.on("connection", function(socket) {
         }
     });
 
-    socket.on("game started", function(data) {
+    socket.on("game started", data => {
         currentPlayer = data.startPlayer;
         // this line makes sure, that selectedPieces (joined players) is in the correct order, like the player pieces are rendered:
         selectedPieces = data.joinedPlayerIds;
@@ -311,7 +317,7 @@ io.on("connection", function(socket) {
         // console.log(`${stuffCards.length} cards left.`);
         firstCard = stuffCards.shift();
 
-        // playerPointsTotal = {};
+        playerPointsTotal = {};
         for (let i = 0; i < selectedPieces.length; i++) {
             playerPointsTotal[selectedPieces[i]] = 0;
         }
@@ -319,6 +325,7 @@ io.on("connection", function(socket) {
         correctAnswer = randomNumber(1, 7);
         guessedAnswers = {};
         answeringOrder = [];
+        gameStarted = true;
 
         io.sockets.emit("game has been started", {
             message: msg,
@@ -330,7 +337,7 @@ io.on("connection", function(socket) {
         });
     });
 
-    socket.on("objects for next turn", function(data) {
+    socket.on("objects for next turn", data => {
         numberOfRoundsLeft--;
         if (numberOfRoundsLeft == 0) {
             getWinner();
@@ -339,7 +346,7 @@ io.on("connection", function(socket) {
         }
     });
 
-    socket.on("done building", function(data) {
+    socket.on("done building", data => {
         let msg = `player "${data.activePlayer}" finished building! Guess what it is!`;
         io.sockets.emit("building is done", {
             message: msg,
@@ -348,18 +355,18 @@ io.on("connection", function(socket) {
         });
     });
 
-    socket.on("moving objects", function(data) {
+    socket.on("moving objects", data => {
         io.sockets.emit("objects are moving", {
             activePlayer: data.activePlayer,
             movedObjects: data.movedObjects
         });
     });
 
-    socket.on("made a guess", function(data) {
+    socket.on("made a guess", data => {
         collectGuesses(data);
     });
 
-    socket.on("end game", function() {
+    socket.on("end game", () => {
         getWinner();
     });
 
@@ -380,11 +387,14 @@ io.on("connection", function(socket) {
     // OR: to everyone except for the emmiting socket:
     // socket.broadcast.emit('hi everyone else')
 
-    socket.on("disconnect", function() {
+    socket.on("disconnect", () => {
         // console.log('joinedPlayers on "disconnect": ', joinedPlayers);
         console.log(`socket with the id ${socket.id} is now disconnected`);
         let piece = joinedPlayers[socket.id];
         selectedPieces = selectedPieces.filter(item => item !== piece);
+        if (selectedPieces.length == 0) {
+            gameStarted = false;
+        }
         if (piece) {
             console.log(`player piece "${piece}" is now free again`);
             io.sockets.emit("remove selected piece", piece);
