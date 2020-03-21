@@ -59,6 +59,12 @@ body {
     z-index: 100;
 }
 
+/* #select-players *,
+#start-menu-main * {
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+} */
+
 header {
     display: flex;
     flex-direction: column;
@@ -130,8 +136,11 @@ header {
     position: relative;
     height: 100px;
     width: 100px;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
+
+    -webkit-transition: transform 0.4s ease-out;
+    -moz-transition: transform 0.4s ease-out;
+    -o-transition: transform 0.4s ease-out;
+    transition: transform 0.4s ease-out;
 }
 
 #chosen-language.game-master:hover {
@@ -198,13 +207,27 @@ button {
     font-weight: 700;
     margin: 5px 0px;
     z-index: 2000;
+
+
+    -webkit-transition: background-color 0.4s ease-out,
+                        color 0.4s ease-out,
+                        transform 0.4s ease-out;
+    -moz-transition: background-color 0.4s ease-out,
+                    color 0.4s ease-out,
+                    transform 0.4s ease-out;
+    -o-transition: background-color 0.4s ease-out,
+                    color 0.4s ease-out,
+                    transform 0.4s ease-out;
+    transition: background-color 0.4s ease-out,
+                color 0.4s ease-out,
+                transform 0.4s ease-out;
 }
 
 button:hover {
     background-color: black;
     color: white;
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
+    /* -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s; */
 }
 
 button:active {
@@ -601,6 +624,11 @@ small {
     justify-content: center;
     align-items: center;
 }
+
+/* #game-end * {
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+} */
 
 /* siegertreppchen: ----------------------*/
 /* #players-end {
