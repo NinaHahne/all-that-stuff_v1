@@ -720,7 +720,7 @@ socket.on("add selected piece", function(data) {
     gameMaster = data.gameMaster;
 
     // if I'm the game master:
-    if (gameMaster == selectedPieceId) {
+    if (gameMaster == selectedPieceId && !iAmTheGameMaster) {
         iAmTheGameMaster = true;
         console.log('you are the game master');
         $('#chosen-language').addClass('game-master');
