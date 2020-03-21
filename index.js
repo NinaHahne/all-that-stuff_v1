@@ -9,7 +9,9 @@ const io = require("socket.io")(server, {
 });
 
 // cards:
-const cards = require("./cards_enUS");
+const cardsEN = require("./cards_enUS");
+const cardsDE = require("./cards_de.json");
+let cards = cardsEN;
 
 app.use(express.static("./public"));
 
@@ -26,6 +28,7 @@ server.listen(process.env.PORT || 8080, () =>
 let gameStarted = false;
 let joinedPlayers = {}; // { socketId: selectedPieceId, ... }
 let selectedPieces = []; // [ pieceId, .... ]
+let gameMaster;
 let currentPlayer;
 // number of rounds, depending on number of players:
 let numberOfRoundsLeft;
@@ -283,9 +286,29 @@ io.on("connection", socket => {
             // (playersObj[data.selectedPieceId] || {}).name = data.playerName;
             // console.log('playersObj', playersObj);
 
-            io.sockets.emit("add selected piece", data);
+            // first player that selects a piece becomes "game master":
+            if (selectedPieces.length == 1) {
+                gameMaster = data.selectedPieceId;
+            }
+
+            io.sockets.emit("add selected piece", {
+                socketId: data.socketId,
+                selectedPieceId: data.selectedPieceId,
+                playerName: data.playerName,
+                gameMaster: gameMaster
+            });
             // console.log("selectedPieces: ", selectedPieces);
         }
+    });
+
+    socket.on("change language", data => {
+        if (data.newLanguage == "german") {
+            cards = cardsDE;
+        } else if (data.newLanguage == "english") {
+            cards = cardsEN;
+        }
+
+        io.sockets.emit("language has been changed", data);
     });
 
     socket.on("game started", data => {

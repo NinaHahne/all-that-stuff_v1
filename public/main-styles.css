@@ -34,7 +34,7 @@ body {
     font-family: "Life Savers", cursive;
     overflow: hidden;
     /******background image******/
-    background-image: url("images/white-wall.png");
+    background-image: url("/images/white-wall.png");
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -59,22 +59,13 @@ body {
     z-index: 100;
 }
 
-#select-players .player:hover {
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-}
-
-.player:not(.selectedPlayerPiece):hover {
-    cursor: pointer;
-}
-
 header {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding-top: 2rem;
-    padding-right: 2rem;
-    padding-left: 2rem;
+    padding-top: 30px;
+    padding-right: 40px;
+    padding-left: 40px;
     font-family: "Life Savers", cursive;
     align-items: center;
 }
@@ -82,7 +73,16 @@ header {
 #select-players {
     display: flex;
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
+}
+
+#select-players .player:hover {
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+.player:not(.selectedPlayerPiece):hover {
+    cursor: pointer;
 }
 
 .player {
@@ -110,7 +110,51 @@ header {
     border-width: 8px;
 }
 
+/* §§ middle section of start menu */
+
+#start-menu-main {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+/* select language of word cards: */
+#start-left,
+#start-right {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    width: 340px;
+}
+
+#chosen-language {
+    position: relative;
+    height: 100px;
+    width: 100px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+#chosen-language.game-master:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+#chosen-language img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border: 3px dashed black;
+    border-radius: 50%;
+}
+
 /* §§ stuff-logo styles */
+#logo-button-box {
+    height: 435px;
+    width: 340px;
+}
+
 .stuff-logo {
     padding-top: 2rem;
     padding-right: 2rem;

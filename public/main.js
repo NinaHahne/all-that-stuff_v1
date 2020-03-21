@@ -75,6 +75,7 @@ observer.observe(targetNode, config);
 // ------------------------------------
 
 // §§ ELEMENTS & GLOBAL VARIABLES ********************************
+let chosenLanguage = "english";
 
 const $objects = $("#objects");
 const $queue = $("#queue");
@@ -224,6 +225,9 @@ let players = [];
 // }
 let playerNames = {};
 
+let gameMaster;
+let iAmTheGameMaster = false;
+
 // let playersObj = {};
 // players will later be an object like this:
 // let playersObj = {
@@ -346,6 +350,12 @@ $("#start-menu").on("click", ".player", e => {
     }
 });
 
+$("#chosen-language").on("click", e => {
+    if (iAmTheGameMaster) {
+        changeLanguage();
+    }
+});
+
 // §§ functions- start menu: ----------------------------------------
 function preloadObjectImages() {
     const objectsArray = Array.from(objectList);
@@ -374,6 +384,29 @@ function preloadObjectImages() {
         }
     });
 
+}
+
+function changeLanguage() {
+    let newLanguage;
+    if (chosenLanguage == "english") {
+        newLanguage = "german";
+    } else {
+        newLanguage = "english";
+    }
+
+    socket.emit("change language", {
+        newLanguage: newLanguage
+    });
+}
+
+function languageHasBeenChanged(newLanguage) {
+    if (newLanguage == 'english') {
+        chosenLanguage = "english";
+        $("#english-flag").removeClass('hidden');
+    } else if (newLanguage == 'german') {
+        chosenLanguage = "german";
+        $("#english-flag").addClass('hidden');
+    }
 }
 
 function selectedPiece(pieceId) {
@@ -683,11 +716,24 @@ socket.on("add selected piece", function(data) {
         addPlayer(data);
     }
     // console.log('players after "add selected piece": ', players);
+    // the first player who selected a piece, becomes game master:
+    gameMaster = data.gameMaster;
+
+    // if I'm the game master:
+    if (gameMaster == selectedPieceId) {
+        iAmTheGameMaster = true;
+        console.log('you are the game master');
+        $('#chosen-language').addClass('game-master');
+    }
 });
 
 socket.on("remove selected piece", function(pieceId) {
     removePlayer(pieceId);
     // console.log('players after "remove selected piece": ', players);
+});
+
+socket.on("language has been changed", function(data) {
+    languageHasBeenChanged(data.newLanguage);
 });
 
 socket.on("game has been started", function(data) {
