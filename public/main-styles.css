@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    /* to avoid red highlite when user selects elements: */
+    /* to avoid red highlight when user selects elements: */
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -59,12 +59,6 @@ body {
     z-index: 100;
 }
 
-/* #select-players *,
-#start-menu-main * {
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-} */
-
 header {
     display: flex;
     flex-direction: column;
@@ -83,12 +77,16 @@ header {
 }
 
 #select-players .player:hover {
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
+    /* -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s; */
+
 }
 
 .player:not(.selectedPlayerPiece):hover {
     cursor: pointer;
+    transform: scale(1.2);
+    border-style: double;
+    border-width: 8px;
 }
 
 .player {
@@ -103,6 +101,23 @@ header {
     font-weight: bold;
     flex-shrink: 0;
     color: white;
+
+    -webkit-transition: transform 0.4s ease-out,
+                        border-style 0.4s ease-out,
+                        border-width 0.4s ease-out,
+                        color 0.4s ease-out;
+    -moz-transition: transform 0.4s ease-out,
+                    border-style 0.4s ease-out,
+                    border-width 0.4s ease-out,
+                    color 0.4s ease-out;
+    -o-transition: transform 0.4s ease-out,
+                    border-style 0.4s ease-out,
+                    border-width 0.4s ease-out,
+                    color 0.4s ease-out;
+    transition: transform 0.4s ease-out,
+                border-style 0.4s ease-out,
+                border-width 0.4s ease-out,
+                color 0.4s ease-out;
 }
 
 .player.selectedPlayerPiece {
@@ -208,7 +223,6 @@ button {
     margin: 5px 0px;
     z-index: 2000;
 
-
     -webkit-transition: background-color 0.4s ease-out,
                         color 0.4s ease-out,
                         transform 0.4s ease-out;
@@ -226,14 +240,10 @@ button {
 button:hover {
     background-color: black;
     color: white;
-    /* -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s; */
 }
 
 button:active {
     transform: translateY(2px);
-    /* -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s; */
 }
 
 button:focus {
@@ -325,49 +335,54 @@ button:focus {
 
 .grey {
     background-color: rgba(128, 128, 128, 0.4);
-    border-color: rgb(128, 128, 128);
+    border-color: rgb(128, 128, 128) !important;
 }
 
 .purple {
     background-color: rgba(75, 0, 130, 0.4);
-    border-color: rgb(75, 0, 130);
+    border-color: rgb(75, 0, 130) !important;
 }
 
 .blue {
     background-color: rgba(0, 51, 119, 0.4);
-    border-color: rgb(0, 51, 119);
+    border-color: rgb(0, 51, 119) !important;
 }
 
 .green {
     background-color: rgba(46, 139, 87, 0.4);
-    border-color: rgb(46, 139, 87);
+    border-color: rgb(46, 139, 87) !important;
 }
 
 .yellow {
     background-color: rgba(255, 215, 0, 0.4);
-    border-color: rgb(255, 215, 0);
+    border-color: rgb(255, 215, 0) !important;
 }
 
 .orange {
     background-color: rgba(255, 140, 0, 0.4);
-    border-color: rgb(255, 140, 0);
+    border-color: rgb(255, 140, 0) !important;
 }
 
 .red {
     background-color: rgba(185, 0, 20, 0.4);
-    border-color: rgb(185, 0, 20);
+    border-color: rgb(185, 0, 20) !important;
 }
 
 .pink {
     background-color: rgba(213, 0, 102, 0.4);
-    border-color: rgb(213, 0, 102);
+    border-color: rgb(213, 0, 102) !important;
 }
 
 /* §§ instructions --------------------- */
 #instructions {
     position: absolute;
     top: 80px;
+    left: 0;
     margin: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 8px;
+    z-index: 1000;
 }
 
 #instructions h3 {
@@ -444,8 +459,20 @@ button:focus {
 
 .highlight {
     display: flex;
-    border-radius: 10px;
     padding: 10px 5px;
+    border-radius: 10px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: transparent;
+
+    -webkit-transition: border-color 0.2s ease-out;
+    -moz-transition: border-color 0.2s ease-out;
+    -o-transition: border-color 0.2s ease-out;
+    transition: border-color 0.2s ease-out;
+}
+
+.table-row:hover .highlight {
+    border-color: grey;
 }
 
 .bullet,
@@ -624,11 +651,6 @@ small {
     justify-content: center;
     align-items: center;
 }
-
-/* #game-end * {
-    -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-} */
 
 /* siegertreppchen: ----------------------*/
 /* #players-end {
