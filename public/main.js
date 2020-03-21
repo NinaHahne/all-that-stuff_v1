@@ -2,7 +2,7 @@
 // var socket = io();
 var socket = io.connect();
 
-const testingMode = false;
+const testingMode = true;
 
 // // to prevent image dragging for imgs that are dynamically declared:
 // // register onLoad event
@@ -525,7 +525,7 @@ function startGame(playerArray, objArray) {
 
     // to get the id of joined players in the order they are rendered:
     let joinedPlayerIds = playerArray.map(elem => elem.id);
-    console.log('joinedPlayerIds: ', joinedPlayerIds);
+    // console.log('joinedPlayerIds: ', joinedPlayerIds);
     $joinedPlayersContainer.append(playerArray);
 
     let activeObjects = objArray.slice(0, 10);
@@ -562,10 +562,6 @@ function gameHasBeenStarted(data) {
 
     activePlayer = data.startPlayer;
     // sessionStorage.setItem("activePlayer", activePlayer);
-
-    console.log('gameHasBeenStarted');
-    console.log('data.startPlayer: ', data.startPlayer);
-    console.log('selectedPieceId: ', selectedPieceId);
 
     if (data.startPlayer != selectedPieceId) {
         itsMyTurn = false;
@@ -668,9 +664,10 @@ socket.on("welcome", function(data) {
 
     sessionStorage.setItem("mySocketId", data.socketId);
     mySocketId = data.socketId;
-    console.log(
-        `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
-    );
+    // console.log(
+    //     `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
+    // );
+    console.log('Welcome to AllThatStuff!');
 
 
     // to check, if the game has already started:
