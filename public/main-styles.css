@@ -1513,7 +1513,7 @@ small {
     body {
         zoom: 90%;
         width: 1920px;
-        min-height: 950px;
+        /* min-height: 950px; */
         position: absolute;
         overflow: hidden;
     }
