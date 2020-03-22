@@ -675,6 +675,7 @@ small {
 
 /* ---------------------------------------- */
 #players-end {
+    position: relative;
     display: flex;
     flex-direction: column;
     margin-right: 100px;
@@ -682,15 +683,30 @@ small {
 
 #players-end .player {
     border-style: solid;
+    border-width: 3px;
     color: black;
     /* margin: 15px 0; */
 }
 
+#players-end .player:hover {
+    cursor: unset
+}
+
 #players-end .player:first-child {
-    border-style: double;
+    /* border-style: groove; */
     transform: scale(1.3);
-    border-width: 12px;
+    /* border-width: 10px; */
     margin-bottom: 36px;
+    animation: pulse 2s infinite linear;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1.3);
+    }
+    50% {
+        transform: scale(1.5);
+    }
 }
 
 #players-end .player:nth-child(2) {
@@ -721,6 +737,183 @@ small {
 
 #players-end .player:nth-child(8) {
     transform: scale(0.65);
+}
+
+/* §§ --------crown for the winner: -------------*/
+/* NOT IN USE because of ugly rendering artifacts :( */
+#players-end .winner-crown {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100px;
+    width: 100px;
+    /* animation: rotation 30s infinite linear; */
+}
+
+.winner-crown div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.winner-crown div:not(.circle) {
+    /* background-color: gold; */
+    /* five-pointed star: */
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.winner-crown .star1 {
+    background-color: rgb(128, 128, 128);
+    transform: scale(1);
+    /* animation: sparkle 1s infinite linear; */
+}
+
+.winner-crown .star2 {
+    background-color: rgb(75, 0, 130);
+    transform: scale(1.5) rotate(9deg);
+    /* animation: sparkle9 1s infinite linear; */
+}
+
+.winner-crown .star3 {
+    background-color: rgb(0, 51, 119);
+    transform: scale(1) rotate(18deg);
+    /* animation: sparkle18 1s infinite linear; */
+}
+
+.winner-crown .star4 {
+    background-color: rgb(46, 139, 87);
+    transform: scale(1.5) rotate(27deg);
+    /* animation: sparkle27 1s infinite linear; */
+}
+
+.winner-crown .star5 {
+    background-color: rgb(255, 215, 0);
+    transform: scale(1) rotate(36deg);
+    /* animation: sparkle36 1s infinite linear; */
+    /* background-color: yellow; */
+}
+
+.winner-crown .star6 {
+    background-color: rgb(255, 140, 0);
+    transform: scale(1.5) rotate(45deg);
+    /* animation: sparkle45 1s infinite linear; */
+}
+
+.winner-crown .star7 {
+    background-color: rgb(185, 0, 20);
+    transform: scale(1) rotate(54deg);
+    /* animation: sparkle54 1s infinite linear; */
+}
+
+.winner-crown .star8 {
+    background-color: rgb(213, 0, 102);
+    transform: scale(1.5) rotate(63deg);
+    /* animation: sparkle63 1s infinite linear; */
+}
+
+.winner-crown .circle {
+    background-color: white;
+    transform: scale(1.1);
+}
+
+
+@keyframes sparkle {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes sparkle9 {
+    0% {
+        transform: scale(1.5) rotate(9deg);
+    }
+    50% {
+        transform: scale(1) rotate(9deg);
+    }
+    100% {
+        transform: scale(1.5) rotate(9deg);
+    }
+}
+
+@keyframes sparkle18 {
+    0% {
+        transform: scale(1) rotate(18deg);
+    }
+    50% {
+        transform: scale(1.5) rotate(18deg);
+    }
+    100% {
+        transform: scale(1) rotate(18deg);
+    }
+}
+
+@keyframes sparkle27 {
+    0% {
+        transform: scale(1.5) rotate(27deg);
+    }
+    50% {
+        transform: scale(1) rotate(27deg);
+    }
+    100% {
+        transform: scale(1.5) rotate(27deg);
+    }
+}
+
+@keyframes sparkle36 {
+    0% {
+        transform: scale(1) rotate(36deg);
+    }
+    50% {
+        transform: scale(1.5) rotate(36deg);
+    }
+    100% {
+        transform: scale(1) rotate(36deg);
+    }
+}
+
+@keyframes sparkle45 {
+    0% {
+        transform: scale(1.5) rotate(45deg);
+    }
+    50% {
+        transform: scale(1) rotate(45deg);
+    }
+    100% {
+        transform: scale(1.5) rotate(45deg);
+    }
+}
+
+@keyframes sparkle54 {
+    0% {
+        transform: scale(1) rotate(54deg);
+    }
+    50% {
+        transform: scale(1.5) rotate(54deg);
+    }
+    100% {
+        transform: scale(1) rotate(54deg);
+    }
+}
+
+@keyframes sparkle63 {
+    0% {
+        transform: scale(1.5) rotate(63deg);
+    }
+    50% {
+        transform: scale(1) rotate(63deg);
+    }
+    100% {
+        transform: scale(1.5) rotate(63deg);
+    }
 }
 
 /* §§ --------------- OBJECT STYLES ---------------*/

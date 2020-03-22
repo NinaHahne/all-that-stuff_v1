@@ -16,58 +16,6 @@
         <link rel="stylesheet" type="text/css" href="main-styles.css">
     </head>
     <body>
-        <section id="main-game" class="hidden">
-
-            <div id="main-left-center">
-                <section id="joined-players"></section>
-                <div id="card-points-construction">
-                    <div id="card-points">
-                        <section id="card-deck">
-                            <div class="wordcard">
-                                <div class="cardtitle">Card Title</div>
-                                <div class="table-row" key="1"><div class="highlight" key="1"><div class="bullet">1.</div><div class="item">first word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="2"><div class="highlight" key="2"><div class="bullet">2.</div><div class="item">second word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="3"><div class="highlight" key="3"><div class="bullet">3.</div><div class="item">third word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="4"><div class="highlight" key="4"><div class="bullet">4.</div><div class="item">forth word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="5"><div class="highlight" key="5"><div class="bullet">5.</div><div class="item">fifth word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="6"><div class="highlight" key="6"><div class="bullet">6.</div><div class="item">sixth word</div></div><div class="guesses"></div></div>
-                            </div>
-                        </section>
-                        <section id="points-container">
-                            <h3>points if correct:</h3>
-                            <div id="points-if-correct">
-
-                            </div>
-                        </section>
-                    </div>
-
-                    <section id="construction-area">
-                        <div class="hidden message">...under construction...</div>
-                        <section id="instructions" class="hidden">
-                            <h3>Instructions:</h3>
-                            <ul>
-                                <li><strong>drag&drop</strong> objects to the construction area</li>
-                                <li><strong>double-click</strong> objects to switch perspective <small>(only for some objects)</small></li>
-                                <li>press <span>Q</span> or <span>E</span> to rotate the last clicked object in the construction area</li>
-                                <!-- <li>press <span>enter</span> to start next turn <small>(empty construction area and refill objects)</small> </li> -->
-                                <li>press <span>S</span> to toggle between two sound modes <small>(universal vs. object specific)</small></li>
-                                <li>press <span>M</span> to mute sounds</li>
-                            </ul>
-                        </section>
-                        <button id="done-btn" class="hidden">done!</button>
-                        <button id="help-btn">?</button>
-                    </section>
-                </div>
-
-            </div>
-
-            <section id="objects"></section>
-
-            <section id="queue"></section>
-
-            <div id="queue-overlay"></div>
-
-        </section>
         <section id="start-menu">
             <header>
                 <div id="select-players">
@@ -213,8 +161,71 @@
                 </div>
             </div>
         </section>
+        <section id="main-game" class="hidden">
+
+            <div id="main-left-center">
+                <section id="joined-players"></section>
+                <div id="card-points-construction">
+                    <div id="card-points">
+                        <section id="card-deck">
+                            <div class="wordcard">
+                                <div class="cardtitle">Card Title</div>
+                                <div class="table-row" key="1"><div class="highlight" key="1"><div class="bullet">1.</div><div class="item">first word</div></div><div class="guesses"></div></div>
+                                <div class="table-row" key="2"><div class="highlight" key="2"><div class="bullet">2.</div><div class="item">second word</div></div><div class="guesses"></div></div>
+                                <div class="table-row" key="3"><div class="highlight" key="3"><div class="bullet">3.</div><div class="item">third word</div></div><div class="guesses"></div></div>
+                                <div class="table-row" key="4"><div class="highlight" key="4"><div class="bullet">4.</div><div class="item">forth word</div></div><div class="guesses"></div></div>
+                                <div class="table-row" key="5"><div class="highlight" key="5"><div class="bullet">5.</div><div class="item">fifth word</div></div><div class="guesses"></div></div>
+                                <div class="table-row" key="6"><div class="highlight" key="6"><div class="bullet">6.</div><div class="item">sixth word</div></div><div class="guesses"></div></div>
+                            </div>
+                        </section>
+                        <section id="points-container">
+                            <h3>points if correct:</h3>
+                            <div id="points-if-correct">
+
+                            </div>
+                        </section>
+                    </div>
+
+                    <section id="construction-area">
+                        <div class="hidden message">...under construction...</div>
+                        <section id="instructions" class="hidden">
+                            <h3>Instructions:</h3>
+                            <ul>
+                                <li><strong>drag&drop</strong> objects to the construction area</li>
+                                <li><strong>double-click</strong> objects to switch perspective <small>(only for some objects)</small></li>
+                                <li>press <span>Q</span> or <span>E</span> to rotate the last clicked object in the construction area</li>
+                                <!-- <li>press <span>enter</span> to start next turn <small>(empty construction area and refill objects)</small> </li> -->
+                                <li>press <span>S</span> to toggle between two sound modes <small>(universal vs. object specific)</small></li>
+                                <li>press <span>M</span> to mute sounds</li>
+                            </ul>
+                        </section>
+                        <button id="done-btn" class="hidden">done!</button>
+                        <button id="help-btn">?</button>
+                    </section>
+                </div>
+
+            </div>
+
+            <section id="objects"></section>
+
+            <section id="queue"></section>
+
+            <div id="queue-overlay"></div>
+
+        </section>
         <section id="game-end" class="hidden">
             <div id="players-end">
+                <!-- <div class="winner-crown">
+                    <div class="star1"></div>
+                    <div class="star2"></div>
+                    <div class="star3"></div>
+                    <div class="star4"></div>
+                    <div class="star5"></div>
+                    <div class="star6"></div>
+                    <div class="star7"></div>
+                    <div class="star8"></div>
+                    <div class="circle"></div>
+                </div> -->
 
             </div>
             <div id="play-again-box">
