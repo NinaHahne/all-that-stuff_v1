@@ -1511,7 +1511,7 @@ small {
 
     html,
     body {
-        zoom: 80%;
+        /* zoom: 80%; */
         width: 1920px;
         min-height: 950px;
         position: absolute;
