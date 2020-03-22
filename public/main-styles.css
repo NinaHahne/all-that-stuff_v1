@@ -76,10 +76,8 @@ header {
     justify-content: space-between;
 }
 
-#select-players .player:hover {
-    /* -webkit-transition-duration: 0.4s;
-    transition-duration: 0.4s; */
-
+.player-name {
+    font-size: 22px;
 }
 
 .player:not(.selectedPlayerPiece):hover {
@@ -683,6 +681,7 @@ small {
     display: flex;
     flex-direction: column;
     margin-right: 100px;
+    margin-top: 40px;
 }
 
 #players-end .player {
@@ -732,15 +731,15 @@ small {
 }
 
 #players-end .player:nth-child(6) {
-    transform: scale(0.75);
+    transform: scale(0.75) translateY(-12px);
 }
 
 #players-end .player:nth-child(7) {
-    transform: scale(0.7);
+    transform: scale(0.7) translateY(-32px);
 }
 
 #players-end .player:nth-child(8) {
-    transform: scale(0.65);
+    transform: scale(0.65) translateY(-62px);
 }
 
 /* §§ --------crown for the winner: -------------*/
@@ -1508,11 +1507,29 @@ small {
   }
 } */
 
+@media screen and (max-width: 1819px) {
+
+    html,
+    body {
+        width: 1820px;
+        min-height: 950px;
+        position: absolute;
+        overflow: hidden;
+    }
+
+    #main-game {
+        height: 100%;
+        /* padding-bottom: unset; */
+    }
+
+    #queue,
+    #queue-overlay {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
 @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
-    /* html {
-    width: 100vw;
-    height: 100vh;
-    } */
 
     html,
     body {
@@ -1574,5 +1591,4 @@ small {
     #card-deck {
         width: 570px;
     }
-
 }
