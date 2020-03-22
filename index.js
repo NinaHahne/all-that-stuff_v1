@@ -5,13 +5,15 @@ const app = express();
 // for socket.io:
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
-    origins: "localhost:8080 http://192.168.0.14:8080:* http://192.168.2.112:8080:* allthatstuff.herokuapp.com:*"
+    origins:
+        "localhost:8080 http://192.168.0.14:8080:* http://192.168.2.112:8080:* allthatstuff.herokuapp.com:*"
 });
 
 // cards:
 const cardsEN = require("./cards_enUS");
 const cardsDE = require("./cards_de.json");
 let cards = cardsEN;
+let chosenLanguage = "english";
 
 app.use(express.static("./public"));
 
@@ -45,7 +47,6 @@ let guessedAnswers = {}; // { pieceId: <guessed item number> }
 let answeringOrder = []; // [ pieceId, ... ]
 let playerPointsTotal = {}; // { pieceId: <points> }
 let playerNames = {};
-
 
 // IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
 let playersObj = {};
@@ -161,7 +162,6 @@ function collectGuesses(data) {
 
     // when everyone guessed:
     if (guessedAnswersLength == joinedPlayersLength - 1) {
-
         let playerPointsIfCorrect = {};
         let actualPlayerPoints = {};
         let numberOfCorrectGuesses = 0;
@@ -174,13 +174,11 @@ function collectGuesses(data) {
                     actualPlayerPoints[answeringOrder[i]] = pointsCounter;
                     playerPointsTotal[answeringOrder[i]] += pointsCounter;
                     numberOfCorrectGuesses++;
-
                 } else {
                     actualPlayerPoints[answeringOrder[i]] = 0;
                 }
                 pointsCounter--;
             }
-
         } else if (joinedPlayersLength > 6) {
             // for more than 6 players (max 8):
             // maximum points: 5
@@ -191,7 +189,6 @@ function collectGuesses(data) {
                     actualPlayerPoints[answeringOrder[i]] = pointsCounter;
                     playerPointsTotal[answeringOrder[i]] += pointsCounter;
                     numberOfCorrectGuesses++;
-
                 } else {
                     actualPlayerPoints[answeringOrder[i]] = 0;
                 }
@@ -232,12 +229,12 @@ function getWinner() {
     }
 
     // sort array in place by points, descending:
-    ranking.sort(function (a, b) {
+    ranking.sort(function(a, b) {
         return b.points - a.points;
     });
 
     let winner = ranking[0].player;
-    console.log(winner, 'wins!');
+    console.log(winner, "wins!");
 
     // reset selectedPieces for next game:
     selectedPieces = [];
@@ -267,6 +264,7 @@ io.on("connection", socket => {
         // userId: socket.userId,
         selectedPieces: selectedPieces,
         playerNames: playerNames,
+        chosenLanguage: chosenLanguage,
         gameStarted: gameStarted
     });
 
@@ -304,8 +302,10 @@ io.on("connection", socket => {
     socket.on("change language", data => {
         if (data.newLanguage == "german") {
             cards = cardsDE;
+            chosenLanguage = "german";
         } else if (data.newLanguage == "english") {
             cards = cardsEN;
+            chosenLanguage = "english";
         }
 
         io.sockets.emit("language has been changed", data);
@@ -320,7 +320,7 @@ io.on("connection", socket => {
         // console.log(msg);
 
         // set number of rounds:
-        if (selectedPieces.length == 3 || selectedPieces.length == 5 ) {
+        if (selectedPieces.length == 3 || selectedPieces.length == 5) {
             numberOfRoundsLeft = 15;
         } else if (selectedPieces.length == 4) {
             numberOfRoundsLeft = 12;
@@ -331,7 +331,12 @@ io.on("connection", socket => {
         } else if (selectedPieces.length == 8) {
             numberOfRoundsLeft = 16;
         }
-        console.log(`${selectedPieces.length} players joined the game. Each player will be the builder ${numberOfRoundsLeft/selectedPieces.length} times!`);
+        console.log(
+            `${
+                selectedPieces.length
+            } players joined the game. Each player will be the builder ${numberOfRoundsLeft /
+                selectedPieces.length} times!`
+        );
 
         // console.log('cards on "game started": ', cards);
         discardPile = cards;

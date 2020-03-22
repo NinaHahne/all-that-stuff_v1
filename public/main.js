@@ -400,11 +400,10 @@ function changeLanguage() {
 }
 
 function languageHasBeenChanged(newLanguage) {
+    chosenLanguage = newLanguage;
     if (newLanguage == 'english') {
-        chosenLanguage = "english";
         $("#english-flag").removeClass('hidden');
     } else if (newLanguage == 'german') {
-        chosenLanguage = "german";
         $("#english-flag").addClass('hidden');
     }
 }
@@ -669,8 +668,12 @@ socket.on("welcome", function(data) {
     // );
     console.log('Welcome to AllThatStuff!');
 
+    // set language of word cards:
+    if (chosenLanguage != data.chosenLanguage) {
+        languageHasBeenChanged(data.chosenLanguage);
+    }
 
-    // to check, if the game has already started:
+    // check if the game has already started:
     gameStarted = data.gameStarted;
 
     if (!gameStarted) {
