@@ -1518,16 +1518,16 @@ small {
         overflow: hidden;
     }
 
-    #main-game {
+    /* #main-game {
         height: 100%;
-        /* padding-bottom: unset; */
-    }
+        padding-bottom: 112px;
+    } */
 
-    #queue,
+    /* #queue,
     #queue-overlay {
         position: fixed;
         bottom: 0;
-    }
+    } */
 }
 
 @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
