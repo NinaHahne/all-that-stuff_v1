@@ -1507,10 +1507,11 @@ small {
   }
 } */
 
-@media screen and (max-width: 1819px) {
+@media screen and (min-device-width: 800px) and (max-device-width: 1600px) {
 
     html,
     body {
+        zoom: 80%;
         width: 1820px;
         min-height: 950px;
         position: absolute;
