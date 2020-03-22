@@ -436,17 +436,17 @@ function setPlayerName() {
     } catch (err) {
         console.log(err);
         setTimeout(() => {
-            alert("please type in a name with 1-10 letters!");
+            alert("please type in a name with 1-8 letters!");
             setPlayerName();
         }, 200);
     }
 }
 
 function askForName() {
-    let playerName = prompt("Welcome to AllThatStuff! \nPlease type in your name (1-10 letters) \nand then pick a color.");
+    let playerName = prompt("Welcome to AllThatStuff! \nPlease type in your name (1-8 letters) \nand then pick a color.");
     if (
         playerName.length >= 1 &&
-        playerName.length <= 10
+        playerName.length <= 8
     ) {
         return playerName;
     }
@@ -654,7 +654,6 @@ function gameHasBeenStarted(data) {
     // sessionStorage.setItem("gameStarted", gameStarted);
 
 }
-
 
 // §§ sockets - start menu: ----------------------------------------
 socket.on("welcome", function(data) {
