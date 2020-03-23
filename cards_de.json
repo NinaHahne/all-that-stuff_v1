@@ -832,7 +832,7 @@
   {
     "id": 167,
     "title": "Hart oder weich?",
-    "items": ["Weichei", "hardgesotten", "Weichteil", "hartgefroren", "Weichkäse", "Hartplatz <small>(Sport)</small>"]
+    "items": ["Weichei", "hartgesotten", "Weichteil", "hartgefroren", "Weichkäse", "Hartplatz <small>(Sport)</small>"]
   },
   {
     "id": 168,
@@ -960,4 +960,3 @@
     "items": ["Jerry Cotton <small>(Krimi)</small>", "Perry Rhodan <small>(Science Fiction)</small>", "Lassiter <small>(Western)</small>", "Dr. Stefan Frank <small>(Arzt)</small>", "John Sinclair <small>(Geister)</small>", "Bergkristall <small>(Heimat)</small>"]
   }
 ]
-
