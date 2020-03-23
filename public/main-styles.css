@@ -78,6 +78,12 @@ header {
     font-size: 22px;
 }
 
+.player-name,
+.player-points {
+    position: relative;
+    top: 6px;
+}
+
 .player:not(.selectedPlayerPiece):hover {
     cursor: pointer;
     transform: scale(1.2);
@@ -90,8 +96,8 @@ header {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100px;
-    width: 100px;
+    height: 110px;
+    width: 110px;
     border: 3px dashed transparent;
     border-radius: 50%;
     font-weight: bold;
@@ -417,7 +423,7 @@ button:focus {
 /* §§ cards --------------------- */
 #card-deck {
     position: relative;
-    min-width: 440px;
+    /* min-width: 440px; */
 }
 
 .wordcard {
@@ -426,7 +432,7 @@ button:focus {
     justify-content: flex-start;
     align-items: flex-start;
     font-weight: 700;
-    width: 100%;
+    width: 450px;
     touch-action: manipulation;
 }
 
@@ -437,7 +443,7 @@ button:focus {
     /* to allow the guesses-box to position itself to the right:  */
     position: relative;
     /* align-items: center; */
-    /* margin-bottom: 8px; */
+    margin-bottom: 6px;
 }
 
 .cardtitle {
@@ -464,7 +470,7 @@ button:focus {
     position: relative;
     /* leave space for "guess markers" next to card item/word: */
     max-width: 90%;
-    padding: 10px 5px;
+    padding: 8px 5px;
     border-radius: 10px;
     border-width: 3px;
     border-style: solid;
@@ -561,7 +567,7 @@ small {
     /* bottom: 112px;
     right: 632px; */
     height: 680px;
-    width: 715px;
+    width: 710px;
     padding: 4px;
     /* border: 3px lightgrey dashed; */
     border-width: 3px;
@@ -616,7 +622,7 @@ small {
     right: 0; */
     position: relative;
     height: 830px;
-    width: 625px;
+    width: 620px;
     padding: 10px 2px;
     border: 3px lightgrey dashed;
     border-radius: 10px;
