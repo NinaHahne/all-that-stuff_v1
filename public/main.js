@@ -436,21 +436,34 @@ function setPlayerName() {
     } catch (err) {
         console.log(err);
         setTimeout(() => {
-            alert("please type in a name with 1-8 letters!");
+            alert("please type in a name with 1-10 letters!");
             setPlayerName();
         }, 200);
     }
 }
 
 function askForName() {
-    let playerName = prompt("Welcome to AllThatStuff! \nPlease type in your name (1-8 letters) \nand then pick a color.");
+    let playerName = prompt("Welcome to AllThatStuff! \nPlease type in your name (1-10 letters) \nand then pick a color.");
     if (
         playerName.length >= 1 &&
-        playerName.length <= 8
+        playerName.length <= 10
     ) {
         return playerName;
     }
     throw new Error("Bad name");
+}
+
+function adjustNameFontSize($piece, name) {
+    // to adjust font-sizes for player names:
+    if (name.length <= 4) {
+        $piece.addClass("name4");
+    } else if (name.length <= 6) {
+        $piece.addClass("name6");
+    } else if (name.length <= 8) {
+        $piece.addClass("name8");
+    } else if (name.length <= 10) {
+        $piece.addClass("name10");
+    }
 }
 
 function addPlayer(data) {
@@ -460,6 +473,8 @@ function addPlayer(data) {
 
     let $playerName = $piece.find(".player-name");
     $playerName[0].innerText = data.playerName;
+
+    adjustNameFontSize($piece, data.playerName);
 
     // if it was me, selecting a piece:
     if (data.selectedPieceId == selectedPieceId) {
@@ -557,6 +572,13 @@ function gameHasBeenStarted(data) {
     cancelAnimationFrame(myReq);
     doneBtnPressed = false;
     // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
+
+    $(".player-points").removeClass("hidden");
+
+    $(".player-points").each(function() {
+        $( this )[0].innerText = "0";
+        console.log($( this ));
+    });
 
     $message.removeClass("hidden");
 
@@ -708,6 +730,7 @@ socket.on("welcome", function(data) {
         $playerName[0].innerText = playerNames[players[i]];
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
+        adjustNameFontSize($piece, $playerName[0].innerText);
     }
 });
 
@@ -1113,8 +1136,8 @@ function addPoints(data) {
         let $playerPoints = $piece.find(".player-points");
         $playerPoints[0].innerText = data.playerPointsTotal[player];
     }
-    // for the first round:
-    $(".player-points").removeClass("hidden");
+    // // for the first round:
+    // $(".player-points").removeClass("hidden");
     if (!muted) {
         bubblePop1.play();
     }
@@ -1390,6 +1413,9 @@ function gameEnds(data) {
         //         <div class="player-points">${ranking[i].points}</div>
         //     </div>`;
         $playersEnd.append(playerElement);
+
+        let $piece = $("#players-end").find("." + ranking[i].player);
+        adjustNameFontSize($piece, ranking[i].name);
     }
     if (!muted) {
         successJingle.play();

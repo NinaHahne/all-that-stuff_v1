@@ -74,8 +74,21 @@ header {
     justify-content: space-between;
 }
 
-.player-name {
-    font-size: 22px;
+/* font sizes depending on length of player name: */
+.player.name4 .player-name {
+    font-size: 34px;
+}
+
+.player.name6 .player-name {
+    font-size: 30px;
+}
+
+.player.name8 .player-name {
+    font-size: 24px;
+}
+
+.player.name10 .player-name {
+    font-size: 20px;
 }
 
 .player:not(.selectedPlayerPiece):hover {
@@ -322,12 +335,14 @@ button:focus {
     position: relative;
 }
 
-#joined-players .player-name {
-    position: absolute;
-    top: 30%;
+#joined-players .player-name,
+#players-end .player-name {
+    position: relative;
+    bottom: 10px;
 }
 
-#joined-players .player-points {
+#joined-players .player-points,
+#players-end .player-points {
     position: absolute;
     bottom: 6%;
 }
