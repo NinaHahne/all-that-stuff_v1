@@ -446,7 +446,7 @@ button:focus {
     margin-top: 0;
     margin-bottom: 6px;
     font-weight: 800;
-    align-items: flex-end;
+    /* align-items: flex-end; */
     height: 80px;
 }
 
