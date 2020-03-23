@@ -33,7 +33,7 @@ let selectedPieces = []; // [ pieceId, .... ]
 let gameMaster;
 let currentPlayer;
 // number of rounds, depending on number of players:
-let numberOfRoundsLeft;
+let numberOfTurnsLeft;
 
 // card deck: ----------------------
 let stuffCards = [];
@@ -134,7 +134,8 @@ function nextPlayersTurn(data) {
         activeObjects: data.activeObjects,
         queuedObjects: data.queuedObjects,
         newCard: firstCard,
-        correctAnswer: correctAnswer
+        correctAnswer: correctAnswer,
+        numberOfTurnsLeft: numberOfTurnsLeft
     });
 }
 
@@ -321,20 +322,20 @@ io.on("connection", socket => {
 
         // set number of rounds:
         if (selectedPieces.length == 3 || selectedPieces.length == 5) {
-            numberOfRoundsLeft = 15;
+            numberOfTurnsLeft = 15;
         } else if (selectedPieces.length == 4) {
-            numberOfRoundsLeft = 12;
+            numberOfTurnsLeft = 12;
         } else if (selectedPieces.length == 6) {
-            numberOfRoundsLeft = 18;
+            numberOfTurnsLeft = 18;
         } else if (selectedPieces.length == 7) {
-            numberOfRoundsLeft = 14;
+            numberOfTurnsLeft = 14;
         } else if (selectedPieces.length == 8) {
-            numberOfRoundsLeft = 16;
+            numberOfTurnsLeft = 16;
         }
         console.log(
             `${
                 selectedPieces.length
-            } players joined the game. Each player will be the builder ${numberOfRoundsLeft /
+            } players joined the game. Each player will be the builder ${numberOfTurnsLeft /
                 selectedPieces.length} times!`
         );
 
@@ -361,13 +362,14 @@ io.on("connection", socket => {
             activeObjects: data.activeObjects,
             queuedObjects: data.queuedObjects,
             firstCard: firstCard,
-            correctAnswer: correctAnswer
+            correctAnswer: correctAnswer,
+            numberOfTurnsLeft: numberOfTurnsLeft
         });
     });
 
     socket.on("objects for next turn", data => {
-        numberOfRoundsLeft--;
-        if (numberOfRoundsLeft == 0) {
+        numberOfTurnsLeft--;
+        if (numberOfTurnsLeft == 0) {
             getWinner();
         } else {
             nextPlayersTurn(data);
