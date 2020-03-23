@@ -11,23 +11,21 @@
     touch-action: manipulation;
 }
 
-/* html {
+html {
     height: 100%;
     width: 100%;
-} */
+}
 
 body {
     display: flex;
     flex-direction: column;
     /* min-height: 100vh; */
     height: 100%;
-    min-height: 950px;
+    /* min-height: 950px; */
     width: 100%;
-    min-width: 1820px;
-
+    /* min-width: 1820px; */
     margin: 0;
     padding: 0;
-
     font-size: 26px;
     /*font-family: 'Atma', cursive;*/
     /*font-family: 'Special Elite', cursive;*/
@@ -251,7 +249,7 @@ button:focus {
 /* §§ object ticker styles------------------ */
 #ticker {
     position: fixed;
-    bottom: 10px;
+    bottom: 0px;
     width: 100%;
     overflow-x: hidden;
     height: 300px;
@@ -262,7 +260,7 @@ button:focus {
     align-items: center;
     position: fixed;
     /* position: absolute; */
-    bottom: 10px;
+    bottom: 0px;
     left: 0;
     white-space: nowrap;
     font-size: 0; /* to remove white space between the ticker elements, that causes ticker to jump in the first round*/
@@ -275,20 +273,23 @@ button:focus {
 
 /* §§ ---------MAIN GAME------------- */
 #main-game {
-    height: 100vh;
-    /* height: 100%; */
+    /* height: 100vh; */
+    height: 100%;
     width: 100%;
     display: flex;
-    padding-bottom: 100px;
+    flex-shrink: 0;
+    /* padding-bottom: 100px; */
     align-items: flex-end;
     position: relative;
+    padding-bottom: 100px;
 }
 
 #main-left-center {
-    flex-grow: 1;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: 100%;
     justify-content: space-between;
 }
 
@@ -304,6 +305,7 @@ button:focus {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    flex-grow: 1;
 }
 
 #joined-players {
@@ -415,9 +417,7 @@ button:focus {
 /* §§ cards --------------------- */
 #card-deck {
     position: relative;
-    /* top: 140px;
-    left: 25px; */
-    width: 440px;
+    min-width: 440px;
 }
 
 .wordcard {
@@ -437,14 +437,14 @@ button:focus {
     /* to allow the guesses-box to position itself to the right:  */
     position: relative;
     /* align-items: center; */
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
 }
 
 .cardtitle {
     /* padding-left: 0.2rem; */
     font-size: 32px;
     margin-top: 0;
-    /* margin-bottom: 0.6rem; */
+    margin-bottom: 6px;
     font-weight: 800;
     align-items: flex-end;
     height: 80px;
@@ -461,6 +461,9 @@ button:focus {
 
 .highlight {
     display: flex;
+    position: relative;
+    /* leave space for "guess markers" next to card item/word: */
+    max-width: 90%;
     padding: 10px 5px;
     border-radius: 10px;
     border-width: 3px;
@@ -506,7 +509,7 @@ small {
 .guesses {
     display: flex;
     position: absolute;
-    right: 10px;
+    right: 2px;
     align-items: center;
     justify-content: flex-end;
     margin-left: 10px;
@@ -558,7 +561,7 @@ small {
     /* bottom: 112px;
     right: 632px; */
     height: 680px;
-    width: 720px;
+    width: 715px;
     padding: 4px;
     /* border: 3px lightgrey dashed; */
     border-width: 3px;
@@ -613,7 +616,7 @@ small {
     right: 0; */
     position: relative;
     height: 830px;
-    width: 620px;
+    width: 625px;
     padding: 10px 2px;
     border: 3px lightgrey dashed;
     border-radius: 10px;
@@ -1507,20 +1510,13 @@ small {
   }
 } */
 
-@media screen and (min-device-width: 800px) and (max-device-width: 1600px) {
+/* @media
+screen and (max-height: 940px),
+screen and (max-width: 1600px) {
 
     html,
     body {
-        zoom: 90%;
-        width: 1920px;
-        /* min-height: 950px; */
-        position: absolute;
-        overflow: hidden;
-    }
-
-    #main-game {
-        height: 100%;
-        padding-bottom: 112px;
+        zoom: 92%;
     }
 
     #queue,
@@ -1530,10 +1526,21 @@ small {
     }
 }
 
+@media
+screen and (max-height: 764px),
+screen and (max-width: 1280px) {
+
+    html,
+    body {
+        zoom: 89%;
+    }
+} */
+
 @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
 
     html,
     body {
+        zoom: unset;
         width: 1820px;
         min-height: 950px;
         position: absolute;
@@ -1542,6 +1549,7 @@ small {
 
     #main-game {
         height: 100%;
+        margin-top: 0px;
         /* padding-bottom: unset; */
     }
 
@@ -1586,6 +1594,7 @@ small {
 @media screen and (min-device-height: 360px) and (min-device-width: 740px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: landscape) {
     html,
     body {
+        zoom: unset;
         width: 1960px;
     }
 
