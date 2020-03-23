@@ -80,6 +80,8 @@ let chosenLanguage = "english";
 const $objects = $("#objects");
 const $queue = $("#queue");
 const $joinedPlayersContainer = $("#joined-players");
+const $rounds = $("#rounds");
+let numberOfTurns;
 
 const $constructionArea = $("#construction-area");
 const $message = $("#construction-area").find(".message");
@@ -206,7 +208,6 @@ const selectPlayersContainer = document.getElementById("select-players");
 // const playersContainer = document.getElementById("joined-players");
 
 // §§ game/player state: --------------------------
-
 let gameStarted = false;
 // if (sessionStorage.getItem("gameStarted")) {
 //     gameStarted = sessionStorage.getItem("gameStarted");
@@ -574,13 +575,15 @@ function gameHasBeenStarted(data) {
     // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 
     $(".player-points").removeClass("hidden");
-
     $(".player-points").each(function() {
         $( this )[0].innerText = "0";
-        console.log($( this ));
     });
 
     $message.removeClass("hidden");
+
+    numberOfTurns = data.numberOfTurnsLeft;
+    let currentTurn = numberOfTurns - data.numberOfTurnsLeft + 1;
+    $rounds[0].innerText = `${currentTurn}/${numberOfTurns}`;
 
     activePlayer = data.startPlayer;
     // sessionStorage.setItem("activePlayer", activePlayer);
@@ -911,7 +914,7 @@ function handleMouseDown(e, touch) {
         // console.log('startX in handleMouseDown: ', startX);
         // get the clicked object to the very front:
         // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
-        let highestZIndex = 0;
+        let highestZIndex = 1;
         $(".selected").each(function() {
             const currentZIndex = Number($(this).css("z-index"));
             if (currentZIndex > highestZIndex) {
@@ -998,9 +1001,11 @@ function handleMouseUp(e, touch) {
             $clickedImgBox.removeClass("selected");
             // reset object position::
             $clickedImgBox.css({
-                transform: `translate(${0}px, ${0}px)`
+                transform: `translate(${0}px, ${0}px)`,
+                "z-index": 1
             });
         }
+
         $clickedImgBox.removeClass("move");
         objectClicked = false;
         objectMoved = false;
@@ -1062,7 +1067,10 @@ function changeTurn(data) {
 
     $message.removeClass("hidden");
 
-    // next turn is my turn:
+    let currentTurn = numberOfTurns - data.numberOfTurnsLeft + 1;
+    $rounds[0].innerText = `${currentTurn}/${numberOfTurns}`;
+
+    // if next turn is my turn:
     if (data.nextPlayer == selectedPieceId) {
         console.log(`you drew card number ${data.newCard.id}.`);
         console.log(`please build item number ${data.correctAnswer}`);
@@ -1072,7 +1080,7 @@ function changeTurn(data) {
         $message.addClass("bold");
         itsMyTurn = true;
     } else {
-        // next turn is not my turn:
+        // if next turn is not my turn:
         $("#done-btn").addClass("hidden");
         $message.removeClass("bold");
         $message[0].innerText = "...under construction...";
