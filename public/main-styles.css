@@ -78,12 +78,6 @@ header {
     font-size: 22px;
 }
 
-.player-name,
-.player-points {
-    position: relative;
-    top: 6px;
-}
-
 .player:not(.selectedPlayerPiece):hover {
     cursor: pointer;
     transform: scale(1.2);
@@ -324,6 +318,13 @@ button:focus {
 #joined-players .player,
 #select-players .player {
     margin: 5px;
+}
+
+
+#joined-players .player-name,
+#joined-players .player-points {
+    position: relative;
+    top: 6px;
 }
 
 #joined-players .player.myTurn {
