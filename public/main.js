@@ -327,7 +327,7 @@ playButton.addEventListener("click", function() {
         window.alert(msg);
         // do something prettier instead of the alert
     } else {
-        cancelAnimationFrame(myReq);
+        // cancelAnimationFrame(myReq);
         let objectArray = Array.from(objectList);
         startGame(playerArray, objectArray);
     }
@@ -554,6 +554,7 @@ function startGame(playerArray, objArray) {
 }
 
 function gameHasBeenStarted(data) {
+    cancelAnimationFrame(myReq);
     doneBtnPressed = false;
     // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 
