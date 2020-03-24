@@ -852,7 +852,7 @@ $(document).on("keydown", e => {
     } else if (e.keyCode == 70) {
         // = "F"
         // simulate "game end":
-        if (testingMode) {
+        if (testingMode && iAmTheGameMaster) {
             endGame();
         }
     } else if (e.keyCode == 81) {
