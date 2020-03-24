@@ -430,6 +430,7 @@ button:focus {
 
 #instructions li {
     margin-bottom: 4px;
+    font-size: 24px;
 }
 
 #instructions p {
@@ -592,7 +593,7 @@ small {
     position: relative;
     /* bottom: 112px;
     right: 632px; */
-    height: 700px;
+    height: 680px;
     width: 700px;
     padding: 4px;
     /* border: 3px lightgrey dashed; */
@@ -812,6 +813,7 @@ small {
 
 /* §§ --------crown for the winner: -------------*/
 /* NOT IN USE because of ugly rendering artifacts :( */
+
 #players-end .winner-crown {
     position: absolute;
     top: 0;
@@ -1022,7 +1024,7 @@ small {
     cursor: pointer;
 }
 
-/* styles for particular object items: */
+/* §§ styles for particular object items: */
 .banana {
     height: 60px;
     width: auto;
@@ -1108,7 +1110,8 @@ small {
     height: 100px;
     width: auto;
 }
-.coin.v1 {
+.coin.v1,
+.coin.v2 {
     clip-path: circle(50% at center);
 }
 .flower {
@@ -1234,6 +1237,12 @@ small {
         25% 12%,
         19% 8%
     );
+}
+.giant.v2 {
+
+}
+.giant.v3 {
+
 }
 .peg {
     height: 120px;
