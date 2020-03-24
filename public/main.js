@@ -609,6 +609,7 @@ function gameHasBeenStarted(data) {
         $("#main-game").removeClass("hidden");
 
         $message.removeClass("bold");
+        $message.removeClass("done");
         $message.removeClass("hidden");
         $message[0].innerText = "...under construction...";
 
@@ -1066,6 +1067,7 @@ function changeTurn(data) {
     }
 
     $message.removeClass("hidden");
+    $message.removeClass("done");
 
     let currentTurn = numberOfTurns - data.numberOfTurnsLeft + 1;
     $rounds[0].innerText = `${currentTurn}/${numberOfTurns}`;
@@ -1138,14 +1140,25 @@ function showCorrectAnswer(data) {
     $(`.highlight[key=${data.correctAnswer}]`).addClass(activePlayer);
 }
 
+function flashPoints($playerPoints) {
+    $playerPoints.css({
+        transform: `scale(1.2)`
+    });
+    setTimeout(function() {
+        $playerPoints.css({
+            transform: `scale(1)`
+        });
+    }, 350);
+}
+
 function addPoints(data) {
     for (let player in data.playerPointsTotal) {
         let $piece = $("#" + player);
         let $playerPoints = $piece.find(".player-points");
         $playerPoints[0].innerText = data.playerPointsTotal[player];
+        flashPoints($playerPoints);
     }
-    // // for the first round:
-    // $(".player-points").removeClass("hidden");
+
     if (!muted) {
         bubblePop1.play();
     }
@@ -1376,6 +1389,7 @@ function buildingIsDone(data) {
         $message.removeClass("bold");
         $message[0].innerText = `done!`;
     }
+    $message.addClass("done");
     doneBtnPressed = true;
     // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 }
