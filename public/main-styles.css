@@ -410,30 +410,31 @@ button:focus {
 /* §§ instructions --------------------- */
 #instructions {
     position: absolute;
-    top: 80px;
+    top: 0px;
     left: 0;
     margin: 5px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 8px;
     z-index: 1000;
 }
 
 #instructions h3 {
-    margin: 0 0 10px 0;
-    font-size: 32px;
+    margin: 0 0 12px 0;
+    font-size: 30px;
 }
 
 #instructions ul {
-    margin: 10px 0px;
+    margin: 8px 0px;
 }
 
 #instructions li {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 #instructions p {
-    margin-left: 15px;
+    margin: 0;
+    font-weight: bold;
 }
 
 #instructions span {
@@ -477,7 +478,7 @@ button:focus {
     margin-top: 0;
     margin-bottom: 6px;
     font-weight: 800;
-    /* align-items: flex-end; */
+    align-items: center;
     height: 80px;
 }
 
@@ -591,7 +592,7 @@ small {
     position: relative;
     /* bottom: 112px;
     right: 632px; */
-    height: 680px;
+    height: 700px;
     width: 700px;
     padding: 4px;
     /* border: 3px lightgrey dashed; */
