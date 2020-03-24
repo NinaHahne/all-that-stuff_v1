@@ -6,7 +6,7 @@
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
-    -webkit-tap-highlight-color: rgba(255, 255, 255,0);
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     /* disable double-tap zoom on any element: */
     touch-action: manipulation;
 }
@@ -111,22 +111,14 @@ header {
     flex-shrink: 0;
     color: white;
 
-    -webkit-transition: transform 0.4s ease-out,
-                        border-style 0.4s ease-out,
-                        border-width 0.4s ease-out,
-                        color 0.4s ease-out;
-    -moz-transition: transform 0.4s ease-out,
-                    border-style 0.4s ease-out,
-                    border-width 0.4s ease-out,
-                    color 0.4s ease-out;
-    -o-transition: transform 0.4s ease-out,
-                    border-style 0.4s ease-out,
-                    border-width 0.4s ease-out,
-                    color 0.4s ease-out;
-    transition: transform 0.4s ease-out,
-                border-style 0.4s ease-out,
-                border-width 0.4s ease-out,
-                color 0.4s ease-out;
+    -webkit-transition: transform 0.4s ease-out, border-style 0.4s ease-out,
+        border-width 0.4s ease-out, color 0.4s ease-out;
+    -moz-transition: transform 0.4s ease-out, border-style 0.4s ease-out,
+        border-width 0.4s ease-out, color 0.4s ease-out;
+    -o-transition: transform 0.4s ease-out, border-style 0.4s ease-out,
+        border-width 0.4s ease-out, color 0.4s ease-out;
+    transition: transform 0.4s ease-out, border-style 0.4s ease-out,
+        border-width 0.4s ease-out, color 0.4s ease-out;
 }
 
 .player.selectedPlayerPiece {
@@ -232,18 +224,14 @@ button {
     margin: 5px 0px;
     z-index: 2000;
 
-    -webkit-transition: background-color 0.4s ease-out,
-                        color 0.4s ease-out,
-                        transform 0.4s ease-out;
-    -moz-transition: background-color 0.4s ease-out,
-                    color 0.4s ease-out,
-                    transform 0.4s ease-out;
-    -o-transition: background-color 0.4s ease-out,
-                    color 0.4s ease-out,
-                    transform 0.4s ease-out;
-    transition: background-color 0.4s ease-out,
-                color 0.4s ease-out,
-                transform 0.4s ease-out;
+    -webkit-transition: background-color 0.4s ease-out, color 0.4s ease-out,
+        transform 0.4s ease-out;
+    -moz-transition: background-color 0.4s ease-out, color 0.4s ease-out,
+        transform 0.4s ease-out;
+    -o-transition: background-color 0.4s ease-out, color 0.4s ease-out,
+        transform 0.4s ease-out;
+    transition: background-color 0.4s ease-out, color 0.4s ease-out,
+        transform 0.4s ease-out;
 }
 
 button:hover {
@@ -618,7 +606,8 @@ small {
 }
 
 @keyframes floatMessage {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateX(0px);
     }
     25% {
@@ -641,7 +630,8 @@ small {
 }
 
 @keyframes pulseMessage {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
     }
     50% {
@@ -761,7 +751,7 @@ small {
 }
 
 #players-end .player:hover {
-    cursor: unset
+    cursor: unset;
 }
 
 #players-end .player:first-child {
@@ -773,7 +763,8 @@ small {
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1.3);
     }
     50% {
@@ -835,7 +826,18 @@ small {
 .winner-crown div:not(.circle) {
     /* background-color: gold; */
     /* five-pointed star: */
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+    );
 }
 
 .winner-crown .star1 {
@@ -891,7 +893,6 @@ small {
     background-color: white;
     transform: scale(1.1);
 }
-
 
 @keyframes sparkle {
     0% {
@@ -1102,9 +1103,23 @@ small {
 }
 .cloth.v2 {
     height: 200px;
+    clip-path: polygon(
+        19% 25%,
+        37% 28%,
+        50% 16%,
+        69% -1%,
+        83% 36%,
+        99% 40%,
+        102% 64%,
+        99% 72%,
+        11% 101%,
+        -1% 64%,
+        17% 47%
+    );
 }
 .cloth.v3 {
     height: 270px;
+    clip-path: polygon(0 0, 94% 0, 100% 100%, 0% 100%);
 }
 .coin {
     height: 100px;
@@ -1239,10 +1254,31 @@ small {
     );
 }
 .giant.v2 {
-
+    clip-path: polygon(
+        55% -5%,
+        76% 7%,
+        73% 10%,
+        100% 17%,
+        110% 22%,
+        85% 60%,
+        76% 62%,
+        73% 73%,
+        93% 79%,
+        93% 94%,
+        50% 107%,
+        13% 93%,
+        12% 79%,
+        29% 74%,
+        26% 64%,
+        14% 63%,
+        -12% 26%,
+        9% 15%,
+        29% 11%,
+        25% 7%
+    );
 }
 .giant.v3 {
-
+    /* background-color: yellow; */
 }
 .peg {
     height: 120px;
@@ -1611,7 +1647,6 @@ screen and (max-width: 1280px) {
 } */
 
 @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
-
     html,
     body {
         zoom: unset;
