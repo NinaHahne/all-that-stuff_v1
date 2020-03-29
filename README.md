@@ -1,5 +1,5 @@
 # AllThatStuff
-multi-player browser word guessing game
+Multiplayer word association game
 
 ## Features
 * Players take turns
