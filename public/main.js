@@ -75,8 +75,6 @@ observer.observe(targetNode, config);
 // ------------------------------------
 
 // §§ ELEMENTS & GLOBAL VARIABLES ********************************
-let chosenLanguage = "english";
-
 const $objects = $("#objects");
 const $queue = $("#queue");
 const $joinedPlayersContainer = $("#joined-players");
@@ -208,6 +206,7 @@ const selectPlayersContainer = document.getElementById("select-players");
 // const playersContainer = document.getElementById("joined-players");
 
 // §§ game/player state: --------------------------
+let chosenLanguage = "english";
 let gameStarted = false;
 // if (sessionStorage.getItem("gameStarted")) {
 //     gameStarted = sessionStorage.getItem("gameStarted");
@@ -720,7 +719,6 @@ socket.on("welcome", function(data) {
             window.alert("game has already started, please try again later");
         }, 200);
     }
-
 
     players = data.selectedPieces;
     // sessionStorage.setItem("players", players);
