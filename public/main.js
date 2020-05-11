@@ -1162,7 +1162,6 @@ function addPoints(data) {
     }
 }
 
-
 function get$objBorders($obj) {
     let top = $obj.offset().top;
     let bottom = top + $obj.height();

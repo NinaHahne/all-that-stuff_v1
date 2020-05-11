@@ -10,7 +10,7 @@ const io = require("socket.io")(server, {
 });
 
 // cards:
-const cardsEN = require("./cards_enUS");
+const cardsEN = require("./cards_enUS.json");
 const cardsDE = require("./cards_de.json");
 let cards = cardsEN;
 let chosenLanguage = "english";
@@ -317,10 +317,8 @@ io.on("connection", socket => {
         // this line makes sure, that selectedPieces (joined players) is in the correct order, like the player pieces are rendered:
         selectedPieces = data.joinedPlayerIds;
         console.log("joined players at game start: ", selectedPieces);
-        let msg = `"${data.startPlayer}" started the game and starts with building!`;
-        // console.log(msg);
 
-        // set number of rounds:
+        // set number of turns:
         if (selectedPieces.length == 3 || selectedPieces.length == 5) {
             numberOfTurnsLeft = 15;
         } else if (selectedPieces.length == 4) {
@@ -355,6 +353,9 @@ io.on("connection", socket => {
         guessedAnswers = {};
         answeringOrder = [];
         gameStarted = true;
+
+        let msg = `"${data.startPlayer}" started the game and starts with building!`;
+        // console.log(msg);
 
         io.sockets.emit("game has been started", {
             message: msg,
