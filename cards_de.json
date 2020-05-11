@@ -91,7 +91,7 @@
   },
   {
     "id": 19,
-    "title": "Spitze(e)!?",
+    "title": "Spitz(e)!?",
     "items": ["Nadel", "Mark Spitz <small>(Schwimmsportler)</small>", "Zunge", "Nachbars Lumpi", "Kaktus", "Igel"]
   },
   {
@@ -432,7 +432,7 @@
   {
     "id": 87,
     "title": "Es geschah im Februar",
-    "items": ["Verbotene Stadt <small>wird eingeweiht (2.2.1421)</small>", "<small>die ersten</small> Pfadfinder <small>in den USA (8.2.1910)</small>", "<small>Geburtstag von</small> Liza Minnelli <small>,Schauspielerin (13.2.1946)</small>", "<small>Kuba wählt</small> Fidel Castro <small>(16.2.1959)</small>", "Der Dieselmotor <small>wird patentiert (23.2.1893)</small>", "Ludwig I. <small>, bayr. König, stirbt (29.2.1868)</small>"]
+    "items": ["Verbotene Stadt <small>wird eingeweiht (2.2.1421)</small>", "<small>die ersten</small> Pfadfinder <small>in den USA (8.2.1910)</small>", "<small>Geburtstag von</small> Liza Minnelli<small>, Schauspielerin (13.2.1946)</small>", "<small>Kuba wählt</small> Fidel Castro <small>(16.2.1959)</small>", "Der Dieselmotor <small>wird patentiert (23.2.1893)</small>", "Ludwig I.<small>, bayr. König, stirbt (29.2.1868)</small>"]
   },
   {
     "id": 88,
