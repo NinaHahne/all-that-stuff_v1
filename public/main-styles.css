@@ -99,6 +99,7 @@ header {
 }
 
 .player {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -130,6 +131,14 @@ header {
     transform: scale(1.2);
     border-style: double;
     border-width: 8px;
+}
+
+.crown {
+    position: absolute;
+    top: -17px;
+    left: 60px;
+    height: 32px;
+    transform: rotate(26deg);
 }
 
 /* §§ middle section of start menu */

@@ -266,7 +266,8 @@ io.on("connection", socket => {
         selectedPieces: selectedPieces,
         playerNames: playerNames,
         chosenLanguage: chosenLanguage,
-        gameStarted: gameStarted
+        gameStarted: gameStarted,
+        gameMaster: gameMaster
     });
 
     socket.on("selected piece", data => {

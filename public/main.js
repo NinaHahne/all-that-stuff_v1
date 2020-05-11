@@ -34,7 +34,7 @@ const testingMode = true;
 // MutationObserver for everytime the objects are refilled (on game start and new turns):
 
 // Select the node that will be observed for mutations
-const targetNode = document.getElementById('objects');
+const targetNode = document.getElementById("objects");
 
 // Options for the observer (which mutations to observe)
 const config = { attributes: false, childList: true, subtree: false };
@@ -43,8 +43,8 @@ const config = { attributes: false, childList: true, subtree: false };
 const callback = function(mutationsList, observer) {
     let newImages;
     // Use traditional 'for loops' for IE 11
-    for(let mutation of mutationsList) {
-        if (mutation.type === 'childList') {
+    for (let mutation of mutationsList) {
+        if (mutation.type === "childList") {
             // console.log('A child node has been added or removed.');
             newImages = true;
         }
@@ -54,7 +54,7 @@ const callback = function(mutationsList, observer) {
     }
     if (newImages) {
         // collect all images on the page
-        let imgs = targetNode.getElementsByTagName('img');
+        let imgs = targetNode.getElementsByTagName("img");
         for (let i = 0; i < imgs.length; i++) {
             // and define onmousedown event handler / disable img dragging:
             // console.log('onmousedown event handler is defined for ', imgs[i]);
@@ -62,7 +62,6 @@ const callback = function(mutationsList, observer) {
                 e.preventDefault();
             };
         }
-
     }
 };
 
@@ -83,7 +82,7 @@ let numberOfTurns;
 
 const $constructionArea = $("#construction-area");
 const $message = $("#construction-area").find(".message");
-const $instructions = $('#instructions');
+const $instructions = $("#instructions");
 
 let [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
     $constructionArea
@@ -263,7 +262,7 @@ let correctAnswer;
 let cardTitle = document.getElementsByClassName("cardtitle");
 // let bullets = document.getElementsByClassName("bullet");
 let items = document.getElementsByClassName("item");
-let $pointsIfCorrect = $('#points-if-correct');
+let $pointsIfCorrect = $("#points-if-correct");
 
 // §§ moving objects: --------------------------
 let objectClicked = false;
@@ -359,7 +358,7 @@ $("#chosen-language").on("click", e => {
 // §§ functions- start menu: ----------------------------------------
 function preloadObjectImages() {
     const objectsArray = Array.from(objectList);
-    objectsArray.forEach((object) => {
+    objectsArray.forEach(object => {
         if (!$(object).hasClass("only1")) {
             // console.log('more than one image!');
             const img = object.querySelector("img");
@@ -372,7 +371,6 @@ function preloadObjectImages() {
                 let imgSrc2 = newSrcBase + 2 + ".png";
                 let newImageV2 = new Image();
                 newImageV2.src = imgSrc2;
-
             } else if ($(object).hasClass("more3")) {
                 let imgSrc2 = newSrcBase + 2 + ".png";
                 let imgSrc3 = newSrcBase + 3 + ".png";
@@ -383,7 +381,6 @@ function preloadObjectImages() {
             }
         }
     });
-
 }
 
 function changeLanguage() {
@@ -401,10 +398,10 @@ function changeLanguage() {
 
 function languageHasBeenChanged(newLanguage) {
     chosenLanguage = newLanguage;
-    if (newLanguage == 'english') {
-        $("#english-flag").removeClass('hidden');
-    } else if (newLanguage == 'german') {
-        $("#english-flag").addClass('hidden');
+    if (newLanguage == "english") {
+        $("#english-flag").removeClass("hidden");
+    } else if (newLanguage == "german") {
+        $("#english-flag").addClass("hidden");
     }
 }
 
@@ -432,7 +429,6 @@ function setPlayerName() {
         // setTimeout(() => {
         //     alert(`Welcome to AllThatStuff, ${myPlayerName}. \nPlease pick a color!`);
         // }, 200);
-
     } catch (err) {
         console.log(err);
         setTimeout(() => {
@@ -443,11 +439,10 @@ function setPlayerName() {
 }
 
 function askForName() {
-    let playerName = prompt("Welcome to AllThatStuff! \nPlease type in your name (1-10 letters) \nand then pick a color.");
-    if (
-        playerName.length >= 1 &&
-        playerName.length <= 10
-    ) {
+    let playerName = prompt(
+        "Welcome to AllThatStuff! \nPlease type in your name (1-10 letters) \nand then pick a color."
+    );
+    if (playerName.length >= 1 && playerName.length <= 10) {
         return playerName;
     }
     throw new Error("Bad name");
@@ -470,6 +465,11 @@ function addPlayer(data) {
     players.push(data.selectedPieceId);
     let $piece = $("#start-menu").find("#" + data.selectedPieceId);
     $piece.addClass("selectedPlayerPiece");
+
+    if (data.selectedPieceId == gameMaster) {
+        let $crown = $piece.find(".crown");
+        $crown.removeClass("hidden");
+    }
 
     let $playerName = $piece.find(".player-name");
     $playerName[0].innerText = data.playerName;
@@ -575,7 +575,7 @@ function gameHasBeenStarted(data) {
 
     $(".player-points").removeClass("hidden");
     $(".player-points").each(function() {
-        $( this )[0].innerText = "0";
+        $(this)[0].innerText = "0";
     });
 
     $message.removeClass("hidden");
@@ -626,15 +626,15 @@ function gameHasBeenStarted(data) {
         $message[0].innerText = `it's your turn!`;
     }
     // delete "?" from other player names:
-    let $pieces = $("#joined-players").find('.player');
+    let $pieces = $("#joined-players").find(".player");
 
     let $otherPlayerNames = $pieces.find(".player-name");
 
     // console.log('$otherPlayerNames:', $otherPlayerNames);
     for (let i = 0; i < $otherPlayerNames.length; i++) {
         // console.log($otherPlayerNames[i].innerText);
-        if ($otherPlayerNames[i].innerText == '?') {
-            $otherPlayerNames[i].innerText = '';
+        if ($otherPlayerNames[i].innerText == "?") {
+            $otherPlayerNames[i].innerText = "";
         }
     }
     // $otherPlayerNames.map(player => {
@@ -646,7 +646,6 @@ function gameHasBeenStarted(data) {
     //     // $(this)[0].innerText = '';
     // });
 
-
     // $otherPlayerNames.innerText = '';
 
     // first word card:
@@ -657,7 +656,7 @@ function gameHasBeenStarted(data) {
     }
 
     // reset from previous game:
-    $pointsIfCorrect[0].innerHTML = '';
+    $pointsIfCorrect[0].innerHTML = "";
     // create "points if correct" boxes:
     let highestAchievablePoint = players.length - 1;
     for (let i = highestAchievablePoint; i > 0; i--) {
@@ -678,7 +677,6 @@ function gameHasBeenStarted(data) {
 
     gameStarted = true;
     // sessionStorage.setItem("gameStarted", gameStarted);
-
 }
 
 // §§ sockets - start menu: ----------------------------------------
@@ -691,7 +689,7 @@ socket.on("welcome", function(data) {
     // console.log(
     //     `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
     // );
-    console.log('Welcome to AllThatStuff!');
+    console.log("Welcome to AllThatStuff!");
 
     // set language of word cards:
     if (chosenLanguage != data.chosenLanguage) {
@@ -720,9 +718,11 @@ socket.on("welcome", function(data) {
         }, 200);
     }
 
+    gameMaster = data.gameMaster;
+    console.log(gameMaster);
+
     players = data.selectedPieces;
     // sessionStorage.setItem("players", players);
-
     playerNames = data.playerNames;
 
     // console.log('players in socket.on("welcome"): ', players);
@@ -733,22 +733,30 @@ socket.on("welcome", function(data) {
         // console.log('$piece: ', $piece);
         $piece.addClass("selectedPlayerPiece");
         adjustNameFontSize($piece, $playerName[0].innerText);
+
+        console.log(players[i]);
+
+        if (players[i] == gameMaster) {
+            let $crown = $piece.find(".crown");
+            $crown.removeClass("hidden");
+        }
     }
 });
 
 socket.on("add selected piece", function(data) {
+    // the first player who selected a piece, becomes game master:
+    gameMaster = data.gameMaster;
+
     if (data.selectedPieceId && data.playerName) {
         addPlayer(data);
     }
     // console.log('players after "add selected piece": ', players);
-    // the first player who selected a piece, becomes game master:
-    gameMaster = data.gameMaster;
 
     // if I'm the game master:
     if (gameMaster == selectedPieceId && !iAmTheGameMaster) {
         iAmTheGameMaster = true;
-        console.log('you are the game master');
-        $('#chosen-language').addClass('game-master');
+        console.log("you are the game master");
+        $("#chosen-language").addClass("game-master");
     }
 });
 
@@ -788,25 +796,30 @@ window.addEventListener("resize", () => {
 });
 
 // touch events:
-$('img').on("contextmenu", e => {
+$("img").on("contextmenu", e => {
     e.preventDefault();
 });
 
-$('.wordcard').on("contextmenu", e => {
+$(".wordcard").on("contextmenu", e => {
     e.preventDefault();
 });
 
-$('#construction-area').on("contextmenu", e => {
+$("#construction-area").on("contextmenu", e => {
     e.preventDefault();
 });
 
 let touch = true;
-$(document).on("touchstart", ".img-box", e => {handleMouseDown(e, touch);});
+$(document).on("touchstart", ".img-box", e => {
+    handleMouseDown(e, touch);
+});
 
-$(document).on("touchmove", e => {handleMouseMove(e, touch);});
+$(document).on("touchmove", e => {
+    handleMouseMove(e, touch);
+});
 
-$(document).on("touchend", e => {handleMouseUp(e, touch);});
-
+$(document).on("touchend", e => {
+    handleMouseUp(e, touch);
+});
 
 // mouse events:
 $(document).on("mousedown", ".img-box", handleMouseDown);
@@ -856,12 +869,12 @@ $(document).on("keydown", e => {
     } else if (e.keyCode == 81) {
         // = "Q"
         if (itsMyTurn) {
-            rotateObject('clockwise');
+            rotateObject("clockwise");
         }
     } else if (e.keyCode == 69) {
         // = "E"
         if (itsMyTurn) {
-            rotateObject('counterclockwise');
+            rotateObject("counterclockwise");
         }
     }
 });
@@ -943,13 +956,13 @@ function handleMouseDown(e, touch) {
             moveY = translateY;
 
             // get the transform/rotate properties:
-            let a= Number(values[0]);
-            let b= Number(values[1]);
+            let a = Number(values[0]);
+            let b = Number(values[1]);
             // let c= Number(values[2]);
             // let d= Number(values[3]);
             // console.log('a: ', a, 'b: ', b, 'c: ', c, 'd: ', d);
 
-            transformRotate = Math.round(Math.atan2(b, a) * (180/Math.PI));
+            transformRotate = Math.round(Math.atan2(b, a) * (180 / Math.PI));
             // console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
         }
     }
@@ -1031,7 +1044,7 @@ function changeTurn(data) {
 
     // create "points if correct" boxes:
     // reset from previous game:
-    $pointsIfCorrect[0].innerHTML = '';
+    $pointsIfCorrect[0].innerHTML = "";
     let highestAchievablePoint = players.length - 1;
     for (let i = highestAchievablePoint; i > 0; i--) {
         let points = i;
@@ -1095,7 +1108,10 @@ function changeTurn(data) {
 
 function someOneGuessed(data) {
     // console.log("someone guessed");
-    let $highestFreePointBox = $pointsIfCorrect.children().not('.claimed').first();
+    let $highestFreePointBox = $pointsIfCorrect
+        .children()
+        .not(".claimed")
+        .first();
     // console.log('highestFreePointBox:', $highestFreePointBox);
     $highestFreePointBox.addClass(`claimed ${data.guessingPlayer}`);
     if (!muted) {
@@ -1189,10 +1205,10 @@ function getObjectPositions() {
 // getObjectPositions();
 
 function toggleHelp() {
-    if ($instructions.hasClass('hidden')) {
-        $instructions.removeClass('hidden');
+    if ($instructions.hasClass("hidden")) {
+        $instructions.removeClass("hidden");
     } else {
-        $instructions.addClass('hidden');
+        $instructions.addClass("hidden");
     }
 }
 
@@ -1202,7 +1218,7 @@ function changeObjectImage(imgBox) {
         const img = imgBox.querySelector("img");
         // console.log(img.id);
         const fileName = img.src.split("objects/")[1];
-        const projectPath = '/objects/'+fileName;
+        const projectPath = "/objects/" + fileName;
         const srcNameV = projectPath.split(".png")[0];
         const newSrcBase = srcNameV.substring(0, srcNameV.length - 1);
         // console.log('active image version: ', srcNameV[srcNameV.length - 1]);
@@ -1291,7 +1307,6 @@ function updatePosition(e) {
         moveY = e.changedTouches[0].clientY - startY;
     }
 
-
     // // only update position, if object is inside body:
     // let [top, bottom, left, right] = get$objBorders($clickedImgBox);
     //
@@ -1329,9 +1344,9 @@ function updatePosition(e) {
 function rotateObject(direction) {
     if ($clickedImgBox.hasClass("selected")) {
         let rotate;
-        if (direction == 'clockwise') {
+        if (direction == "clockwise") {
             rotate = 5;
-        } else if (direction == 'counterclockwise') {
+        } else if (direction == "counterclockwise") {
             rotate = -5;
         }
         // console.log('$clickedImgBox while rotateObject(): ', $clickedImgBox);
@@ -1421,8 +1436,7 @@ function gameEnds(data) {
     // console.log('$playersEnd[0].innerHTML: ', $playersEnd[0].innerHTML);
     let ranking = data.rankingArray;
     for (let i = 0; i < ranking.length; i++) {
-        let playerElement =
-            `<div class="player ${ranking[i].player}">
+        let playerElement = `<div class="player ${ranking[i].player}">
                 <div class="player-name">${ranking[i].name}</div>
                 <div class="player-points">${ranking[i].points}</div>
             </div>`;
@@ -1439,7 +1453,6 @@ function gameEnds(data) {
     if (!muted) {
         successJingle.play();
     }
-
 }
 
 // §§ sockets - main game: ******************************************
