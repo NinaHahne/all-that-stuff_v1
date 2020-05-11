@@ -758,6 +758,7 @@ socket.on("add selected piece", function(data) {
     iAmTheGameMaster = true;
     console.log("you are the game master");
     $("#chosen-language").addClass("game-master");
+    $("#chosen-language").find('.crown').removeClass('hidden');
 
     let $buttonBox = $("#logo-button-box").find(".buttonBox");
     $buttonBox.removeClass("hidden");
@@ -914,7 +915,7 @@ $("#play-again-btn").on("click", () => window.location.reload(false));
 
 // §§ event listener functions - main game ------------------------
 function handleMouseDown(e, touch) {
-  if (gameStarted && itsMyTurn) {
+  if (gameStarted && itsMyTurn && !doneBtnPressed) {
     if (touch) {
       e.preventDefault();
       // e.preventDefault && e.preventDefault();
@@ -1496,10 +1497,16 @@ socket.on("everyone guessed", function(data) {
           if (iAmTheGameMaster) {
             $("#next-btn").removeClass("hidden");
           }
+          if (itsMyTurn) {
+            $("#done-btn").addClass("hidden");
+          }
+          $message.removeClass("done");
+          $message.addClass("bold");
+          $message[0].innerText = "discussion time!";
 
           // discardAndRefillObjects(data);
 
-        }, 1700); // time before change to next turn
+        }, 1000); // time before change to next turn / next-button shows up
       }, 1500); // time before addPoints
     }, 1500); // time before showCorrectAnswer
   }, 500); // time before showAnswers

@@ -136,9 +136,16 @@ header {
 .crown {
   position: absolute;
   top: -17px;
-  left: 60px;
+  /* left: 60px; */
+  right: 4px;
   height: 32px;
   transform: rotate(30deg);
+}
+
+#play .crown,
+#next-btn .crown {
+  top: -22px;
+  right: -18px;
 }
 
 /* §§ middle section of start menu */
@@ -174,7 +181,7 @@ header {
   transform: scale(1.1);
 }
 
-#chosen-language img {
+#chosen-language img:not(.crown) {
   position: absolute;
   top: 0;
   left: 0;
@@ -191,7 +198,7 @@ header {
 }
 
 .stuff-logo {
-  padding-top: 2rem;
+  padding-top: 4rem;
   padding-right: 2rem;
   padding-left: 2rem;
   /* font-family: "Life Savers", cursive; */
@@ -220,6 +227,7 @@ header {
 }
 
 button {
+  position: relative;
   display: inline-block;
   padding: 0.5rem;
   font-size: 26px;
