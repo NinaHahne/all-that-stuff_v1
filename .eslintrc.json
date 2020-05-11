@@ -12,7 +12,7 @@
     },
     "rules": {
         "indent": [
-            "error", 4, { "SwitchCase": 4}
+            "error", 2, { "SwitchCase": 2}
         ],
         "semi": [
             "error",
