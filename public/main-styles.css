@@ -135,17 +135,21 @@ header {
 
 .crown {
   position: absolute;
-  top: -17px;
-  /* left: 60px; */
-  right: 4px;
-  height: 32px;
-  transform: rotate(30deg);
+  top: -19px;
+  right: 2px;
+  height: 30px;
+  transform: rotate(28deg);
+}
+
+#select-players .player.myPiece .crown {
+  top: -23px;
+  right: -5px;
 }
 
 #play .crown,
 #next-btn .crown {
-  top: -22px;
-  right: -18px;
+  top: -21px;
+  right: -17px;
 }
 
 /* §§ middle section of start menu */
@@ -369,8 +373,8 @@ button:focus {
 }
 
 #joined-players .player.myTurn .crown {
-  top: -20px;
-  left: 81px;
+  top: -22px;
+  right: -16px;
 }
 
 #joined-players .player.myPiece {
@@ -381,6 +385,16 @@ button:focus {
   width: 115px;
   /* border-style: solid;
     border-width: 3px; */
+}
+
+#joined-players .player.myPiece .crown {
+  top: -24px;
+  right: -6px;
+}
+
+#joined-players .player.myTurn.myPiece .crown {
+  top: -27px;
+  right: -21px;
 }
 
 .grey {

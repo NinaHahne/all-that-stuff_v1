@@ -328,7 +328,7 @@ playButton.addEventListener("click", function() {
     window.alert(msg);
     // do something prettier instead of the alert
   } else {
-    // cancelAnimationFrame(myReq);
+    cancelAnimationFrame(myReq);
     let objectArray = Array.from(objectList);
     startGame(playerArray, objectArray);
   }
@@ -1392,15 +1392,18 @@ function objectsAreMoving(data) {
 }
 
 function doneBuilding() {
-  // check if there is at least 1 object in the construction area...
+  let $selectedObjects = $("#objects").find('.selected');
 
-  let activeObjectsHTML = $("#objects")[0].innerHTML;
-  // console.log(activeObjectsHTML);
+  // check if there is at least 1 object in the construction area:
+  if ($selectedObjects.length > 0) {
+    let activeObjectsHTML = $("#objects")[0].innerHTML;
+    // console.log(activeObjectsHTML);
 
-  socket.emit("done building", {
-    activePlayer: activePlayer,
-    movedObjects: activeObjectsHTML
-  });
+    socket.emit("done building", {
+      activePlayer: activePlayer,
+      movedObjects: activeObjectsHTML
+    });
+  }
 }
 
 function buildingIsDone(data) {
