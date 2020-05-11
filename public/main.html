@@ -1,236 +1,426 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-    <head>
-        <title>All That Stuff</title>
-        <meta charset="utf-8">
+  <head>
+    <title>All That Stuff</title>
+    <meta charset="utf-8" />
 
-        <meta name="viewport" content="width=device-width, shrink-to-fit=yes">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=yes" />
 
-        <link rel="icon" href="./images/flower.ico">
+    <link rel="icon" href="./images/flower.ico" />
 
-        <link href="https://fonts.googleapis.com/css?family=Life+Savers:400,700,800" rel="stylesheet">
-        <!-- <link href="https://fonts.googleapis.com/css?family=Atma:400,500,600,700" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Life+Savers:400,700,800"
+      rel="stylesheet"
+    />
+    <!-- <link href="https://fonts.googleapis.com/css?family=Atma:400,500,600,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Cabin+Sketch:400,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet"> -->
 
-        <link rel="stylesheet" type="text/css" href="main-styles.css">
-    </head>
-    <body>
-        <section id="start-menu">
-            <header>
-                <div id="select-players">
-                    <div class="player grey" id="grey">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                    <div class="player purple" id="purple">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                    <div class="player blue" id="blue">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                    <div class="player green" id="green">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                    <div class="player yellow" id="yellow">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                    <div class="player orange" id="orange">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                    <div class="player red" id="red">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                    <div class="player pink" id="pink">
-                        <img class="crown hidden" src="/images/crown_1f451_Android4.3.png" alt="crown">
-                        <div class="player-name">
-                            ?
-                        </div>
-                        <div class="player-points hidden"></div>
-                    </div>
-                </div>
-                <div id="start-menu-main">
-                    <div id="start-left">
-                        <div id="chosen-language">
-                            <img id="german-flag" src="/images/flag-germany_1f1e9-1f1ea.png" alt="german language icon">
-                            <img id="english-flag" src="/images/flag-united-states_1f1fa-1f1f8.png" alt="english language icon">
-                        </div>
-                    </div>
-
-                    <div id="logo-button-box">
-                        <div class="stuff-logo">
-                            <h2>All&nbsp;That</h2>
-                            <h1>Stuff</h1>
-                        </div>
-
-                        <div class="buttonBox">
-                            <div class="">
-                                press
-                            </div>
-                            <button id="play">everybody's in</button>
-                            <div>to start the game</div>
-                        </div>
-                    </div>
-                    <div id="start-right">
-
-                    </div>
-                </div>
-            </header>
-
-            <div id="ticker">
-                <div id="ticker-objects">
-                    <div class="img-box banana only1">
-                        <img id="banana" src="objects/banana.png" alt="banana" draggable="false">
-                    </div>
-                    <div class="img-box bridge more3 v1">
-                        <img id="bridge" src="objects/bridge_v1.png" alt="bridge" draggable="false">
-                    </div>
-                    <div class="img-box cloth more3 v1">
-                        <img id="cloth" src="objects/cloth_v1.png" alt="cloth" draggable="false">
-                    </div>
-                    <div class="img-box coin more2 v1">
-                        <img id="coin" src="objects/coin_v1.png" alt="coin" draggable="false">
-                    </div>
-                    <div class="img-box flower more2 v1">
-                        <img id="flower" src="objects/flower_v1.png" alt="flower" draggable="false">
-                    </div>
-                    <div class="img-box fur only1">
-                        <img id="fur" src="objects/fur.png" alt="fur" draggable="false">
-                    </div>
-                    <div class="img-box giant more3 v1">
-                        <img id="giant" src="objects/giant_v1.png" alt="giant" draggable="false">
-                    </div>
-                    <div class="img-box peg more2 v1">
-                        <img id="peg" src="objects/peg_v1.png" alt="peg" draggable="false">
-                    </div>
-                    <div class="img-box pig more3 v1">
-                        <img id="pig" src="objects/pig_v1.png" alt="pig" draggable="false">
-                    </div>
-                    <div class="img-box plane more3 v1">
-                        <img id="plane" src="objects/plane_v1.png" alt="plane" draggable="false">
-                    </div>
-                    <div class="img-box pokerchip only1">
-                        <img id="pokerchip" src="objects/pokerchip.png" alt="pokerchip" draggable="false">
-                    </div>
-                    <div class="img-box pole only1">
-                        <img id="pole" src="objects/pole.png" alt="pole" draggable="false">
-                    </div>
-                    <div class="img-box puzzle more2 v1">
-                        <img id="puzzle" src="objects/puzzle_v1.png" alt="piece of a puzzle" draggable="false">
-                    </div>
-                    <div class="img-box ring more2 v1">
-                        <img id="ring" src="objects/ring_v1.png" alt="ring" draggable="false">
-                    </div>
-                    <div class="img-box rummikubtile only1">
-                        <img id="rummikubtile" src="objects/rummikubtile.png" alt="rummikub tile" draggable="false">
-                    </div>
-                    <div class="img-box scissors only1">
-                        <img id="scissors" src="objects/scissors.png" alt="scissors" draggable="false">
-                    </div>
-                    <div class="img-box stone only1">
-                        <img id="stone" src="objects/stone.png" alt="stone" draggable="false">
-                    </div>
-                    <div class="img-box ticket only1">
-                        <img id="ticket" src="objects/ticket.png" alt="ticket" draggable="false">
-                    </div>
-                    <div class="img-box token more2 v1">
-                        <img id="token" src="objects/token_v1.png" alt="token (peace/war)" draggable="false">
-                    </div>
-                    <div class="img-box triangle only1">
-                        <img id="triangle" src="objects/triangle.png" alt="triangle" draggable="false">
-                    </div>
-                </div>
+    <link rel="stylesheet" type="text/css" href="main-styles.css" />
+  </head>
+  <body>
+    <section id="start-menu">
+      <header>
+        <div id="select-players">
+          <div class="player grey" id="grey">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
             </div>
-        </section>
-        <section id="main-game" class="hidden">
-            <div id="main-left-center">
-                <section id="joined-players"></section>
-                <div id="card-points-construction">
-                    <div id="card-points">
-                        <section id="card-deck">
-                            <div class="wordcard">
-                                <div class="cardtitle">Card Title</div>
-                                <div class="table-row" key="1"><div class="highlight" key="1"><div class="bullet">1.</div><div class="item">first word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="2"><div class="highlight" key="2"><div class="bullet">2.</div><div class="item">second word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="3"><div class="highlight" key="3"><div class="bullet">3.</div><div class="item">third word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="4"><div class="highlight" key="4"><div class="bullet">4.</div><div class="item">forth word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="5"><div class="highlight" key="5"><div class="bullet">5.</div><div class="item">fifth word</div></div><div class="guesses"></div></div>
-                                <div class="table-row" key="6"><div class="highlight" key="6"><div class="bullet">6.</div><div class="item">sixth word</div></div><div class="guesses"></div></div>
-                            </div>
-                        </section>
-                        <section id="points-container">
-                            <h3>points if correct:</h3>
-                            <div id="points-if-correct">
+            <div class="player-points hidden"></div>
+          </div>
+          <div class="player purple" id="purple">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
+            </div>
+            <div class="player-points hidden"></div>
+          </div>
+          <div class="player blue" id="blue">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
+            </div>
+            <div class="player-points hidden"></div>
+          </div>
+          <div class="player green" id="green">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
+            </div>
+            <div class="player-points hidden"></div>
+          </div>
+          <div class="player yellow" id="yellow">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
+            </div>
+            <div class="player-points hidden"></div>
+          </div>
+          <div class="player orange" id="orange">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
+            </div>
+            <div class="player-points hidden"></div>
+          </div>
+          <div class="player red" id="red">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
+            </div>
+            <div class="player-points hidden"></div>
+          </div>
+          <div class="player pink" id="pink">
+            <img
+              class="crown hidden"
+              src="/images/crown_1f451_Android4.3.png"
+              alt="crown"
+            />
+            <div class="player-name">
+              ?
+            </div>
+            <div class="player-points hidden"></div>
+          </div>
+        </div>
+        <div id="start-menu-main">
+          <div id="start-left">
+            <div id="chosen-language">
+              <img
+                id="german-flag"
+                src="/images/flag-germany_1f1e9-1f1ea.png"
+                alt="german language icon"
+              />
+              <img
+                id="english-flag"
+                src="/images/flag-united-states_1f1fa-1f1f8.png"
+                alt="english language icon"
+              />
+            </div>
+          </div>
 
-                            </div>
-                        </section>
-                    </div>
-
-                    <section id="construction-area">
-                        <div class="hidden message">...under construction...</div>
-                        <div id="rounds"></div>
-                        <section id="instructions" class="hidden">
-                            <h3>Instructions:</h3>
-                            <p>If it's your turn to build:</p>
-                            <ul>
-                                <li><strong>drag&drop</strong> objects from the right to the construction area in the middle</li>
-                                <li><strong>double-click</strong> objects to switch perspective <small>(only for some objects)</small></li>
-                                <li>press <span>Q</span> or <span>E</span> to <strong>rotate</strong> the last clicked object in the construction area</li>
-                                <li>click <span>done!</span> when you're <strong>finished</strong> building</li>
-                            </ul>
-                            <p>If you have to guess:</p>
-                            <ul>
-                                <li>wait for the builder to finish and then click on a word on the left side to make your guess</li>
-                            </ul>
-                            <p>Sound settings:</p>
-                            <ul>
-                                <li>press <span>S</span> to toggle between two <strong>sound modes</strong> <small>(universal vs. object specific)</small></li>
-                                <li>press <span>M</span> to <strong>mute</strong> sounds</li>
-                            </ul>
-                        </section>
-                        <button id="done-btn" class="hidden">done!</button>
-                        <button id="help-btn">?</button>
-                    </section>
-                </div>
-
+          <div id="logo-button-box">
+            <div class="stuff-logo">
+              <h2>All&nbsp;That</h2>
+              <h1>Stuff</h1>
             </div>
 
-            <section id="objects"></section>
+            <div class="buttonBox hidden">
+              <div>press</div>
+              <button id="play">everybody's in</button>
+              <div>to start the game</div>
+            </div>
+            <div class="waiting-msg hidden">
+              waiting for other players
+            </div>
+          </div>
+          <div id="start-right"></div>
+        </div>
+      </header>
 
-            <section id="queue"></section>
+      <div id="ticker">
+        <div id="ticker-objects">
+          <div class="img-box banana only1">
+            <img
+              id="banana"
+              src="objects/banana.png"
+              alt="banana"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box bridge more3 v1">
+            <img
+              id="bridge"
+              src="objects/bridge_v1.png"
+              alt="bridge"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box cloth more3 v1">
+            <img
+              id="cloth"
+              src="objects/cloth_v1.png"
+              alt="cloth"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box coin more2 v1">
+            <img
+              id="coin"
+              src="objects/coin_v1.png"
+              alt="coin"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box flower more2 v1">
+            <img
+              id="flower"
+              src="objects/flower_v1.png"
+              alt="flower"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box fur only1">
+            <img id="fur" src="objects/fur.png" alt="fur" draggable="false" />
+          </div>
+          <div class="img-box giant more3 v1">
+            <img
+              id="giant"
+              src="objects/giant_v1.png"
+              alt="giant"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box peg more2 v1">
+            <img
+              id="peg"
+              src="objects/peg_v1.png"
+              alt="peg"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box pig more3 v1">
+            <img
+              id="pig"
+              src="objects/pig_v1.png"
+              alt="pig"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box plane more3 v1">
+            <img
+              id="plane"
+              src="objects/plane_v1.png"
+              alt="plane"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box pokerchip only1">
+            <img
+              id="pokerchip"
+              src="objects/pokerchip.png"
+              alt="pokerchip"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box pole only1">
+            <img
+              id="pole"
+              src="objects/pole.png"
+              alt="pole"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box puzzle more2 v1">
+            <img
+              id="puzzle"
+              src="objects/puzzle_v1.png"
+              alt="piece of a puzzle"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box ring more2 v1">
+            <img
+              id="ring"
+              src="objects/ring_v1.png"
+              alt="ring"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box rummikubtile only1">
+            <img
+              id="rummikubtile"
+              src="objects/rummikubtile.png"
+              alt="rummikub tile"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box scissors only1">
+            <img
+              id="scissors"
+              src="objects/scissors.png"
+              alt="scissors"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box stone only1">
+            <img
+              id="stone"
+              src="objects/stone.png"
+              alt="stone"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box ticket only1">
+            <img
+              id="ticket"
+              src="objects/ticket.png"
+              alt="ticket"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box token more2 v1">
+            <img
+              id="token"
+              src="objects/token_v1.png"
+              alt="token (peace/war)"
+              draggable="false"
+            />
+          </div>
+          <div class="img-box triangle only1">
+            <img
+              id="triangle"
+              src="objects/triangle.png"
+              alt="triangle"
+              draggable="false"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="main-game" class="hidden">
+      <div id="main-left-center">
+        <section id="joined-players"></section>
+        <div id="card-points-construction">
+          <div id="card-points">
+            <section id="card-deck">
+              <div class="wordcard">
+                <div class="cardtitle">Card Title</div>
+                <div class="table-row" key="1">
+                  <div class="highlight" key="1">
+                    <div class="bullet">1.</div>
+                    <div class="item">first word</div>
+                  </div>
+                  <div class="guesses"></div>
+                </div>
+                <div class="table-row" key="2">
+                  <div class="highlight" key="2">
+                    <div class="bullet">2.</div>
+                    <div class="item">second word</div>
+                  </div>
+                  <div class="guesses"></div>
+                </div>
+                <div class="table-row" key="3">
+                  <div class="highlight" key="3">
+                    <div class="bullet">3.</div>
+                    <div class="item">third word</div>
+                  </div>
+                  <div class="guesses"></div>
+                </div>
+                <div class="table-row" key="4">
+                  <div class="highlight" key="4">
+                    <div class="bullet">4.</div>
+                    <div class="item">forth word</div>
+                  </div>
+                  <div class="guesses"></div>
+                </div>
+                <div class="table-row" key="5">
+                  <div class="highlight" key="5">
+                    <div class="bullet">5.</div>
+                    <div class="item">fifth word</div>
+                  </div>
+                  <div class="guesses"></div>
+                </div>
+                <div class="table-row" key="6">
+                  <div class="highlight" key="6">
+                    <div class="bullet">6.</div>
+                    <div class="item">sixth word</div>
+                  </div>
+                  <div class="guesses"></div>
+                </div>
+              </div>
+            </section>
+            <section id="points-container">
+              <h3>points if correct:</h3>
+              <div id="points-if-correct"></div>
+            </section>
+          </div>
 
-            <div id="queue-overlay"></div>
-        </section>
-        <section id="game-end" class="hidden">
-            <div id="players-end">
-                <!-- <div class="winner-crown">
+          <section id="construction-area">
+            <div class="hidden message">...under construction...</div>
+            <div id="rounds"></div>
+            <section id="instructions" class="hidden">
+              <h3>Instructions:</h3>
+              <p>If it's your turn to build:</p>
+              <ul>
+                <li>
+                  <strong>drag&drop</strong> objects from the right to the
+                  construction area in the middle
+                </li>
+                <li>
+                  <strong>double-click</strong> objects to switch perspective
+                  <small>(only for some objects)</small>
+                </li>
+                <li>
+                  press <span>Q</span> or <span>E</span> to
+                  <strong>rotate</strong> the last clicked object in the
+                  construction area
+                </li>
+                <li>
+                  click <span>done!</span> when you're
+                  <strong>finished</strong> building
+                </li>
+              </ul>
+              <p>If you have to guess:</p>
+              <ul>
+                <li>
+                  wait for the builder to finish and then click on a word on the
+                  left side to make your guess
+                </li>
+              </ul>
+              <p>Sound settings:</p>
+              <ul>
+                <li>
+                  press <span>S</span> to toggle between two
+                  <strong>sound modes</strong>
+                  <small>(universal vs. object specific)</small>
+                </li>
+                <li>press <span>M</span> to <strong>mute</strong> sounds</li>
+              </ul>
+            </section>
+            <button id="done-btn" class="hidden">done!</button>
+            <button id="help-btn">?</button>
+          </section>
+        </div>
+      </div>
+
+      <section id="objects"></section>
+
+      <section id="queue"></section>
+
+      <div id="queue-overlay"></div>
+    </section>
+    <section id="game-end" class="hidden">
+      <div id="players-end">
+        <!-- <div class="winner-crown">
                     <div class="star1"></div>
                     <div class="star2"></div>
                     <div class="star3"></div>
@@ -241,20 +431,19 @@
                     <div class="star8"></div>
                     <div class="circle"></div>
                 </div> -->
+      </div>
+      <div id="play-again-box">
+        <div class="stuff-logo">
+          <h2>All&nbsp;That</h2>
+          <h1>Stuff</h1>
+        </div>
 
-            </div>
-            <div id="play-again-box">
-                <div class="stuff-logo">
-                    <h2>All&nbsp;That</h2>
-                    <h1>Stuff</h1>
-                </div>
+        <div class="buttonBox">
+          <button id="play-again-btn">play again</button>
+        </div>
+      </div>
 
-                <div class="buttonBox">
-                    <button id="play-again-btn">play again</button>
-                </div>
-            </div>
-
-            <!-- <div id="ticker">
+      <!-- <div id="ticker">
                 <div id="ticker-objects">
                     <div class="img-box banana only1">
                         <img id="banana" src="objects/banana.png" alt="banana" draggable="false">
@@ -318,11 +507,10 @@
                     </div>
                 </div>
             </div> -->
-        </section>
+    </section>
 
-
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="/main.js"></script>
-    </body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/main.js"></script>
+  </body>
 </html>
