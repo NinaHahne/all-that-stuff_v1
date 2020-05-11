@@ -617,6 +617,7 @@ small {
 
 #construction-area .message {
   align-self: flex-start;
+  position: absolute;
   margin-top: 10px;
   font-size: 36px;
   /* position: absolute;
@@ -670,6 +671,10 @@ small {
   left: 5px;
   bottom: 5px;
   z-index: 1500;
+}
+
+#next-btn {
+  animation: pulseMessage 3s infinite linear;
 }
 
 #help-btn {

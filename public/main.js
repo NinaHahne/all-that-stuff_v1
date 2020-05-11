@@ -258,6 +258,8 @@ let correctAnswer;
 //     correctAnswer = sessionStorage.getItem("correctAnswer");
 // }
 
+let dataForNextTurn;
+
 // card deck: ----------------------------------
 let cardTitle = document.getElementsByClassName("cardtitle");
 // let bullets = document.getElementsByClassName("bullet");
@@ -906,6 +908,8 @@ $("#done-btn").on("click", doneBuilding);
 
 $("#help-btn").on("click", toggleHelp);
 
+$("#next-btn").on("click", readyForNextTurn);
+
 $("#play-again-btn").on("click", () => window.location.reload(false));
 
 // §§ event listener functions - main game ------------------------
@@ -1030,6 +1034,10 @@ function handleMouseUp(e, touch) {
   }
 }
 
+function readyForNextTurn() {
+  socket.emit("ready for next turn");
+}
+
 // §§ functions- main game: ----------------------------------------
 
 function changeTurn(data) {
@@ -1084,6 +1092,7 @@ function changeTurn(data) {
 
   $message.removeClass("hidden");
   $message.removeClass("done");
+  $("#next-btn").addClass("hidden");
 
   let currentTurn = numberOfTurns - data.numberOfTurnsLeft + 1;
   $rounds[0].innerText = `${currentTurn}/${numberOfTurns}`;
@@ -1482,11 +1491,22 @@ socket.on("everyone guessed", function(data) {
       setTimeout(() => {
         addPoints(data);
         setTimeout(() => {
-          discardAndRefillObjects(data);
+          // show button for the game master to click, when everyone is ready for the next turn to start:
+          dataForNextTurn = data;
+          if (iAmTheGameMaster) {
+            $("#next-btn").removeClass("hidden");
+          }
+
+          // discardAndRefillObjects(data);
+
         }, 1700); // time before change to next turn
       }, 1500); // time before addPoints
     }, 1500); // time before showCorrectAnswer
   }, 500); // time before showAnswers
+});
+
+socket.on("ready for next turn", function() {
+  discardAndRefillObjects(dataForNextTurn);
 });
 
 socket.on("game ends", function(data) {

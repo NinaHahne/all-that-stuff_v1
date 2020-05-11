@@ -369,6 +369,10 @@ io.on("connection", socket => {
     });
   });
 
+  socket.on("ready for next turn", () => {
+    io.sockets.emit("ready for next turn");
+  });
+
   socket.on("objects for next turn", data => {
     numberOfTurnsLeft--;
     if (numberOfTurnsLeft == 0) {
