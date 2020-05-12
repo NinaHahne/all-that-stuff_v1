@@ -244,6 +244,7 @@ let mySocketId; //should I put this too in the sessionStorage??????
 
 let selectedPieceId = sessionStorage.getItem("selectedPieceId");
 let myPlayerName = sessionStorage.getItem("myPlayerName");
+let myTotalPoints = parseInt(sessionStorage.getItem("myTotalPoints"), 10);
 
 let doneBtnPressed = false;
 // if (sessionStorage.getItem("doneBtnPressed")) {
@@ -500,6 +501,116 @@ function addPlayer(data) {
   }
 }
 
+function addPlayerMidGame(data) {
+  players.push(data.selectedPieceId);
+  // console.log('data.selectedPieceId:', data.selectedPieceId);
+
+  // if I am the rejoining player:
+  if (data.selectedPieceId == selectedPieceId) {
+    gameStarted = true;
+
+    $("#start-menu").find("#" + data.selectedPieceId).addClass("selectedPlayerPiece");
+
+    cancelAnimationFrame(myReq);
+    // TODO: get doneBtnPressed status
+    // doneBtnPressed = false;
+    // TODO: get guessing status...
+    gameMaster = data.gameMaster;
+
+    $message.removeClass("hidden");
+
+    numberOfTurns = data.numberOfTurnsForThisGame;
+    let currentTurn = numberOfTurns - data.numberOfTurnsLeft + 1;
+    $rounds[0].innerText = `${currentTurn}/${numberOfTurns}`;
+
+    activePlayer = data.activePlayer;
+
+    // first word card:
+    cardTitle[0].innerHTML = data.firstCard.title;
+    let cardItems = data.firstCard.items;
+    for (let i = 0; i < cardItems.length; i++) {
+      items[i].innerHTML = cardItems[i];
+    }
+
+    // reset from previous game:
+    $pointsIfCorrect[0].innerHTML = "";
+    // create "points if correct" boxes:
+    let highestAchievablePoint = players.length - 1;
+    for (let i = highestAchievablePoint; i > 0; i--) {
+      let points = i;
+      if (i > 5) {
+        points = 5;
+      }
+      let elem = `<div class="points">${points}</div>`;
+      $pointsIfCorrect.append(elem);
+    }
+
+    correctAnswer = data.correctAnswer;
+
+    $(`#${data.activePlayer}`).addClass("myTurn");
+    $("#construction-area").addClass(data.activePlayer);
+
+    let joinedPlayersList = selectPlayersContainer.getElementsByClassName(
+      "selectedPlayerPiece"
+    );
+    let playerArray = Array.from(joinedPlayersList);
+    $joinedPlayersContainer.append(playerArray);
+
+    let $myPiece = $("#joined-players").find("#" + data.selectedPieceId);
+    $myPiece.addClass("myPiece");
+
+    $(".player-points").removeClass("hidden");
+    // get player points:
+    addPoints(data);
+
+    $objects[0].innerHTML = data.activeObjects;
+    $queue[0].innerHTML = data.queuedObjects;
+    getObjectPositions();
+
+    $("#start-menu").addClass("hidden");
+    $("#main-game").removeClass("hidden");
+
+    // if it's not my turn:
+    if (data.activePlayer != selectedPieceId) {
+      itsMyTurn = false;
+
+      $message.removeClass("bold");
+      $message.removeClass("done");
+      $message.removeClass("hidden");
+      $message[0].innerText = "...under construction...";
+
+      $("#done-btn").addClass("hidden");
+    } else if (data.activePlayer == selectedPieceId) {
+      itsMyTurn = true;
+
+      console.log(`you drew card number ${data.firstCard.id}.`);
+      console.log(`please build item number ${data.correctAnswer}`);
+      $(`.highlight[key=${data.correctAnswer}]`).addClass(selectedPieceId);
+      $("#done-btn").removeClass("hidden");
+
+      $message.addClass("bold");
+      $message[0].innerText = `it's your turn!`;
+    }
+
+
+  } else {
+    // if someone else is rejoining the game:
+  }
+
+  let $piece = $("#joined-players").find("#" + data.selectedPieceId);
+  $piece.addClass("selectedPlayerPiece");
+
+  if (data.selectedPieceId == data.gameMaster) {
+    let $crown = $piece.find(".crown");
+    $crown.removeClass("hidden");
+  }
+
+  let $playerName = $piece.find(".player-name");
+  $playerName[0].innerText = data.playerName;
+
+  adjustNameFontSize($piece, data.playerName);
+}
+
 function removePlayer(pieceId) {
   // only if the disconnected player had chosen a piece and it's not "":
   if (pieceId) {
@@ -663,6 +774,9 @@ function gameHasBeenStarted(data) {
   }
 
   // reset from previous game:
+  myTotalPoints = 0;
+  sessionStorage.setItem("myTotalPoints", 0);
+
   $pointsIfCorrect[0].innerHTML = "";
   // create "points if correct" boxes:
   let highestAchievablePoint = players.length - 1;
@@ -716,13 +830,26 @@ socket.on("welcome", function(data) {
     // remember previously selected piece on page reload:
     // console.log("your selected piece is: ", selectedPieceId);
     if (selectedPieceId && myPlayerName) {
-      // In case of a replay, I should also check here, if the selected piece has been taken by a new player in the meantime....
+      // TODO In case of a replay, I should also check here, if the selected piece has been taken by a new player in the meantime....
       selectedPiece(selectedPieceId);
     }
   } else {
-    setTimeout(() => {
-      window.alert("game has already started, please try again later");
-    }, 200);
+    // if the game has already started:
+    if (selectedPieceId && myPlayerName) {
+      // e.g. if a joined player disconnected unintentionally and reconnects mid game..
+
+      socket.emit("let me rejoin the game", {
+        selectedPieceId: selectedPieceId,
+        playerName: myPlayerName,
+        myTotalPoints: myTotalPoints
+      });
+
+    } else {
+      // if the player is new player and didn't join the game before
+      setTimeout(() => {
+        window.alert("game has already started, please try again later");
+      }, 200);
+    }
   }
 
   gameMaster = data.gameMaster;
@@ -739,8 +866,6 @@ socket.on("welcome", function(data) {
     // console.log('$piece: ', $piece);
     $piece.addClass("selectedPlayerPiece");
     adjustNameFontSize($piece, $playerName[0].innerText);
-
-    console.log(players[i]);
 
     if (players[i] == gameMaster) {
       let $crown = $piece.find(".crown");
@@ -1186,6 +1311,11 @@ function addPoints(data) {
     let $playerPoints = $piece.find(".player-points");
     $playerPoints[0].innerText = data.playerPointsTotal[player];
     flashPoints($playerPoints);
+
+    if (player == selectedPieceId) {
+      myTotalPoints = data.playerPointsTotal[player];
+      sessionStorage.setItem("myTotalPoints", data.playerPointsTotal[player]);
+    }
   }
 
   if (!muted) {
@@ -1521,4 +1651,10 @@ socket.on("ready for next turn", function() {
 
 socket.on("game ends", function(data) {
   gameEnds(data);
+});
+
+socket.on("add player midgame", function(data) {
+  let msg = `${data.playerName} wants to rejoin the game`;
+  console.log(msg);
+  addPlayerMidGame(data);
 });

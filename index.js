@@ -33,6 +33,7 @@ let selectedPieces = []; // [ pieceId, .... ]
 let gameMaster;
 let currentPlayer;
 // number of rounds, depending on number of players:
+let numberOfTurnsForThisGame;
 let numberOfTurnsLeft;
 
 // card deck: ----------------------
@@ -47,6 +48,11 @@ let guessedAnswers = {}; // { pieceId: <guessed item number> }
 let answeringOrder = []; // [ pieceId, ... ]
 let playerPointsTotal = {}; // { pieceId: <points> }
 let playerNames = {};
+
+// active and queued objects:
+let activeObjects;
+let queuedObjects;
+
 
 // IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
 let playersObj = {};
@@ -128,6 +134,10 @@ function nextPlayersTurn(data) {
   correctAnswer = randomNumber(1, 7);
   guessedAnswers = {};
   answeringOrder = [];
+
+  activeObjects = data.activeObjects;
+  queuedObjects = data.queuedObjects;
+
   io.sockets.emit("next turn", {
     activePlayer: data.activePlayer,
     nextPlayer: nextPlayer,
@@ -249,6 +259,23 @@ function getWinner() {
   });
 }
 
+function addPlayerMidGame(data) {
+  io.sockets.emit("add player midgame", {
+    selectedPieceId: data.selectedPieceId,
+    playerName: data.playerName,
+    gameMaster: gameMaster,
+    activePlayer: currentPlayer,
+    playerPointsTotal: playerPointsTotal,
+    numberOfTurnsForThisGame: numberOfTurnsForThisGame,
+    numberOfTurnsLeft: numberOfTurnsLeft,
+    firstCard: firstCard,
+    correctAnswer: correctAnswer,
+    guessedAnswers: guessedAnswers,
+    activeObjects: activeObjects,
+    queuedObjects: queuedObjects
+  });
+}
+
 // §§ SOCKET.IO ********************************
 io.on("connection", socket => {
   console.log(`socket with the id ${socket.id} is now connected`);
@@ -331,6 +358,8 @@ io.on("connection", socket => {
     } else if (selectedPieces.length == 8) {
       numberOfTurnsLeft = 16;
     }
+    numberOfTurnsForThisGame = numberOfTurnsLeft;
+
     console.log(
       `${
         selectedPieces.length
@@ -358,6 +387,9 @@ io.on("connection", socket => {
     let msg = `"${data.startPlayer}" started the game and starts with building!`;
     // console.log(msg);
 
+    activeObjects = data.activeObjects;
+    queuedObjects = data.queuedObjects;
+
     io.sockets.emit("game has been started", {
       message: msg,
       startPlayer: data.startPlayer,
@@ -382,7 +414,9 @@ io.on("connection", socket => {
     }
   });
 
+
   socket.on("done building", data => {
+    activeObjects = data.movedObjects;
     let msg = `player "${data.activePlayer}" finished building! Guess what it is!`;
     io.sockets.emit("building is done", {
       message: msg,
@@ -392,6 +426,7 @@ io.on("connection", socket => {
   });
 
   socket.on("moving objects", data => {
+    activeObjects = data.movedObjects;
     io.sockets.emit("objects are moving", {
       activePlayer: data.activePlayer,
       movedObjects: data.movedObjects
@@ -404,6 +439,16 @@ io.on("connection", socket => {
 
   socket.on("end game", () => {
     getWinner();
+  });
+
+  socket.on("let me rejoin the game", data => {
+    if (data.selectedPieceId && data.playerName) {
+      selectedPieces.push(data.selectedPieceId);
+      joinedPlayers[socket.id] = data.selectedPieceId;
+      playerNames[data.selectedPieceId] = data.playerName;
+      playerPointsTotal[data.selectedPieceId] = data.myTotalPoints;
+      addPlayerMidGame(data);
+    }
   });
 
   // send a message to all connected sockets:
@@ -437,6 +482,7 @@ io.on("connection", socket => {
       delete joinedPlayers[socket.id];
       delete playerNames[piece];
       delete playerPointsTotal[piece];
+      // TODO: what happens if disconnected player is the game master?
     }
   });
 });
