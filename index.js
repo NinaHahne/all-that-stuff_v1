@@ -48,10 +48,14 @@ let guessedAnswers = {}; // { pieceId: <guessed item number> }
 let answeringOrder = []; // [ pieceId, ... ]
 let playerPointsTotal = {}; // { pieceId: <points> }
 let playerNames = {};
+let doneBtnPressed = false;
+let cardPointsHTML;
+let discussionTime = false;
 
 // active and queued objects:
 let activeObjects;
 let queuedObjects;
+let dataForNextTurn = {};
 
 
 // IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
@@ -138,6 +142,9 @@ function nextPlayersTurn(data) {
   activeObjects = data.activeObjects;
   queuedObjects = data.queuedObjects;
 
+  doneBtnPressed = false;
+  discussionTime = false;
+
   io.sockets.emit("next turn", {
     activePlayer: data.activePlayer,
     nextPlayer: nextPlayer,
@@ -211,14 +218,16 @@ function collectGuesses(data) {
 
     playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
 
-    io.sockets.emit("everyone guessed", {
+    dataForNextTurn = {
       activePlayer: currentPlayer,
       correctAnswer: correctAnswer,
       guessedAnswers: guessedAnswers,
       playerPointsIfCorrect: playerPointsIfCorrect,
       actualPlayerPoints: actualPlayerPoints,
       playerPointsTotal: playerPointsTotal
-    });
+    };
+
+    io.sockets.emit("everyone guessed", dataForNextTurn);
   }
 }
 
@@ -272,7 +281,11 @@ function addPlayerMidGame(data) {
     correctAnswer: correctAnswer,
     guessedAnswers: guessedAnswers,
     activeObjects: activeObjects,
-    queuedObjects: queuedObjects
+    queuedObjects: queuedObjects,
+    doneBtnPressed: doneBtnPressed,
+    cardPointsHTML: cardPointsHTML,
+    discussionTime: discussionTime,
+    dataForNextTurn: dataForNextTurn
   });
 }
 
@@ -383,6 +396,8 @@ io.on("connection", socket => {
     guessedAnswers = {};
     answeringOrder = [];
     gameStarted = true;
+    doneBtnPressed = false;
+    discussionTime = false;
 
     let msg = `"${data.startPlayer}" started the game and starts with building!`;
     // console.log(msg);
@@ -418,6 +433,7 @@ io.on("connection", socket => {
   socket.on("done building", data => {
     activeObjects = data.movedObjects;
     let msg = `player "${data.activePlayer}" finished building! Guess what it is!`;
+    doneBtnPressed = true;
     io.sockets.emit("building is done", {
       message: msg,
       activePlayer: data.activePlayer,
@@ -449,6 +465,11 @@ io.on("connection", socket => {
       playerPointsTotal[data.selectedPieceId] = data.myTotalPoints;
       addPlayerMidGame(data);
     }
+  });
+
+  socket.on("discussion backup", data => {
+    cardPointsHTML = data.cardPointsHTML;
+    discussionTime = true;
   });
 
   // send a message to all connected sockets:

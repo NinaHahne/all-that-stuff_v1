@@ -512,9 +512,8 @@ function addPlayerMidGame(data) {
     $("#start-menu").find("#" + data.selectedPieceId).addClass("selectedPlayerPiece");
 
     cancelAnimationFrame(myReq);
-    // TODO: get doneBtnPressed status
-    // doneBtnPressed = false;
-    // TODO: get guessing status...
+
+    doneBtnPressed = data.doneBtnPressed;
     gameMaster = data.gameMaster;
 
     $message.removeClass("hidden");
@@ -565,13 +564,12 @@ function addPlayerMidGame(data) {
 
     $objects[0].innerHTML = data.activeObjects;
     $queue[0].innerHTML = data.queuedObjects;
-    getObjectPositions();
 
     $("#start-menu").addClass("hidden");
     $("#main-game").removeClass("hidden");
 
-    // if it's not my turn:
     if (data.activePlayer != selectedPieceId) {
+      // if it's not my turn:
       itsMyTurn = false;
 
       $message.removeClass("bold");
@@ -580,7 +578,14 @@ function addPlayerMidGame(data) {
       $message[0].innerText = "...under construction...";
 
       $("#done-btn").addClass("hidden");
+
+      if (doneBtnPressed) {
+        $message.addClass("bold");
+        $message[0].innerText = `what's all that stuff?`;
+        $message.addClass("done");
+      }
     } else if (data.activePlayer == selectedPieceId) {
+      // if it is my turn:
       itsMyTurn = true;
 
       console.log(`you drew card number ${data.firstCard.id}.`);
@@ -590,8 +595,21 @@ function addPlayerMidGame(data) {
 
       $message.addClass("bold");
       $message[0].innerText = `it's your turn!`;
+
+      if (doneBtnPressed) {
+        $message.removeClass("bold");
+        $message[0].innerText = `done!`;
+        $message.addClass("done");
+      }
     }
 
+    if (data.discussionTime) {
+      $message.removeClass("done");
+      $message.addClass("bold");
+      $message[0].innerText = "discussion time!";
+      // TODO: render guesses and correct answer..
+      dataForNextTurn = data.dataForNextTurn;
+    }
 
   } else {
     // if someone else is rejoining the game:
@@ -1292,6 +1310,15 @@ function showAnswers(data) {
 function showCorrectAnswer(data) {
   // show correct answer:
   $(`.highlight[key=${data.correctAnswer}]`).addClass(activePlayer);
+
+  // save guesses for discussion in case someone disconnects in that moment:
+  if (!iAmTheGameMaster) {
+    let cardPointsHTML = $("#card-points")[0].innerHTML;
+
+    socket.emit("discussion backup", {
+      cardPointsHTML: cardPointsHTML
+    });
+  }
 }
 
 function flashPoints($playerPoints) {
