@@ -507,6 +507,7 @@ function addPlayerMidGame(data) {
 
   // if I am the rejoining player:
   if (data.selectedPieceId == selectedPieceId) {
+    // TODO: reset game state like after a page reload?
     gameStarted = true;
 
     $("#start-menu").find("#" + data.selectedPieceId).addClass("selectedPlayerPiece");
@@ -819,6 +820,27 @@ function gameHasBeenStarted(data) {
 }
 
 // §§ sockets - start menu: ----------------------------------------
+socket.on("disconnect", function() {
+  console.log("disconnected");
+});
+
+socket.on("reconnect", function() {
+  console.log('reconnecting...');
+});
+
+socket.on("connect", function() {
+  if (gameStarted) {
+    console.log('connecting midgame...');
+    // socket.emit("let me join");
+    // socket.emit("let me rejoin the game", {
+    //   selectedPieceId: selectedPieceId,
+    //   playerName: myPlayerName,
+    //   myTotalPoints: myTotalPoints
+    // });
+    location.reload();
+  }
+});
+
 socket.on("welcome", function(data) {
   selectedPieceId = sessionStorage.getItem("selectedPieceId");
   myPlayerName = sessionStorage.getItem("myPlayerName");
@@ -851,6 +873,8 @@ socket.on("welcome", function(data) {
       // TODO In case of a replay, I should also check here, if the selected piece has been taken by a new player in the meantime....
       selectedPiece(selectedPieceId);
     }
+
+
   } else {
     // if the game has already started:
     if (selectedPieceId && myPlayerName) {
@@ -881,7 +905,6 @@ socket.on("welcome", function(data) {
     let $piece = $("#start-menu").find("#" + players[i]);
     let $playerName = $piece.find(".player-name");
     $playerName[0].innerText = playerNames[players[i]];
-    // console.log('$piece: ', $piece);
     $piece.addClass("selectedPlayerPiece");
     adjustNameFontSize($piece, $playerName[0].innerText);
 

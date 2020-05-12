@@ -269,6 +269,9 @@ function getWinner() {
 }
 
 function addPlayerMidGame(data) {
+  console.log(
+    `${data.playerName} rejoined the game with the color ${data.selectedPieceId}`
+  );
   io.sockets.emit("add player midgame", {
     selectedPieceId: data.selectedPieceId,
     playerName: data.playerName,
@@ -310,11 +313,23 @@ io.on("connection", socket => {
     gameMaster: gameMaster
   });
 
+  // socket.on('let me join', () => {
+  //   socket.emit("welcome", {
+  //     socketId: socket.id,
+  //     // userId: socket.userId,
+  //     selectedPieces: selectedPieces,
+  //     playerNames: playerNames,
+  //     chosenLanguage: chosenLanguage,
+  //     gameStarted: gameStarted,
+  //     gameMaster: gameMaster
+  //   });
+  // });
+
   socket.on("selected piece", data => {
     if (data.selectedPieceId) {
       // console.log('joinedPlayers on "selected piece": ', joinedPlayers);
       console.log(
-        `${data.playerName} joined the game with the color ${data.selectedPieceId}'`
+        `${data.playerName} joined the game with the color ${data.selectedPieceId}`
       );
       selectedPieces.push(data.selectedPieceId);
       joinedPlayers[socket.id] = data.selectedPieceId;
@@ -428,7 +443,6 @@ io.on("connection", socket => {
       nextPlayersTurn(data);
     }
   });
-
 
   socket.on("done building", data => {
     activeObjects = data.movedObjects;
