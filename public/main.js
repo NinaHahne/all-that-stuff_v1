@@ -1,4 +1,4 @@
-// io() is apparently actually not undefined?:
+// io() is actually not undefined..:
 // var socket = io();
 var socket = io.connect();
 
@@ -27,7 +27,7 @@ const testingMode = true;
 //     }
 // }
 
-// §§ prevent img dragging in firefox--------------------------------
+// §§ PREVENT IMAGE DRAGGING IN FIREFOX ********************************
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
 
@@ -71,14 +71,11 @@ const observer = new MutationObserver(callback);
 // Start observing the target node for configured mutations
 observer.observe(targetNode, config);
 
-// ------------------------------------
-
 // §§ ELEMENTS & GLOBAL VARIABLES ********************************
 const $objects = $("#objects");
 const $queue = $("#queue");
 const $joinedPlayersContainer = $("#joined-players");
 const $rounds = $("#rounds");
-let numberOfTurns;
 
 const $constructionArea = $("#construction-area");
 const $message = $("#construction-area").find(".message");
@@ -87,13 +84,11 @@ const $instructions = $("#instructions");
 let [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
   $constructionArea
 );
-// console.log(borderTop, borderBottom, borderLeft, borderRight);
+
+const selectPlayersContainer = document.getElementById("select-players");
 const playButton = document.getElementById("play");
 
-// const $body = $('body');
-// let [bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight] = get$objBorders($body);
-// console.log(bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight);
-
+// object ticker on start menu:
 const objObj = [
   {
     name: "banana",
@@ -201,31 +196,33 @@ let objectList = objects.getElementsByClassName("img-box"); //objectList[0] is a
 let left = objects.offsetLeft; //number (in px), x-position of element relative to its parent
 let myReq;
 
-const selectPlayersContainer = document.getElementById("select-players");
-// const playersContainer = document.getElementById("joined-players");
+// card deck: ----------------------------------
+let cardTitle = document.getElementsByClassName("cardtitle");
+let items = document.getElementsByClassName("item");
+let $pointsIfCorrect = $("#points-if-correct");
 
-// §§ game/player state: --------------------------
+// §§ GAME/PLAYER STATE: --------------------------
+let mySocketId;
 let chosenLanguage = "english";
 let gameStarted = false;
-// if (sessionStorage.getItem("gameStarted")) {
-//     gameStarted = sessionStorage.getItem("gameStarted");
-// }
 let itsMyTurn = false;
-// if (sessionStorage.getItem("itsMyTurn")) {
-//     itsMyTurn = sessionStorage.getItem("itsMyTurn");
-// }
-let activePlayer;
-// if (sessionStorage.getItem("activePlayer")) {
-//     activePlayer = sessionStorage.getItem("activePlayer");
-// }
+let numberOfTurns;
 let players = [];
-// if (sessionStorage.getItem("players")) {
-//     players = sessionStorage.getItem("players");
-// }
 let playerNames = {};
+let activePlayer;
 
 let gameMaster;
 let iAmTheGameMaster = false;
+
+let selectedPieceId = sessionStorage.getItem("selectedPieceId");
+let myPlayerName = sessionStorage.getItem("myPlayerName");
+let myTotalPoints = parseInt(sessionStorage.getItem("myTotalPoints"), 10);
+
+let doneBtnPressed = false;
+let myGuess;
+let correctAnswer;
+
+let dataForNextTurn;
 
 // let playersObj = {};
 // players will later be an object like this:
@@ -240,34 +237,8 @@ let iAmTheGameMaster = false;
 //     playersObj = sessionStorage.getItem("playersObj");
 // }
 
-let mySocketId; //should I put this too in the sessionStorage??????
 
-let selectedPieceId = sessionStorage.getItem("selectedPieceId");
-let myPlayerName = sessionStorage.getItem("myPlayerName");
-let myTotalPoints = parseInt(sessionStorage.getItem("myTotalPoints"), 10);
-
-let doneBtnPressed = false;
-// if (sessionStorage.getItem("doneBtnPressed")) {
-//     doneBtnPressed = sessionStorage.getItem("doneBtnPressed");
-// }
-let myGuess;
-// if (sessionStorage.getItem("myGuess")) {
-//     myGuess = sessionStorage.getItem("myGuess");
-// }
-let correctAnswer;
-// if (sessionStorage.getItem("correctAnswer")) {
-//     correctAnswer = sessionStorage.getItem("correctAnswer");
-// }
-
-let dataForNextTurn;
-
-// card deck: ----------------------------------
-let cardTitle = document.getElementsByClassName("cardtitle");
-// let bullets = document.getElementsByClassName("bullet");
-let items = document.getElementsByClassName("item");
-let $pointsIfCorrect = $("#points-if-correct");
-
-// §§ moving objects: --------------------------
+// §§ GLOBAL VARIABLES for moving/drag&drop objects: --------------------------
 let objectClicked = false;
 let objectMoved = false;
 let $clickedImgBox;
@@ -284,7 +255,7 @@ let translateY;
 
 let transformRotate = 0;
 
-// §§ sounds: --------------------------
+// §§ SOUNDS: --------------------------
 const ringDropSound = new Audio("./sounds/218823__djtiii__staple-drop.wav");
 const universalDropSound = new Audio("./sounds/157539__nenadsimic__click.wav");
 const startGong = new Audio("./sounds/56240__q-k__gong-center-clear.wav");
@@ -299,12 +270,14 @@ const plop = new Audio("./sounds/431671__pellepyb__b1.ogg");
 let uniSound = true;
 let muted = false;
 
-// §§ START MENU ************************************************
+// §§ PREPARATION ************************************************
+
 shuffleObjects(objects);
 moveObjects();
 preloadObjectImages();
 
-// §§ event listeners - start menu: -----------------------------
+// §§ EVENT LISTENERS: *******************************************
+
 playButton.addEventListener("click", function() {
   // e.preventDefault();
   let joinedPlayersList = selectPlayersContainer.getElementsByClassName(
@@ -358,7 +331,242 @@ $("#chosen-language").on("click", e => {
   }
 });
 
-// §§ functions- start menu: ----------------------------------------
+// §§ event listeners - main game ---------------------------------
+window.addEventListener("resize", () => {
+  [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
+    $constructionArea
+  );
+});
+
+// touch events:
+$("img").on("contextmenu", e => {
+  e.preventDefault();
+});
+
+$(".wordcard").on("contextmenu", e => {
+  e.preventDefault();
+});
+
+$("#construction-area").on("contextmenu", e => {
+  e.preventDefault();
+});
+
+let touch = true;
+$(document).on("touchstart", ".img-box", e => {
+  handleMouseDown(e, touch);
+});
+
+$(document).on("touchmove", e => {
+  handleMouseMove(e, touch);
+});
+
+$(document).on("touchend", e => {
+  handleMouseUp(e, touch);
+});
+
+// mouse events:
+$(document).on("mousedown", ".img-box", handleMouseDown);
+
+$(document).on("mousemove", handleMouseMove);
+
+$(document).on("mouseup", handleMouseUp);
+
+// key & mouse & touch events:
+// toggle sound / mute / discard used objects and refill:
+$(document).on("keydown", e => {
+  if (e.keyCode == 83) {
+    // = "S"
+    if (uniSound) {
+      ringDropSound.play();
+      uniSound = false;
+    } else {
+      universalDropSound.play();
+      uniSound = true;
+    }
+  } else if (e.keyCode == 77) {
+    // = "M"
+    if (muted) {
+      muted = false;
+      if (uniSound) {
+        universalDropSound.play();
+      } else {
+        ringDropSound.play();
+      }
+    } else {
+      muted = true;
+    }
+  } else if (e.keyCode == 13) {
+    // = "ENTER"
+    if (itsMyTurn) {
+      doneBuilding();
+    }
+  } else if (e.keyCode == 32) {
+    // = "SPACE"
+    // do something..
+  } else if (e.keyCode == 70) {
+    // = "F"
+    // simulate "game end":
+    if (testingMode && iAmTheGameMaster) {
+      endGame();
+    }
+  } else if (e.keyCode == 81) {
+    // = "Q"
+    if (itsMyTurn) {
+      rotateObject("clockwise");
+    }
+  } else if (e.keyCode == 69) {
+    // = "E"
+    if (itsMyTurn) {
+      rotateObject("counterclockwise");
+    }
+  }
+});
+
+$(document).on("dblclick", ".img-box", e => {
+  if (gameStarted && itsMyTurn) {
+    let imgBox = e.currentTarget;
+    changeObjectImage(imgBox);
+    updateObjectsForOtherPlayers();
+  }
+});
+
+$("#card-deck").on("mousedown", ".table-row", function(e) {
+  if (!itsMyTurn) {
+    guessWordFromCard(e);
+  }
+});
+
+$("#done-btn").on("click", doneBuilding);
+
+$("#help-btn").on("click", toggleHelp);
+
+$("#next-btn").on("click", readyForNextTurn);
+
+$("#play-again-btn").on("click", () => window.location.reload(false));
+
+// §§ mouse & touch events listener functions ------------------------
+function handleMouseDown(e, touch) {
+  if (gameStarted && itsMyTurn && !doneBtnPressed) {
+    if (touch) {
+      e.preventDefault();
+      // e.preventDefault && e.preventDefault();
+      // console.log('touchstart!');
+    }
+    objectClicked = true;
+    // $clickedImgBox = $(this) || e.currentTarget;
+    $clickedImgBox = $(e.currentTarget);
+
+    // reset transform rotate:
+    transformRotate = 0;
+    // console.log($clickedImgBox);
+    // show name of clicked object:
+    $clickedImgId = $clickedImgBox.find("img").attr("id");
+    console.log($clickedImgId);
+    $clickedImgBox.addClass("move");
+    // start position if mouse event || touch event:
+    startX = e.clientX || e.touches[0].clientX;
+    startY = e.clientY || e.touches[0].clientY;
+    // console.log('startX in handleMouseDown: ', startX);
+    // get the clicked object to the very front:
+    // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
+    let highestZIndex = 1;
+    $(".selected").each(function() {
+      const currentZIndex = Number($(this).css("z-index"));
+      if (currentZIndex > highestZIndex) {
+        highestZIndex = currentZIndex;
+      }
+    });
+    $clickedImgBox.css({
+      "z-index": highestZIndex + 1
+    });
+
+    //  https://css-tricks.com/get-value-of-css-rotation-through-javascript/
+
+    // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
+    if ($clickedImgBox.hasClass("selected")) {
+      const transformProps = $(".move").css("transform");
+      // console.log('transformProps: ', transformProps);
+      var values = transformProps.split("(")[1],
+        values = values.split(")")[0],
+        values = values.split(",");
+
+      translateX = Number(values[4]);
+      translateY = Number(values[5]);
+      // console.log('translateX: ', translateX, 'translateY: ', translateY);
+
+      // set move props of clicked object to current values, in case it will be moved or rotated later:
+      moveX = translateX;
+      moveY = translateY;
+
+      // get the transform/rotate properties:
+      let a = Number(values[0]);
+      let b = Number(values[1]);
+      // let c= Number(values[2]);
+      // let d= Number(values[3]);
+      // console.log('a: ', a, 'b: ', b, 'c: ', c, 'd: ', d);
+
+      transformRotate = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+      // console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
+    }
+  }
+}
+
+function handleMouseMove(e, touch) {
+  if (objectClicked) {
+    if (touch) {
+      e.preventDefault();
+      // e.preventDefault && e.preventDefault();
+      // console.log('touchmove!');
+    }
+    updatePosition(e);
+  }
+}
+
+function handleMouseUp(e, touch) {
+  if (objectClicked) {
+    if (touch) {
+      e.preventDefault();
+      // e.preventDefault && e.preventDefault();
+      // console.log('touchend!');
+    }
+    const $clickedImgBox = $(".move");
+    // new position if mouse event || touch event:
+    const posX = e.clientX || e.changedTouches[0].clientX;
+    const posY = e.clientY || e.changedTouches[0].clientY;
+    if (!muted && objectMoved) {
+      if (uniSound) {
+        universalDropSound.play();
+      } else {
+        const currentObj = objObj.find(obj => obj.name === $clickedImgId);
+        new Audio("./sounds/" + currentObj.sound).play();
+      }
+    }
+    //only if object is dropped (when cursor is) inside the construction area:
+    if (
+      borderLeft < posX &&
+      posX < borderRight &&
+      borderTop < posY &&
+      posY < borderBottom
+    ) {
+      $clickedImgBox.addClass("selected");
+      // if dropped ouside construction area, put it back to it's original position:
+    } else {
+      $clickedImgBox.removeClass("selected");
+      // reset object position::
+      $clickedImgBox.css({
+        transform: `translate(${0}px, ${0}px)`,
+        "z-index": 1
+      });
+    }
+
+    $clickedImgBox.removeClass("move");
+    objectClicked = false;
+    objectMoved = false;
+    updateObjectsForOtherPlayers();
+  }
+}
+
+// §§ FUNCTIONS: *******************************************
 function preloadObjectImages() {
   const objectsArray = Array.from(objectList);
   objectsArray.forEach(object => {
@@ -384,6 +592,31 @@ function preloadObjectImages() {
       }
     }
   });
+}
+
+//based on Fisher–Yates shuffle //By Alexey Lebedev :
+function shuffleObjects(objects) {
+  for (let i = objects.children.length; i >= 0; i--) {
+    objects.appendChild(objects.children[(Math.random() * i) | 0]);
+  }
+}
+
+// move ticker objects in start menu:
+function moveObjects() {
+  // left = left - 2;
+  left--;
+  // console.log(left);
+  if (left < -objectList[0].offsetWidth) {
+    //true when first link is off screen..
+    // add to left the width of the currently first link
+    let widthOfFirstObject = objectList[0].offsetWidth; //use clientWidth instead?
+    // console.log(widthOfFirstObject);
+    left += widthOfFirstObject;
+    // make first link the last link
+    objects.appendChild(objectList[0]); //appending will actually remove it from the start and add it to the end
+  }
+  myReq = requestAnimationFrame(moveObjects); //like setTimeout, but the waiting time is adjusted to the framerate of used hardware(?)
+  objects.style.left = left + "px";
 }
 
 function changeLanguage() {
@@ -642,30 +875,6 @@ function removePlayer(pieceId) {
   }
 }
 
-function moveObjects() {
-  // left = left - 2;
-  left--;
-  // console.log(left);
-  if (left < -objectList[0].offsetWidth) {
-    //true when first link is off screen..
-    // add to left the width of the currently first link
-    let widthOfFirstObject = objectList[0].offsetWidth; //use clientWidth instead?
-    // console.log(widthOfFirstObject);
-    left += widthOfFirstObject;
-    // make first link the last link
-    objects.appendChild(objectList[0]); //appending will actually remove it from the start and add it to the end
-  }
-  myReq = requestAnimationFrame(moveObjects); //like setTimeout, but the waiting time is adjusted to the framerate of used hardware(?)
-  objects.style.left = left + "px";
-}
-
-//based on Fisher–Yates shuffle //By Alexey Lebedev :
-function shuffleObjects(objects) {
-  for (let i = objects.children.length; i >= 0; i--) {
-    objects.appendChild(objects.children[(Math.random() * i) | 0]);
-  }
-}
-
 function startGame(playerArray, objArray) {
   // whoever starts the game, is also the start player:
   activePlayer = selectedPieceId;
@@ -819,393 +1028,31 @@ function gameHasBeenStarted(data) {
   // sessionStorage.setItem("gameStarted", gameStarted);
 }
 
-// §§ sockets - start menu: ----------------------------------------
-socket.on("disconnect", function() {
-  console.log("disconnected");
-});
-
-socket.on("reconnect", function() {
-  console.log('reconnecting...');
-});
-
-socket.on("connect", function() {
-  if (gameStarted) {
-    console.log('connecting midgame...');
-    // socket.emit("let me join");
-    // socket.emit("let me rejoin the game", {
-    //   selectedPieceId: selectedPieceId,
-    //   playerName: myPlayerName,
-    //   myTotalPoints: myTotalPoints
-    // });
-    location.reload();
-  }
-});
-
-socket.on("welcome", function(data) {
-  selectedPieceId = sessionStorage.getItem("selectedPieceId");
-  myPlayerName = sessionStorage.getItem("myPlayerName");
-
-  sessionStorage.setItem("mySocketId", data.socketId);
-  mySocketId = data.socketId;
-  // console.log(
-  //     `Connected successfully to the socket.io server. My socketID is ${data.socketId}.`
-  // );
-  console.log("Welcome to AllThatStuff!");
-
-  // set language of word cards:
-  if (chosenLanguage != data.chosenLanguage) {
-    languageHasBeenChanged(data.chosenLanguage);
-  }
-
-  // check if the game has already started:
-  gameStarted = data.gameStarted;
-
-  if (!gameStarted) {
-    if (!myPlayerName) {
-      setTimeout(() => {
-        setPlayerName();
-      }, 200);
-    }
-
-    // remember previously selected piece on page reload:
-    // console.log("your selected piece is: ", selectedPieceId);
-    if (selectedPieceId && myPlayerName) {
-      // TODO In case of a replay, I should also check here, if the selected piece has been taken by a new player in the meantime....
-      selectedPiece(selectedPieceId);
-    }
-
-
-  } else {
-    // if the game has already started:
-    if (selectedPieceId && myPlayerName) {
-      // e.g. if a joined player disconnected unintentionally and reconnects mid game..
-
-      socket.emit("let me rejoin the game", {
-        selectedPieceId: selectedPieceId,
-        playerName: myPlayerName,
-        myTotalPoints: myTotalPoints
-      });
-
-    } else {
-      // if the player is new player and didn't join the game before
-      setTimeout(() => {
-        window.alert("game has already started, please try again later");
-      }, 200);
-    }
-  }
-
-  gameMaster = data.gameMaster;
-
-  players = data.selectedPieces;
-  // sessionStorage.setItem("players", players);
-  playerNames = data.playerNames;
-
-  // console.log('players in socket.on("welcome"): ', players);
-  for (let i = 0; i < players.length; i++) {
-    let $piece = $("#start-menu").find("#" + players[i]);
-    let $playerName = $piece.find(".player-name");
-    $playerName[0].innerText = playerNames[players[i]];
-    $piece.addClass("selectedPlayerPiece");
-    adjustNameFontSize($piece, $playerName[0].innerText);
-
-    if (players[i] == gameMaster) {
-      let $crown = $piece.find(".crown");
-      $crown.removeClass("hidden");
-    }
-  }
-});
-
-socket.on("add selected piece", function(data) {
-  // the first player who selected a piece, becomes game master:
-  gameMaster = data.gameMaster;
-
-  // if I'm the game master:
-  if (gameMaster == selectedPieceId && !iAmTheGameMaster) {
-    iAmTheGameMaster = true;
-    console.log("you are the game master");
-    $("#chosen-language").addClass("game-master");
-    $("#chosen-language").find('.crown').removeClass('hidden');
-
-    let $buttonBox = $("#logo-button-box").find(".buttonBox");
-    $buttonBox.removeClass("hidden");
-  }
-
-  if (data.selectedPieceId && data.playerName) {
-    addPlayer(data);
-  }
-  // console.log('players after "add selected piece": ', players);
-});
-
-socket.on("remove selected piece", function(pieceId) {
-  removePlayer(pieceId);
-  // console.log('players after "remove selected piece": ', players);
-});
-
-socket.on("language has been changed", function(data) {
-  languageHasBeenChanged(data.newLanguage);
-});
-
-socket.on("game has been started", function(data) {
-  console.log(data.message);
-  // console.log('data.activeObjects: ', data.activeObjects);
-  // console.log('data.queuedObjects: ', data.queuedObjects);
-  // only if player joined (& in case of a second game, if player pressed "play again"):
-  if (selectedPieceId && !gameStarted) {
-    gameHasBeenStarted(data);
-  }
-});
-
-socket.on("next turn", function(data) {
-  console.log(`it's ${data.nextPlayer}'s turn now!'`);
-  changeTurn(data);
-});
-
-// §§ MAIN GAME ************************************************
-
-// §§ event listeners - main game ---------------------------------
-window.addEventListener("resize", () => {
-  [borderTop, borderBottom, borderLeft, borderRight] = get$objBorders(
-    $constructionArea
-  );
-  // [bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight] = get$objBorders($body);
-  // console.log(bodyBorderTop, bodyBorderBottom, bodyBorderLeft, bodyBorderRight);
-});
-
-// touch events:
-$("img").on("contextmenu", e => {
-  e.preventDefault();
-});
-
-$(".wordcard").on("contextmenu", e => {
-  e.preventDefault();
-});
-
-$("#construction-area").on("contextmenu", e => {
-  e.preventDefault();
-});
-
-let touch = true;
-$(document).on("touchstart", ".img-box", e => {
-  handleMouseDown(e, touch);
-});
-
-$(document).on("touchmove", e => {
-  handleMouseMove(e, touch);
-});
-
-$(document).on("touchend", e => {
-  handleMouseUp(e, touch);
-});
-
-// mouse events:
-$(document).on("mousedown", ".img-box", handleMouseDown);
-
-$(document).on("mousemove", handleMouseMove);
-
-$(document).on("mouseup", handleMouseUp);
-
-// key & mouse & touch events:
-// toggle sound / mute / discard used objects and refill:
-$(document).on("keydown", e => {
-  if (e.keyCode == 83) {
-    // = "S"
-    if (uniSound) {
-      ringDropSound.play();
-      uniSound = false;
-    } else {
-      universalDropSound.play();
-      uniSound = true;
-    }
-  } else if (e.keyCode == 77) {
-    // = "M"
-    if (muted) {
-      muted = false;
-      if (uniSound) {
-        universalDropSound.play();
-      } else {
-        ringDropSound.play();
-      }
-    } else {
-      muted = true;
-    }
-  } else if (e.keyCode == 13) {
-    // = "ENTER"
-    if (itsMyTurn) {
-      doneBuilding();
-    }
-  } else if (e.keyCode == 32) {
-    // = "SPACE"
-    // do something..
-  } else if (e.keyCode == 70) {
-    // = "F"
-    // simulate "game end":
-    if (testingMode && iAmTheGameMaster) {
-      endGame();
-    }
-  } else if (e.keyCode == 81) {
-    // = "Q"
-    if (itsMyTurn) {
-      rotateObject("clockwise");
-    }
-  } else if (e.keyCode == 69) {
-    // = "E"
-    if (itsMyTurn) {
-      rotateObject("counterclockwise");
-    }
-  }
-});
-
-$(document).on("dblclick", ".img-box", e => {
-  if (gameStarted && itsMyTurn) {
-    // console.log('img-box was double clicked!');
-    // console.log(e.currentTarget);
-    let imgBox = e.currentTarget;
-    changeObjectImage(imgBox);
-    updateObjectsForOtherPlayers();
-  }
-});
-
-$("#card-deck").on("mousedown", ".table-row", function(e) {
-  if (!itsMyTurn) {
-    guessWordFromCard(e);
-  }
-});
-
-$("#done-btn").on("click", doneBuilding);
-
-$("#help-btn").on("click", toggleHelp);
-
-$("#next-btn").on("click", readyForNextTurn);
-
-$("#play-again-btn").on("click", () => window.location.reload(false));
-
-// §§ event listener functions - main game ------------------------
-function handleMouseDown(e, touch) {
-  if (gameStarted && itsMyTurn && !doneBtnPressed) {
-    if (touch) {
-      e.preventDefault();
-      // e.preventDefault && e.preventDefault();
-      // console.log('touchstart!');
-    }
-    objectClicked = true;
-    // $clickedImgBox = $(this) || e.currentTarget;
-    $clickedImgBox = $(e.currentTarget);
-
-    // reset transform rotate:
-    transformRotate = 0;
-    // console.log($clickedImgBox);
-    // show name of clicked object:
-    $clickedImgId = $clickedImgBox.find("img").attr("id");
-    console.log($clickedImgId);
-    $clickedImgBox.addClass("move");
-    // start position if mouse event || touch event:
-    startX = e.clientX || e.touches[0].clientX;
-    startY = e.clientY || e.touches[0].clientY;
-    // console.log('startX in handleMouseDown: ', startX);
-    // get the clicked object to the very front:
-    // https://stackoverflow.com/questions/5680770/how-to-find-the-highest-z-index-using-jquery
-    let highestZIndex = 1;
-    $(".selected").each(function() {
-      const currentZIndex = Number($(this).css("z-index"));
-      if (currentZIndex > highestZIndex) {
-        highestZIndex = currentZIndex;
-      }
-    });
-    $clickedImgBox.css({
-      "z-index": highestZIndex + 1
-    });
-
-    //  https://css-tricks.com/get-value-of-css-rotation-through-javascript/
-
-    // to move an object, that's already in the construction area, check the transform props and calculate with them when invoking updatePosition():
-    if ($clickedImgBox.hasClass("selected")) {
-      const transformProps = $(".move").css("transform");
-      // console.log('transformProps: ', transformProps);
-      var values = transformProps.split("(")[1],
-        values = values.split(")")[0],
-        values = values.split(",");
-
-      translateX = Number(values[4]);
-      translateY = Number(values[5]);
-      // console.log('translateX: ', translateX, 'translateY: ', translateY);
-
-      // set move props of clicked object to current values, in case it will be moved or rotated later:
-      moveX = translateX;
-      moveY = translateY;
-
-      // get the transform/rotate properties:
-      let a = Number(values[0]);
-      let b = Number(values[1]);
-      // let c= Number(values[2]);
-      // let d= Number(values[3]);
-      // console.log('a: ', a, 'b: ', b, 'c: ', c, 'd: ', d);
-
-      transformRotate = Math.round(Math.atan2(b, a) * (180 / Math.PI));
-      // console.log('Rotate props of clicked Object: '+ transformRotate + 'deg');
-    }
-  }
-}
-
-function handleMouseMove(e, touch) {
-  if (objectClicked) {
-    if (touch) {
-      e.preventDefault();
-      // e.preventDefault && e.preventDefault();
-      // console.log('touchmove!');
-    }
-    updatePosition(e);
-  }
-}
-
-function handleMouseUp(e, touch) {
-  if (objectClicked) {
-    if (touch) {
-      e.preventDefault();
-      // e.preventDefault && e.preventDefault();
-      // console.log('touchend!');
-    }
-    const $clickedImgBox = $(".move");
-    // new position if mouse event || touch event:
-    const posX = e.clientX || e.changedTouches[0].clientX;
-    const posY = e.clientY || e.changedTouches[0].clientY;
-    if (!muted && objectMoved) {
-      if (uniSound) {
-        universalDropSound.play();
-      } else {
-        const currentObj = objObj.find(obj => obj.name === $clickedImgId);
-        new Audio("./sounds/" + currentObj.sound).play();
-      }
-    }
-    //only if object is dropped (when cursor is) inside the construction area:
-    if (
-      borderLeft < posX &&
-      posX < borderRight &&
-      borderTop < posY &&
-      posY < borderBottom
-    ) {
-      $clickedImgBox.addClass("selected");
-      // if dropped ouside construction area, put it back to it's original position:
-    } else {
-      $clickedImgBox.removeClass("selected");
-      // reset object position::
-      $clickedImgBox.css({
-        transform: `translate(${0}px, ${0}px)`,
-        "z-index": 1
-      });
-    }
-
-    $clickedImgBox.removeClass("move");
-    objectClicked = false;
-    objectMoved = false;
-    updateObjectsForOtherPlayers();
-  }
-}
-
-function readyForNextTurn() {
-  socket.emit("ready for next turn");
-}
-
 // §§ functions- main game: ----------------------------------------
+function get$objBorders($obj) {
+  let top = $obj.offset().top;
+  let bottom = top + $obj.height();
+  let left = $obj.offset().left;
+  let right = left + $obj.width();
+  return [top, bottom, left, right];
+}
+
+function getObjectPositions() {
+  $objects.children().each(function() {
+    // position() gives position relative to positioned parent
+    let objTop = $(this).position().top;
+    let objLeft = $(this).position().left;
+    // console.log('objTop: ', objTop, 'objLeft: ', objLeft);
+    $(this).css({
+      // position: 'absolute',
+      top: objTop + "px",
+      left: objLeft + "px"
+    });
+  });
+  $objects.children(".img-box").css({
+    position: "absolute"
+  });
+}
 
 function changeTurn(data) {
   $(`#${data.activePlayer}`).removeClass("myTurn");
@@ -1236,16 +1083,9 @@ function changeTurn(data) {
   }
 
   activePlayer = data.nextPlayer;
-  // sessionStorage.setItem("activePlayer", activePlayer);
-
   correctAnswer = data.correctAnswer;
-  // sessionStorage.setItem("correctAnswer", correctAnswer);
-
-  doneBtnPressed = false;
-  // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
-
   myGuess = "";
-  // sessionStorage.setItem("myGuess", myGuess);
+  doneBtnPressed = false;
 
   $objects[0].innerHTML = data.activeObjects;
   $queue[0].innerHTML = data.queuedObjects;
@@ -1373,32 +1213,6 @@ function addPoints(data) {
   }
 }
 
-function get$objBorders($obj) {
-  let top = $obj.offset().top;
-  let bottom = top + $obj.height();
-  let left = $obj.offset().left;
-  let right = left + $obj.width();
-  return [top, bottom, left, right];
-}
-
-function getObjectPositions() {
-  $objects.children().each(function() {
-    // position() gives position relative to positioned parent
-    let objTop = $(this).position().top;
-    let objLeft = $(this).position().left;
-    // console.log('objTop: ', objTop, 'objLeft: ', objLeft);
-    $(this).css({
-      // position: 'absolute',
-      top: objTop + "px",
-      left: objLeft + "px"
-    });
-  });
-  $objects.children(".img-box").css({
-    position: "absolute"
-  });
-}
-// getObjectPositions();
-
 function toggleHelp() {
   if ($instructions.hasClass("hidden")) {
     $instructions.removeClass("hidden");
@@ -1450,9 +1264,6 @@ function changeObjectImage(imgBox) {
   } else {
     console.log("this object has only one image!");
   }
-
-  // let currentObj = objObj.find(obj => obj.name === img.id);
-  // console.log(currentObj.images);
 }
 
 function discardAndRefillObjects(data) {
@@ -1488,6 +1299,7 @@ function discardAndRefillObjects(data) {
   }
 }
 
+// drag&drop objects in main game:
 function updatePosition(e) {
   objectMoved = true;
   const $clickedImgBox = $(".move");
@@ -1618,13 +1430,16 @@ function guessWordFromCard(e) {
   }
 }
 
+function readyForNextTurn() {
+  socket.emit("ready for next turn");
+}
+
 function endGame() {
   socket.emit("end game");
 }
 
 function gameEnds(data) {
-  console.log(data.message);
-  // console.log(data.rankingArray);
+  console.log(`game is over`);
   console.log(`player "${data.winner}" wins!`);
 
   $("#main-game").addClass("hidden");
@@ -1653,7 +1468,138 @@ function gameEnds(data) {
   }
 }
 
-// §§ sockets - main game: ******************************************
+// §§ SOCKETS: *******************************************
+socket.on("disconnect", function() {
+  console.log("disconnected");
+});
+
+socket.on("reconnect", function() {
+  console.log('reconnecting...');
+});
+
+socket.on("connect", function() {
+  if (gameStarted) {
+    console.log('connecting...');
+    location.reload();
+  }
+});
+
+socket.on("welcome", function(data) {
+  selectedPieceId = sessionStorage.getItem("selectedPieceId");
+  myPlayerName = sessionStorage.getItem("myPlayerName");
+
+  sessionStorage.setItem("mySocketId", data.socketId);
+  mySocketId = data.socketId;
+  console.log("Welcome to AllThatStuff!");
+
+  // set language of word cards:
+  if (chosenLanguage != data.chosenLanguage) {
+    languageHasBeenChanged(data.chosenLanguage);
+  }
+
+  // check if the game has already started:
+  gameStarted = data.gameStarted;
+
+  if (!gameStarted) {
+    if (!myPlayerName) {
+      setTimeout(() => {
+        setPlayerName();
+      }, 200);
+    }
+
+    // remember previously selected piece on page reload:
+    // console.log("your selected piece is: ", selectedPieceId);
+    if (selectedPieceId && myPlayerName) {
+      // TODO In case of a replay, I should also check here, if the selected piece has been taken by a new player in the meantime....
+      selectedPiece(selectedPieceId);
+    }
+
+
+  } else {
+    // if the game has already started:
+    if (selectedPieceId && myPlayerName) {
+      // e.g. if a joined player disconnected unintentionally and reconnects mid game..
+
+      socket.emit("let me rejoin the game", {
+        selectedPieceId: selectedPieceId,
+        playerName: myPlayerName,
+        myTotalPoints: myTotalPoints
+      });
+
+    } else {
+      // if the player is new player and didn't join the game before
+      setTimeout(() => {
+        window.alert("game has already started, please try again later");
+      }, 200);
+    }
+  }
+
+  gameMaster = data.gameMaster;
+
+  players = data.selectedPieces;
+  // sessionStorage.setItem("players", players);
+  playerNames = data.playerNames;
+
+  // console.log('players in socket.on("welcome"): ', players);
+  for (let i = 0; i < players.length; i++) {
+    let $piece = $("#start-menu").find("#" + players[i]);
+    let $playerName = $piece.find(".player-name");
+    $playerName[0].innerText = playerNames[players[i]];
+    $piece.addClass("selectedPlayerPiece");
+    adjustNameFontSize($piece, $playerName[0].innerText);
+
+    if (players[i] == gameMaster) {
+      let $crown = $piece.find(".crown");
+      $crown.removeClass("hidden");
+    }
+  }
+});
+
+socket.on("add selected piece", function(data) {
+  // the first player who selected a piece, becomes game master:
+  gameMaster = data.gameMaster;
+
+  // if I'm the game master:
+  if (gameMaster == selectedPieceId && !iAmTheGameMaster) {
+    iAmTheGameMaster = true;
+    console.log("you are the game master");
+    $("#chosen-language").addClass("game-master");
+    $("#chosen-language").find('.crown').removeClass('hidden');
+
+    let $buttonBox = $("#logo-button-box").find(".buttonBox");
+    $buttonBox.removeClass("hidden");
+  }
+
+  if (data.selectedPieceId && data.playerName) {
+    addPlayer(data);
+  }
+  // console.log('players after "add selected piece": ', players);
+});
+
+socket.on("remove selected piece", function(pieceId) {
+  removePlayer(pieceId);
+  // console.log('players after "remove selected piece": ', players);
+});
+
+socket.on("language has been changed", function(data) {
+  languageHasBeenChanged(data.newLanguage);
+});
+
+socket.on("game has been started", function(data) {
+  console.log(data.message);
+  // console.log('data.activeObjects: ', data.activeObjects);
+  // console.log('data.queuedObjects: ', data.queuedObjects);
+  // only if player joined (& in case of a second game, if player pressed "play again"):
+  if (selectedPieceId && !gameStarted) {
+    gameHasBeenStarted(data);
+  }
+});
+
+socket.on("next turn", function(data) {
+  console.log(`it's ${data.nextPlayer}'s turn now!'`);
+  changeTurn(data);
+});
+
 socket.on("objects are moving", function(data) {
   objectsAreMoving(data);
 });
@@ -1704,7 +1650,6 @@ socket.on("game ends", function(data) {
 });
 
 socket.on("add player midgame", function(data) {
-  let msg = `${data.playerName} wants to rejoin the game`;
-  console.log(msg);
+  console.log(`${data.playerName} wants to rejoin the game`);
   addPlayerMidGame(data);
 });
