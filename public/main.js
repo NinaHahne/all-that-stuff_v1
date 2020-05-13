@@ -280,14 +280,6 @@ preloadObjectImages();
 
 playButton.addEventListener("click", function() {
   // e.preventDefault();
-  let joinedPlayersList = selectPlayersContainer.getElementsByClassName(
-    "selectedPlayerPiece"
-  );
-  // console.log('joinedPlayersList: ', joinedPlayersList);
-
-  let playerArray = Array.from(joinedPlayersList);
-  // console.log(Array.isArray(objectList));
-  // console.log(Array.isArray(objectArray));
   if (gameStarted) {
     setTimeout(() => {
       window.alert("game has already started, please try again later");
@@ -296,15 +288,13 @@ playButton.addEventListener("click", function() {
     let msg = "please pick a color before you start the game.";
     window.alert(msg);
     // do something prettier instead of the alert
-  } else if (playerArray.length < 3) {
+  } else if (players.length < 3) {
     let msg =
       "minimum number of players is 3. \nwait for more players to join the game";
     window.alert(msg);
     // do something prettier instead of the alert
   } else {
-    cancelAnimationFrame(myReq);
-    let objectArray = Array.from(objectList);
-    startGame(playerArray, objectArray);
+    startGame();
   }
 });
 
@@ -430,11 +420,13 @@ $(document).on("dblclick", ".img-box", e => {
   }
 });
 
-$("#card-deck").on("mousedown", ".table-row", function(e) {
+$("#card-points").on("mousedown", ".table-row", function(e) {
   if (!itsMyTurn) {
     guessWordFromCard(e);
   }
 });
+// FIXED: a player reconnecting during discussion time, couldn't make a guess in the next turn (but after a reconnecting again in that turn he could)
+// --> it was because everything inside #card-points" gets replaced on reconnection, including the event listener in a nested html element.
 
 $("#done-btn").on("click", doneBuilding);
 
@@ -736,11 +728,9 @@ function addPlayer(data) {
 
 function addPlayerMidGame(data) {
   players.push(data.selectedPieceId);
-  // console.log('data.selectedPieceId:', data.selectedPieceId);
 
   // if I am the rejoining player:
   if (data.selectedPieceId == selectedPieceId) {
-    // TODO: reset game state like after a page reload?
     gameStarted = true;
 
     $("#start-menu").find("#" + data.selectedPieceId).addClass("selectedPlayerPiece");
@@ -766,17 +756,19 @@ function addPlayerMidGame(data) {
     }
 
     // reset from previous game:
-    $pointsIfCorrect[0].innerHTML = "";
     // create "points if correct" boxes:
-    let highestAchievablePoint = players.length - 1;
-    for (let i = highestAchievablePoint; i > 0; i--) {
-      let points = i;
-      if (i > 5) {
-        points = 5;
-      }
-      let elem = `<div class="points">${points}</div>`;
-      $pointsIfCorrect.append(elem);
-    }
+    resetPointsIfCorrect();
+
+    // $pointsIfCorrect[0].innerHTML = "";
+    // let highestAchievablePoint = players.length - 1;
+    // for (let i = highestAchievablePoint; i > 0; i--) {
+    //   let points = i;
+    //   if (i > 5) {
+    //     points = 5;
+    //   }
+    //   let elem = `<div class="points">${points}</div>`;
+    //   $pointsIfCorrect.append(elem);
+    // }
 
     correctAnswer = data.correctAnswer;
 
@@ -841,12 +833,13 @@ function addPlayerMidGame(data) {
       $message.removeClass("done");
       $message.addClass("bold");
       $message[0].innerText = "discussion time!";
-      // TODO: render guesses and correct answer..
       dataForNextTurn = data.dataForNextTurn;
+      // render guesses and correct answer with "discussion backup":
+      $("#card-points")[0].innerHTML = data.cardPointsHTML;
     }
 
-  } else {
-    // if someone else is rejoining the game:
+    // TODO: just get a backup of all the guessed items/points, everytime it changes
+
   }
 
   let $piece = $("#joined-players").find("#" + data.selectedPieceId);
@@ -875,18 +868,14 @@ function removePlayer(pieceId) {
   }
 }
 
-function startGame(playerArray, objArray) {
+function startGame() {
+  // to start the game with the first 10 ticker objects that are visible when clicking playButton:
+  cancelAnimationFrame(myReq); //stops moving ticker
+  let objArray = Array.from(objectList);
+
   // whoever starts the game, is also the start player:
+  // TODO: change that to start with a random player
   activePlayer = selectedPieceId;
-  // sessionStorage.setItem("activePlayer", activePlayer);
-
-  $(`#${selectedPieceId}`).addClass("myTurn");
-  $("#construction-area").addClass(selectedPieceId);
-
-  // to get the id of joined players in the order they are rendered:
-  let joinedPlayerIds = playerArray.map(elem => elem.id);
-  // console.log('joinedPlayerIds: ', joinedPlayerIds);
-  $joinedPlayersContainer.append(playerArray);
 
   let activeObjects = objArray.slice(0, 10);
   let queuedObjects = objArray.slice(10);
@@ -895,29 +884,36 @@ function startGame(playerArray, objArray) {
   $queue.append(queuedObjects);
   getObjectPositions();
 
-  $("#start-menu").addClass("hidden");
-  $("#main-game").removeClass("hidden");
-
   let activeObjectsHTML = $("#objects")[0].innerHTML;
   let queuedObjectsHTML = $("#queue")[0].innerHTML;
 
   socket.emit("game started", {
     startPlayer: selectedPieceId,
-    joinedPlayerIds: joinedPlayerIds,
     activeObjects: activeObjectsHTML,
     queuedObjects: queuedObjectsHTML
   });
 }
 
 function gameHasBeenStarted(data) {
-  cancelAnimationFrame(myReq);
+  // if I did not start the game, get objects from the one who started the game (game master):
+  if (!iAmTheGameMaster) {
+    cancelAnimationFrame(myReq);
+    $objects[0].innerHTML = data.activeObjects;
+    $queue[0].innerHTML = data.queuedObjects;
+    getObjectPositions();
+  }
   doneBtnPressed = false;
-  // sessionStorage.setItem("doneBtnPressed", doneBtnPressed);
 
   $(".player-points").removeClass("hidden");
   $(".player-points").each(function() {
     $(this)[0].innerText = "0";
   });
+
+  $("#start-menu").addClass("hidden");
+  $("#main-game").removeClass("hidden");
+
+  $(`#${data.startPlayer}`).addClass("myTurn");
+  $("#construction-area").addClass(data.startPlayer);
 
   $message.removeClass("hidden");
 
@@ -925,69 +921,42 @@ function gameHasBeenStarted(data) {
   let currentTurn = numberOfTurns - data.numberOfTurnsLeft + 1;
   $rounds[0].innerText = `${currentTurn}/${numberOfTurns}`;
 
+  let joinedPlayersList = selectPlayersContainer.getElementsByClassName("selectedPlayerPiece");
+  let playerArray = Array.from(joinedPlayersList);
+  $joinedPlayersContainer.append(playerArray);
+
   activePlayer = data.startPlayer;
-  // sessionStorage.setItem("activePlayer", activePlayer);
 
   if (data.startPlayer != selectedPieceId) {
     itsMyTurn = false;
-    // sessionStorage.setItem("itsMyTurn", itsMyTurn);
-
-    $(`#${data.startPlayer}`).addClass("myTurn");
-    $("#construction-area").addClass(data.startPlayer);
-
-    let joinedPlayersList = selectPlayersContainer.getElementsByClassName(
-      "selectedPlayerPiece"
-    );
-    let playerArray = Array.from(joinedPlayersList);
-    $joinedPlayersContainer.append(playerArray);
-
-    $objects[0].innerHTML = data.activeObjects;
-    $queue[0].innerHTML = data.queuedObjects;
-    getObjectPositions();
-
-    $("#start-menu").addClass("hidden");
-    $("#main-game").removeClass("hidden");
 
     $message.removeClass("bold");
     $message.removeClass("done");
-    $message.removeClass("hidden");
     $message[0].innerText = "...under construction...";
 
     $("#done-btn").addClass("hidden");
+
   } else if (data.startPlayer == selectedPieceId) {
     itsMyTurn = true;
-    // sessionStorage.setItem("itsMyTurn", itsMyTurn);
 
     console.log(`you drew card number ${data.firstCard.id}.`);
     console.log(`please build item number ${data.correctAnswer}`);
     $(`.highlight[key=${data.correctAnswer}]`).addClass(selectedPieceId);
-    $("#done-btn").removeClass("hidden");
 
     $message.addClass("bold");
     $message[0].innerText = `it's your turn!`;
+
+    $("#done-btn").removeClass("hidden");
   }
-  // delete "?" from other player names:
-  let $pieces = $("#joined-players").find(".player");
-
-  let $otherPlayerNames = $pieces.find(".player-name");
-
-  // console.log('$otherPlayerNames:', $otherPlayerNames);
-  for (let i = 0; i < $otherPlayerNames.length; i++) {
-    // console.log($otherPlayerNames[i].innerText);
-    if ($otherPlayerNames[i].innerText == "?") {
-      $otherPlayerNames[i].innerText = "";
-    }
-  }
-  // $otherPlayerNames.map(player => {
-  //     console.log('player.innerText: ', player[0].innerText);
-  //     // if (player.innerText) {
-  //     //
-  //     // }
-  //     // console.log('$otherPlayerNames loop: ', $(this)[0].innerText);
-  //     // $(this)[0].innerText = '';
-  // });
-
-  // $otherPlayerNames.innerText = '';
+  // delete "?" from other player names: // from old game version without player names..
+  // let $pieces = $("#joined-players").find(".player");
+  // let $otherPlayerNames = $pieces.find(".player-name");
+  // for (let i = 0; i < $otherPlayerNames.length; i++) {
+  //   // console.log($otherPlayerNames[i].innerText);
+  //   if ($otherPlayerNames[i].innerText == "?") {
+  //     $otherPlayerNames[i].innerText = "";
+  //   }
+  // }
 
   // first word card:
   cardTitle[0].innerHTML = data.firstCard.title;
@@ -1000,27 +969,27 @@ function gameHasBeenStarted(data) {
   myTotalPoints = 0;
   sessionStorage.setItem("myTotalPoints", 0);
 
-  $pointsIfCorrect[0].innerHTML = "";
   // create "points if correct" boxes:
-  let highestAchievablePoint = players.length - 1;
-  for (let i = highestAchievablePoint; i > 0; i--) {
-    let points = i;
-    if (i > 5) {
-      points = 5;
-    }
-    let elem = `<div class="points">${points}</div>`;
-    $pointsIfCorrect.append(elem);
-  }
+  resetPointsIfCorrect();
+
+  // $pointsIfCorrect[0].innerHTML = "";
+  // let highestAchievablePoint = players.length - 1;
+  // for (let i = highestAchievablePoint; i > 0; i--) {
+  //   let points = i;
+  //   if (i > 5) {
+  //     points = 5;
+  //   }
+  //   let elem = `<div class="points">${points}</div>`;
+  //   $pointsIfCorrect.append(elem);
+  // }
 
   correctAnswer = data.correctAnswer;
-  // sessionStorage.setItem("correctAnswer", correctAnswer);
 
   if (!muted) {
     startGong.play();
   }
 
   gameStarted = true;
-  // sessionStorage.setItem("gameStarted", gameStarted);
 }
 
 // §§ functions- main game: ----------------------------------------
@@ -1066,16 +1035,18 @@ function changeTurn(data) {
 
   // create "points if correct" boxes:
   // reset from previous game:
-  $pointsIfCorrect[0].innerHTML = "";
-  let highestAchievablePoint = players.length - 1;
-  for (let i = highestAchievablePoint; i > 0; i--) {
-    let points = i;
-    if (i > 5) {
-      points = 5;
-    }
-    let elem = `<div class="points">${points}</div>`;
-    $pointsIfCorrect.append(elem);
-  }
+  resetPointsIfCorrect();
+
+  // $("#points-if-correct")[0].innerHTML = "";
+  // let highestAchievablePoint = players.length - 1;
+  // for (let i = highestAchievablePoint; i > 0; i--) {
+  //   let points = i;
+  //   if (i > 5) {
+  //     points = 5;
+  //   }
+  //   let elem = `<div class="points">${points}</div>`;
+  //   $("#points-if-correct").append(elem);
+  // }
 
   activePlayer = data.nextPlayer;
   correctAnswer = data.correctAnswer;
@@ -1119,6 +1090,19 @@ function changeTurn(data) {
 
   if (!muted) {
     startGong.play();
+  }
+}
+
+function resetPointsIfCorrect() {
+  $("#points-if-correct")[0].innerHTML = "";
+  let highestAchievablePoint = players.length - 1;
+  for (let i = highestAchievablePoint; i > 0; i--) {
+    let points = i;
+    if (i > 5) {
+      points = 5;
+    }
+    let elem = `<div class="points">${points}</div>`;
+    $("#points-if-correct").append(elem);
   }
 }
 
@@ -1170,7 +1154,7 @@ function showCorrectAnswer(data) {
   $(`.highlight[key=${data.correctAnswer}]`).addClass(activePlayer);
 
   // save guesses for discussion in case someone disconnects in that moment:
-  if (!iAmTheGameMaster) {
+  if (iAmTheGameMaster) {
     let cardPointsHTML = $("#card-points")[0].innerHTML;
 
     socket.emit("discussion backup", {
@@ -1508,7 +1492,6 @@ socket.on("welcome", function(data) {
       // TODO In case of a replay, I should also check here, if the selected piece has been taken by a new player in the meantime....
       selectedPiece(selectedPieceId);
     }
-
 
   } else {
     // if the game has already started:

@@ -345,7 +345,8 @@ io.on("connection", socket => {
   socket.on("game started", data => {
     currentPlayer = data.startPlayer;
     // this line makes sure, that selectedPieces (joined players) is in the correct order, like the player pieces are rendered (in a beautiful rainbow order):
-    selectedPieces = data.joinedPlayerIds;
+    // selectedPieces = data.joinedPlayerIds;
+    selectedPieces.sort(rainbowSort);
     console.log("joined players at game start: ", selectedPieces);
 
     // set number of turns:
