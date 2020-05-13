@@ -900,11 +900,6 @@ function startGame(playerArray, objArray) {
 
   let activeObjectsHTML = $("#objects")[0].innerHTML;
   let queuedObjectsHTML = $("#queue")[0].innerHTML;
-  // console.log('activeObjectsHTML: ', activeObjectsHTML);
-  // console.log('queuedObjectsHTML: ', queuedObjectsHTML);
-
-  // gameStarted = true;
-  // sessionStorage.setItem("gameStarted", gameStarted);
 
   socket.emit("game started", {
     startPlayer: selectedPieceId,
@@ -1519,7 +1514,6 @@ socket.on("welcome", function(data) {
     // if the game has already started:
     if (selectedPieceId && myPlayerName) {
       // e.g. if a joined player disconnected unintentionally and reconnects mid game..
-
       socket.emit("let me rejoin the game", {
         selectedPieceId: selectedPieceId,
         playerName: myPlayerName,

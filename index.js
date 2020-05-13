@@ -57,7 +57,6 @@ let activeObjects;
 let queuedObjects;
 let dataForNextTurn = {};
 
-
 // TODO: IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
 let playersObj = {};
 
@@ -92,6 +91,12 @@ const gameState = {
 // };
 
 // §§ FUNCTIONS ********************************
+
+function rainbowSort(a, b) {
+  let rainbow = ['grey', 'purple', 'blue', 'green', 'yellow', 'orange', 'red', 'pink'];
+  return rainbow.indexOf(a) - rainbow.indexOf(b);
+}
+
 //modern version of the Fisher–Yates shuffle algorithm:
 function shuffleCards(cards) {
   //shuffles array in place
@@ -106,10 +111,6 @@ function shuffleCards(cards) {
   discardPile = [];
   return cards;
 }
-
-// function drawCard(cards) {
-//     firstCard = cards.shift();
-// }
 
 function discardCard() {
   if (newPile === false) {
@@ -444,6 +445,11 @@ io.on("connection", socket => {
   socket.on("let me rejoin the game", data => {
     if (data.selectedPieceId && data.playerName) {
       selectedPieces.push(data.selectedPieceId);
+      console.log('selectedPieces after rejoining:', selectedPieces);
+      // now the player piece order is destroyed.. so after someone disconnects/reconnets, resort in rainbow pattern:
+      selectedPieces.sort(rainbowSort);
+      console.log('selectedPieces after rainbowSort:', selectedPieces);
+
       joinedPlayers[socket.id] = data.selectedPieceId;
       playerNames[data.selectedPieceId] = data.playerName;
       playerPointsTotal[data.selectedPieceId] = data.myTotalPoints;
