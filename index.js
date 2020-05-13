@@ -50,7 +50,7 @@ let playerPointsTotal = {}; // { pieceId: <points> }
 let playerNames = {};
 let doneBtnPressed = false;
 let cardPointsHTML;
-let discussionTime = false;
+let guessingOrDiscussionTime = false;
 
 // active and queued objects:
 let activeObjects;
@@ -151,7 +151,7 @@ function nextPlayersTurn(data) {
   queuedObjects = data.queuedObjects;
 
   doneBtnPressed = false;
-  discussionTime = false;
+  guessingOrDiscussionTime = false;
 
   io.sockets.emit("next turn", {
     activePlayer: data.activePlayer,
@@ -284,7 +284,7 @@ function addPlayerMidGame(data) {
     queuedObjects: queuedObjects,
     doneBtnPressed: doneBtnPressed,
     cardPointsHTML: cardPointsHTML,
-    discussionTime: discussionTime,
+    guessingOrDiscussionTime: guessingOrDiscussionTime,
     dataForNextTurn: dataForNextTurn
   });
 }
@@ -384,7 +384,7 @@ io.on("connection", socket => {
     answeringOrder = [];
     gameStarted = true;
     doneBtnPressed = false;
-    discussionTime = false;
+    guessingOrDiscussionTime = false;
 
     let msg = `"${data.startPlayer}" started the game and starts with building!`;
     // console.log(msg);
@@ -444,9 +444,15 @@ io.on("connection", socket => {
   });
 
   socket.on("let me rejoin the game", data => {
+    console.log('rejoining socketId:', socket.id);
+
     if (data.selectedPieceId && data.playerName) {
       selectedPieces.push(data.selectedPieceId);
       console.log('selectedPieces after rejoining:', selectedPieces);
+      // NOTE: depending on the disconnection (intenet failure / page refresh) there might be double entries in the selected pieces array (because they don't get deleted on "disconnect").. so:
+      // NOTE: update: the selected piece WILL get deleted on internet disconnection, BUT: in this case it happens a long time after the same player rejoined the game already.. how do I solve this problem? the rejoining player shouldn't get deleted..
+      selectedPieces = [...new Set(selectedPieces)];
+      console.log('selectedPieces after filtering double entries:', selectedPieces);
       // now the player piece order is destroyed.. so after someone disconnects/reconnets, resort in rainbow pattern:
       selectedPieces.sort(rainbowSort);
       console.log('selectedPieces after rainbowSort:', selectedPieces);
@@ -458,13 +464,15 @@ io.on("connection", socket => {
     }
   });
 
-  socket.on("discussion backup", data => {
+  socket.on("guesses backup", data => {
     cardPointsHTML = data.cardPointsHTML;
-    discussionTime = true;
+    guessingOrDiscussionTime = true;
   });
 
   socket.on("disconnect", () => {
     console.log(`socket with the id ${socket.id} is now disconnected`);
+    // NOTE: for some reason, this event only fires, when the browser is refreshed; not if it just lost internet connection? --> seems to be delayed, so players will be removed after disconnecting after they actually rejoined :(
+
     let piece = joinedPlayers[socket.id];
     selectedPieces = selectedPieces.filter(item => item !== piece);
     if (selectedPieces.length == 0) {

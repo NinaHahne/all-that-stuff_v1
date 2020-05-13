@@ -72,6 +72,7 @@ const observer = new MutationObserver(callback);
 observer.observe(targetNode, config);
 
 // §§ ELEMENTS & GLOBAL VARIABLES ********************************
+let iGotDisconnected = false;
 const $objects = $("#objects");
 const $queue = $("#queue");
 const $joinedPlayersContainer = $("#joined-players");
@@ -199,7 +200,6 @@ let myReq;
 // card deck: ----------------------------------
 let cardTitle = document.getElementsByClassName("cardtitle");
 let items = document.getElementsByClassName("item");
-let $pointsIfCorrect = $("#points-if-correct");
 
 // §§ GAME/PLAYER STATE: --------------------------
 let mySocketId;
@@ -829,17 +829,14 @@ function addPlayerMidGame(data) {
       }
     }
 
-    if (data.discussionTime) {
+    if (data.guessingOrDiscussionTime) {
       $message.removeClass("done");
       $message.addClass("bold");
       $message[0].innerText = "discussion time!";
       dataForNextTurn = data.dataForNextTurn;
-      // render guesses and correct answer with "discussion backup":
+      // render guesses and correct answer with "guesses backup":
       $("#card-points")[0].innerHTML = data.cardPointsHTML;
     }
-
-    // TODO: just get a backup of all the guessed items/points, everytime it changes
-
   }
 
   let $piece = $("#joined-players").find("#" + data.selectedPieceId);
@@ -1108,12 +1105,14 @@ function resetPointsIfCorrect() {
 
 function someOneGuessed(data) {
   // console.log("someone guessed");
-  let $highestFreePointBox = $pointsIfCorrect
+  let $highestFreePointBox = $("#points-if-correct")
     .children()
     .not(".claimed")
     .first();
   // console.log('highestFreePointBox:', $highestFreePointBox);
   $highestFreePointBox.addClass(`claimed ${data.guessingPlayer}`);
+  backupGuesses();
+
   if (!muted) {
     plop.play();
   }
@@ -1138,6 +1137,8 @@ function showAnswers(data) {
     $guessesBoxInCardItem.append(newGuess);
     // empty guesses div for next turn.... also for startGame?
   }
+  backupGuesses();
+
   if (!muted) {
     // pop sound for displaying all answers:
     plop.play();
@@ -1152,12 +1153,15 @@ function showAnswers(data) {
 function showCorrectAnswer(data) {
   // show correct answer:
   $(`.highlight[key=${data.correctAnswer}]`).addClass(activePlayer);
+  backupGuesses();
+}
 
-  // save guesses for discussion in case someone disconnects in that moment:
+function backupGuesses() {
+  // save status of guesses in case someone disconnects/reconnects:
   if (iAmTheGameMaster) {
     let cardPointsHTML = $("#card-points")[0].innerHTML;
 
-    socket.emit("discussion backup", {
+    socket.emit("guesses backup", {
       cardPointsHTML: cardPointsHTML
     });
   }
@@ -1449,7 +1453,13 @@ function gameEnds(data) {
 
 // §§ SOCKETS: *******************************************
 socket.on("disconnect", function() {
+  iGotDisconnected = true;
   console.log("disconnected");
+  // setTimeout(() => {
+  //   window.alert(`you got disconnected!
+  //     please refresh the page to rejoin the game :)`);
+  // }, 200);
+
 });
 
 socket.on("reconnect", function() {
@@ -1457,9 +1467,13 @@ socket.on("reconnect", function() {
 });
 
 socket.on("connect", function() {
-  if (gameStarted) {
-    console.log('connecting...');
-    location.reload();
+  console.log('connecting...');
+  if (iGotDisconnected) {
+    // location.reload();
+    window.location.reload(false);
+    // setTimeout(() => {
+    //   window.location.reload(false);
+    // }, 500);
   }
 });
 
