@@ -58,8 +58,15 @@ let queuedObjects;
 let dataForNextTurn = {};
 
 
-// IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
+// TODO: IN THE FUTURE: replace above selectedPieces, guessedAnswers & playerPointsTotal with playersObj:
 let playersObj = {};
+
+// playersObj[data.selectedPieceId].name = data.playerName;
+
+// https://hackernoon.com/accessing-nested-objects-in-javascript-f02f1bd6387f
+// (playersObj[data.selectedPieceId] || {}).name = data.playerName;
+// console.log('playersObj', playersObj);
+
 // players will later be an object like this:
 // let playersObj = {
 //     "pieceId": {
@@ -166,25 +173,21 @@ function collectGuesses(data) {
   answeringOrder.push(data.guessingPlayer);
 
   let guessedAnswersLength = Object.keys(guessedAnswers).length;
-  // let joinedPlayersLength = Object.keys(joinedPlayers).length;
   let joinedPlayersLength = selectedPieces.length;
-
-  // console.log('joinedPlayersLength: ', joinedPlayersLength);
-  // console.log('guessedAnswersLength: ', guessedAnswersLength);
-  // console.log("guessedAnswers: ", guessedAnswers);
 
   io.sockets.emit("someone guessed", {
     guessingPlayer: data.guessingPlayer,
     guessedItem: data.guessedItem
   });
 
-  // when everyone guessed:
+  // when everyone guessed: add points:
   if (guessedAnswersLength == joinedPlayersLength - 1) {
     let playerPointsIfCorrect = {};
     let actualPlayerPoints = {};
     let numberOfCorrectGuesses = 0;
 
     if (joinedPlayersLength <= 6) {
+      // points for up to 6 players (5 guessers):
       let pointsCounter = answeringOrder.length;
       for (let i = 0; i < answeringOrder.length; i++) {
         playerPointsIfCorrect[answeringOrder[i]] = pointsCounter;
@@ -198,7 +201,7 @@ function collectGuesses(data) {
         pointsCounter--;
       }
     } else if (joinedPlayersLength > 6) {
-      // for more than 6 players (max 8):
+      // for more than 6 players (max 8): (6-7 guessers):
       // maximum points: 5
       let pointsCounter = 0;
       for (let i = answeringOrder.length; i > 0; i--) {
@@ -215,7 +218,7 @@ function collectGuesses(data) {
         }
       }
     }
-
+    // building player gets 1 point for each correct guess:
     playerPointsTotal[currentPlayer] += numberOfCorrectGuesses;
 
     dataForNextTurn = {
@@ -232,12 +235,8 @@ function collectGuesses(data) {
 }
 
 function getWinner() {
-  // console.log('data.playerArray in getWinner:', data.playerArray);
-  // console.log('data.playerPiecesHTML: ', data.playerPiecesHTML);
-
   let ranking = [];
   for (let player in playerPointsTotal) {
-    // console.log(player, ":", playerPointsTotal[player]);
     let name = playerNames[player];
     let playerPointsObj = {
       player: player,
@@ -245,7 +244,6 @@ function getWinner() {
       points: playerPointsTotal[player]
     };
     ranking.push(playerPointsObj);
-    // console.log('playerPontsObj in getWinner loop:', playerPontsObj);
   }
 
   // sort array in place by points, descending:
@@ -260,9 +258,7 @@ function getWinner() {
   selectedPieces = [];
   gameStarted = false;
 
-  let msg = `game is over`;
   io.sockets.emit("game ends", {
-    message: msg,
     rankingArray: ranking,
     winner: winner
   });
@@ -295,17 +291,14 @@ function addPlayerMidGame(data) {
 // §§ SOCKET.IO ********************************
 io.on("connection", socket => {
   console.log(`socket with the id ${socket.id} is now connected`);
-  // console.log('joinedPlayers on connection: ', joinedPlayers);
-
-  // joinedPlayers[socket.id] = "";
 
   // Generate a v1 (time-based) id:
   // socket.userId = uuid.v1();
 
   // tell the player they connected, giving them their socket id and the list with players that joined so far:
   socket.emit("welcome", {
-    socketId: socket.id,
     // userId: socket.userId,
+    socketId: socket.id,
     selectedPieces: selectedPieces,
     playerNames: playerNames,
     chosenLanguage: chosenLanguage,
@@ -313,33 +306,14 @@ io.on("connection", socket => {
     gameMaster: gameMaster
   });
 
-  // socket.on('let me join', () => {
-  //   socket.emit("welcome", {
-  //     socketId: socket.id,
-  //     // userId: socket.userId,
-  //     selectedPieces: selectedPieces,
-  //     playerNames: playerNames,
-  //     chosenLanguage: chosenLanguage,
-  //     gameStarted: gameStarted,
-  //     gameMaster: gameMaster
-  //   });
-  // });
-
   socket.on("selected piece", data => {
     if (data.selectedPieceId) {
-      // console.log('joinedPlayers on "selected piece": ', joinedPlayers);
       console.log(
         `${data.playerName} joined the game with the color ${data.selectedPieceId}`
       );
       selectedPieces.push(data.selectedPieceId);
       joinedPlayers[socket.id] = data.selectedPieceId;
       playerNames[data.selectedPieceId] = data.playerName;
-
-      // playersObj[data.selectedPieceId].name = data.playerName;
-
-      // https://hackernoon.com/accessing-nested-objects-in-javascript-f02f1bd6387f
-      // (playersObj[data.selectedPieceId] || {}).name = data.playerName;
-      // console.log('playersObj', playersObj);
 
       // first player that selects a piece becomes "game master":
       if (selectedPieces.length == 1) {
@@ -352,7 +326,6 @@ io.on("connection", socket => {
         playerName: data.playerName,
         gameMaster: gameMaster
       });
-      // console.log("selectedPieces: ", selectedPieces);
     }
   });
 
@@ -370,7 +343,7 @@ io.on("connection", socket => {
 
   socket.on("game started", data => {
     currentPlayer = data.startPlayer;
-    // this line makes sure, that selectedPieces (joined players) is in the correct order, like the player pieces are rendered:
+    // this line makes sure, that selectedPieces (joined players) is in the correct order, like the player pieces are rendered (in a beautiful rainbow order):
     selectedPieces = data.joinedPlayerIds;
     console.log("joined players at game start: ", selectedPieces);
 
@@ -389,17 +362,14 @@ io.on("connection", socket => {
     numberOfTurnsForThisGame = numberOfTurnsLeft;
 
     console.log(
-      `${
-        selectedPieces.length
-      } players joined the game. Each player will be the builder ${numberOfTurnsLeft /
-        selectedPieces.length} times!`
+      `${selectedPieces.length} players joined the game.
+      Each player will be the builder ${numberOfTurnsLeft / selectedPieces.length} times!`
     );
 
-    // console.log('cards on "game started": ', cards);
     discardPile = cards;
-    shuffleCards(discardPile); // discard pile gets shuffled and builds the new stuffCards pile
+    // discard pile gets shuffled and builds the new stuffCards pile:
+    shuffleCards(discardPile);
     // drawCard(stuffCards);
-    // console.log(`${stuffCards.length} cards left.`);
     firstCard = stuffCards.shift();
 
     playerPointsTotal = {};
@@ -486,6 +456,23 @@ io.on("connection", socket => {
     discussionTime = true;
   });
 
+  socket.on("disconnect", () => {
+    console.log(`socket with the id ${socket.id} is now disconnected`);
+    let piece = joinedPlayers[socket.id];
+    selectedPieces = selectedPieces.filter(item => item !== piece);
+    if (selectedPieces.length == 0) {
+      gameStarted = false;
+    }
+    if (piece) {
+      console.log(`player piece "${piece}" is now free again`);
+      io.sockets.emit("remove selected piece", piece);
+      delete joinedPlayers[socket.id];
+      delete playerNames[piece];
+      delete playerPointsTotal[piece];
+      // TODO: what happens if disconnected player is the game master?
+    }
+  });
+
   // send a message to all connected sockets:
   // io.sockets.emit("achtung", {
   //     warning: "This site will go offline for maintenance in one hour."
@@ -502,22 +489,4 @@ io.on("connection", socket => {
   // });
   // OR: to everyone except for the emmiting socket:
   // socket.broadcast.emit('hi everyone else')
-
-  socket.on("disconnect", () => {
-    // console.log('joinedPlayers on "disconnect": ', joinedPlayers);
-    console.log(`socket with the id ${socket.id} is now disconnected`);
-    let piece = joinedPlayers[socket.id];
-    selectedPieces = selectedPieces.filter(item => item !== piece);
-    if (selectedPieces.length == 0) {
-      gameStarted = false;
-    }
-    if (piece) {
-      console.log(`player piece "${piece}" is now free again`);
-      io.sockets.emit("remove selected piece", piece);
-      delete joinedPlayers[socket.id];
-      delete playerNames[piece];
-      delete playerPointsTotal[piece];
-      // TODO: what happens if disconnected player is the game master?
-    }
-  });
 });
