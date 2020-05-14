@@ -104,8 +104,10 @@ header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 110px;
-  width: 110px;
+  /* height: 110px; */
+  /* width: 110px; */
+  height: 11.5vh;
+  width: 11.5vh;
   border: 3px dashed transparent;
   border-radius: 50%;
   font-weight: bold;
@@ -306,27 +308,44 @@ button:focus {
   width: 100%;
   display: flex;
   flex-shrink: 0;
-  /* padding-bottom: 100px; */
-  align-items: flex-end;
+  /* align-items: flex-end; */
   position: relative;
-  padding-bottom: 100px;
+  /* padding-bottom: 100px; */
 }
 
 #main-left-center {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   flex-shrink: 0;
-  height: 100%;
+  height: 91%;
+  /* width: 60%; */
+  width: 62vw;
   justify-content: space-between;
+  position: relative;
+}
+
+#main-right {
+  display: flex;
+  /* flex-direction: column; */
+  /* flex-grow: 1; */
+  flex-shrink: 0;
+  height: 91%;
+  /* width: 40%; */
+  width: 38vw;
+  /* justify-content: space-between; */
+  padding: 8px;
+  align-items: flex-end;
 }
 
 #card-points-construction {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  margin-left: 12px;
+  width: 100%;
+  height: 82%;
+  padding: 8px 0px 8px 12px;
+  align-items: flex-end;
+  position: relative;
 }
 
 #card-points {
@@ -334,14 +353,16 @@ button:focus {
   flex-direction: column;
   justify-content: space-between;
   flex-grow: 1;
+  height: 38vw;
 }
 
 #joined-players {
   display: flex;
   width: 100%;
+  height: 18%;
   justify-content: space-around;
   align-items: center;
-  margin-top: 20px;
+  padding-top: 20px;
 }
 
 #joined-players .player,
@@ -381,8 +402,10 @@ button:focus {
   transform: unset;
   border-style: double;
   border-width: 8px;
-  height: 115px;
-  width: 115px;
+  /* height: 115px; */
+  /* width: 115px; */
+  height: 12vh;
+  width: 12vh;
   /* border-style: solid;
     border-width: 3px; */
 }
@@ -488,8 +511,8 @@ button:focus {
   justify-content: flex-start;
   align-items: flex-start;
   font-weight: 700;
-  min-width: 450px;
-  max-width: 480px;
+  /* min-width: 450px; */
+  /* max-width: 480px; */
   touch-action: manipulation;
 }
 
@@ -623,8 +646,8 @@ small {
   position: relative;
   /* bottom: 112px;
     right: 632px; */
-  height: 680px;
-  width: 700px;
+  height: 38vw;
+  width: 38vw;
   padding: 4px;
   /* border: 3px lightgrey dashed; */
   border-width: 3px;
@@ -718,13 +741,13 @@ small {
     bottom: 102px;
     right: 0; */
   position: relative;
-  height: 830px;
-  width: 620px;
-  padding: 10px 2px;
+  height: 47vw;
+  width: 100%;
+  padding: 3px;
   border: 3px lightgrey dashed;
   border-radius: 10px;
-  margin-right: 12px;
-  margin-bottom: 10px;
+  /* margin-right: 12px; */
+  /* margin-bottom: 10px; */
 }
 #queue {
   display: flex;
@@ -733,15 +756,16 @@ small {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 100px;
+  height: 9%;
   /* background-color: rgba(0, 0, 0, 0.5); */
   border-top: 3px black dashed;
+  padding: 2px 8px;
 }
 
 #queue-overlay {
   position: absolute;
   bottom: 0;
-  height: 100px;
+  height: 9%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 1000;
@@ -1056,11 +1080,9 @@ small {
 }
 
 #queue .img-box {
-  max-height: 90px;
+  max-height: 90%;
   width: auto;
-  margin-left: 26px;
-  margin-right: 6px;
-  margin-top: 3px;
+  margin-left: 1.5%;
   z-index: 0;
 }
 
@@ -1676,6 +1698,104 @@ small {
 
 #ticker-objects .img-box {
   clip-path: unset;
+}
+
+/* §§ object items in main-game: */
+#objects .banana {
+  height: 6.7%;
+}
+#objects .bridge {
+  height: 11%;
+}
+#objects .bridge.v2 {
+  height: 7.4%;
+}
+#objects .bridge.v3 {
+  height: 9.5%;
+}
+#objects .cloth {
+  height: 30%;
+}
+#objects .cloth.v2 {
+  height: 22.3%;
+}
+#objects .cloth.v3 {
+  height: 30%;
+}
+#objects .coin {
+  height: 11%;
+}
+#objects .flower {
+  height: 19%;
+}
+#objects .flower.v2 {
+  height: 5.6%;
+}
+#objects .fur {
+  height: 22%;
+}
+#objects .giant {
+  height: 22%;
+}
+#objects .peg {
+  height: 13.4%;
+}
+#objects .peg.v2 {
+  height: 12.3%;
+}
+#objects .pig {
+  height: 10%;
+}
+#objects .pig.v2 {
+  height: 10%;
+}
+#objects .pig.v3 {
+  height: 10%;
+}
+#objects .plane {
+  height: 17.5%;
+}
+#objects .plane.v2 {
+  height: 11.2%;
+}
+#objects .plane.v3 {
+  height: 11.2%;
+}
+#objects .pokerchip {
+  height: 10%;
+}
+#objects .pole {
+  height: 19%;
+}
+#objects .puzzle {
+  height: 19%;
+}
+#objects .puzzle.v2 {
+  height: 18%;
+}
+#objects .ring {
+  height: 10.5%;
+}
+#objects .ring.v2 {
+  height: 5.65%;
+}
+#objects .rummikubtile {
+  height: 16.5%;
+}
+#objects .scissors {
+  height: 11.2%;
+}
+#objects .stone {
+  height: 10%;
+}
+#objects .ticket {
+  height: 21%;
+}
+#objects .token {
+  height: 12%;
+}
+#objects .triangle {
+  height: 12%;
 }
 
 /* §§ MOBILE: */
