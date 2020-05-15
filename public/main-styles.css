@@ -26,7 +26,8 @@ body {
   /* min-width: 1820px; */
   margin: 0;
   padding: 0;
-  font-size: 26px;
+  /* font-size: 26px; */
+  font-size: 1.6vw;
   /*font-family: 'Atma', cursive;*/
   /*font-family: 'Special Elite', cursive;*/
   font-family: "Life Savers", cursive;
@@ -76,19 +77,34 @@ header {
 
 /* font sizes depending on length of player name: */
 .player.name4 .player-name {
-  font-size: 34px;
+  /* font-size: 34px; */
+  /* font-size: 3.5vh; */
+      font-size: 2vw;
 }
 
 .player.name6 .player-name {
-  font-size: 30px;
+  /* font-size: 30px; */
+  /* font-size: 3.1vh; */
+  font-size: 1.8vw;
 }
 
 .player.name8 .player-name {
-  font-size: 24px;
+  /* font-size: 24px; */
+  /* font-size: 2.6vh; */
+  font-size: 1.4vw;
 }
 
 .player.name10 .player-name {
-  font-size: 20px;
+  /* font-size: 20px; */
+  /* font-size: 2.1vh; */
+  font-size: 1.15vw;
+
+}
+
+.player.name12 .player-name {
+  /* font-size: 16px; */
+  /* font-size: 1.8vh; */
+  font-size: 1vw;
 }
 
 .player:not(.selectedPlayerPiece):hover {
@@ -106,8 +122,10 @@ header {
   align-items: center;
   /* height: 110px; */
   /* width: 110px; */
-  height: 11.5vh;
-  width: 11.5vh;
+  /* height: 12vh; */
+  /* width: 12vh; */
+  height: 6.5vw;
+  width: 6.5vw;
   border: 3px dashed transparent;
   border-radius: 50%;
   font-weight: bold;
@@ -320,7 +338,7 @@ button:focus {
   flex-shrink: 0;
   height: 91%;
   /* width: 60%; */
-  width: 62vw;
+  width: 63vw;
   justify-content: space-between;
   position: relative;
 }
@@ -332,7 +350,7 @@ button:focus {
   flex-shrink: 0;
   height: 91%;
   /* width: 40%; */
-  width: 38vw;
+  width: 37vw;
   /* justify-content: space-between; */
   padding: 8px;
   align-items: flex-end;
@@ -354,6 +372,7 @@ button:focus {
   justify-content: space-between;
   flex-grow: 1;
   height: 38vw;
+  width: 15vw;
 }
 
 #joined-players {
@@ -404,8 +423,10 @@ button:focus {
   border-width: 8px;
   /* height: 115px; */
   /* width: 115px; */
-  height: 12vh;
-  width: 12vh;
+  /* height: 12vh; */
+  /* width: 12vh; */
+  height: 7vw;
+  width: 7vw;
   /* border-style: solid;
     border-width: 3px; */
 }
@@ -528,7 +549,8 @@ button:focus {
 
 .cardtitle {
   /* padding-left: 0.2rem; */
-  font-size: 32px;
+  /* font-size: 32px; */
+  font-size: 1.8vw;
   margin-top: 0;
   margin-bottom: 6px;
   font-weight: 800;
@@ -570,14 +592,16 @@ button:focus {
 .item {
   vertical-align: top;
   /* padding-top: 0.8rem; */
-  font-size: 29px;
+  /* font-size: 29px; */
+  font-size: 1.7vw;
 }
 
 .bullet {
   font-weight: 800;
   letter-spacing: 0.1em;
   text-align: end;
-  width: 25px;
+  /* width: 25px; */
+  width: 1.7vw;
 }
 
 .item {
@@ -621,12 +645,14 @@ small {
   margin-top: 0px;
   margin-bottom: 8px;
   font-weight: 800;
-  font-size: 30px;
+  /* font-size: 30px; */
+  font-size: 1.6vw;
 }
 
 #points-if-correct {
   display: flex;
-  font-size: 28px;
+  /* font-size: 28px; */
+  font-size: 1.5vw;
   font-weight: bold;
 }
 
@@ -658,13 +684,15 @@ small {
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  flex-shrink: 0;
 }
 
 #construction-area .message {
   align-self: flex-start;
   position: absolute;
   margin-top: 10px;
-  font-size: 36px;
+  /* font-size: 36px; */
+  font-size: 2vw;
   /* position: absolute;
     top: 10px;
     right: 100px; */
@@ -811,7 +839,7 @@ small {
   display: flex;
   flex-direction: column;
   margin-right: 100px;
-  margin-top: 40px;
+  margin-top: 9vh;
 }
 
 #players-end .player {
@@ -829,7 +857,7 @@ small {
   /* border-style: groove; */
   transform: scale(1.3);
   /* border-width: 10px; */
-  margin-bottom: 36px;
+  margin-bottom: 4vh;
   animation: pulse 2s infinite linear;
 }
 
@@ -845,12 +873,12 @@ small {
 
 #players-end .player:nth-child(2) {
   transform: scale(1.1);
-  margin-bottom: 18px;
+  margin-bottom: 1.8vh;
 }
 
 #players-end .player:nth-child(3) {
   transform: scale(1);
-  margin-bottom: 8px;
+  margin-bottom: 0.5vh;
 }
 
 #players-end .player:nth-child(4) {
@@ -858,19 +886,19 @@ small {
 }
 
 #players-end .player:nth-child(5) {
-  transform: scale(0.8);
+  transform: scale(0.8) translateY(-1vh);
 }
 
 #players-end .player:nth-child(6) {
-  transform: scale(0.75) translateY(-12px);
+  transform: scale(0.75) translateY(-3.4vh);
 }
 
 #players-end .player:nth-child(7) {
-  transform: scale(0.7) translateY(-32px);
+  transform: scale(0.7) translateY(-7vh);
 }
 
 #players-end .player:nth-child(8) {
-  transform: scale(0.65) translateY(-62px);
+  transform: scale(0.65) translateY(-12.4vh);
 }
 
 /* §§ --------crown for the winner: -------------*/
@@ -1812,95 +1840,3 @@ small {
     left: 0;
   }
 } */
-
-/* @media
-screen and (max-height: 940px),
-screen and (max-width: 1600px) {
-
-    html,
-    body {
-        zoom: 92%;
-    }
-
-    #queue,
-    #queue-overlay {
-        position: fixed;
-        bottom: 0;
-    }
-}
-
-@media
-screen and (max-height: 764px),
-screen and (max-width: 1280px) {
-
-    html,
-    body {
-        zoom: 89%;
-    }
-} */
-
-@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
-  html,
-  body {
-    zoom: unset;
-    width: 1820px;
-    min-height: 950px;
-    position: absolute;
-    overflow: hidden;
-  }
-
-  #main-game {
-    height: 100%;
-    margin-top: 0px;
-    /* padding-bottom: unset; */
-  }
-
-  .cardtitle {
-    font-size: 38px;
-  }
-
-  .table-row {
-    margin-bottom: 8px;
-  }
-
-  .table-row *,
-  #points-container h3 {
-    font-size: 36px;
-  }
-
-  .table-row small {
-    font-size: 28px;
-  }
-
-  #points-if-correct {
-    font-size: 34px;
-  }
-
-  #construction-area .message {
-    font-size: 40px;
-  }
-
-  #done-btn,
-  #help-btn {
-    font-size: 32px;
-  }
-
-  #queue,
-  #queue-overlay {
-    position: fixed;
-    bottom: 0;
-  }
-}
-
-/* for Samsung Galaxy S8: */
-@media screen and (min-device-height: 360px) and (min-device-width: 740px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: landscape) {
-  html,
-  body {
-    zoom: unset;
-    width: 1960px;
-  }
-
-  #card-deck {
-    width: 570px;
-  }
-}
