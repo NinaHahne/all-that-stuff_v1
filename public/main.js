@@ -660,7 +660,7 @@ function setPlayerName() {
   } catch (err) {
     console.log(err);
     setTimeout(() => {
-      alert("please type in a name with 1-10 letters!");
+      alert("please type in a name with 1-12 letters!");
       setPlayerName();
     }, 200);
   }
@@ -668,9 +668,9 @@ function setPlayerName() {
 
 function askForName() {
   let playerName = prompt(
-    "Welcome to AllThatStuff! \nPlease type in your name (1-10 letters) \nand then pick a color."
+    "Welcome to AllThatStuff! \nPlease type in your name (1-12 letters) \nand then pick a color."
   );
-  if (playerName.length >= 1 && playerName.length <= 10) {
+  if (playerName.length >= 1 && playerName.length <= 12) {
     return playerName;
   }
   throw new Error("Bad name");
@@ -686,6 +686,8 @@ function adjustNameFontSize($piece, name) {
     $piece.addClass("name8");
   } else if (name.length <= 10) {
     $piece.addClass("name10");
+  } else if (name.length <= 12) {
+    $piece.addClass("name12");
   }
 }
 
