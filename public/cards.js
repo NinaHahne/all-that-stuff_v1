@@ -10,10 +10,7 @@ let bullets = document.getElementsByClassName("bullet");
 let items = document.getElementsByClassName("item");
 
 //load JSON file:
-
-//INSTEAD: request.addEventListener('readystatechange', function(){}...).. but there is a less tedious way: jQuery.ajax
-
-let requestURL = "https://www.allthatstuff.fun/cards_enUS.json";
+let requestURL = "https://ninahahne.github.io/AllThatStuff/cards_enUS.json";
 let request = new XMLHttpRequest();
 request.open("GET", requestURL);
 request.responseType = "json";
