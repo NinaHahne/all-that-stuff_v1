@@ -435,13 +435,9 @@ io.on("connection", socket => {
     });
   });
 
-  socket.on("made a guess", data => {
-    collectGuesses(data);
-  });
+  socket.on("made a guess", data => collectGuesses(data) );
 
-  socket.on("end game", () => {
-    getWinner();
-  });
+  socket.on("end game", () => getWinner() );
 
   socket.on("let me rejoin the game", data => {
     console.log('rejoining socketId:', socket.id);
