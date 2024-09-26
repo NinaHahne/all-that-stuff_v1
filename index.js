@@ -155,12 +155,12 @@ function nextPlayersTurn(data) {
 
   io.sockets.emit("next turn", {
     activePlayer: data.activePlayer,
-    nextPlayer: nextPlayer,
+    nextPlayer,
     activeObjects: data.activeObjects,
     queuedObjects: data.queuedObjects,
     newCard: firstCard,
-    correctAnswer: correctAnswer,
-    numberOfTurnsLeft: numberOfTurnsLeft
+    correctAnswer,
+    numberOfTurnsLeft
   });
 }
 
@@ -224,11 +224,11 @@ function collectGuesses(data) {
 
     dataForNextTurn = {
       activePlayer: currentPlayer,
-      correctAnswer: correctAnswer,
-      guessedAnswers: guessedAnswers,
-      playerPointsIfCorrect: playerPointsIfCorrect,
-      actualPlayerPoints: actualPlayerPoints,
-      playerPointsTotal: playerPointsTotal
+      correctAnswer,
+      guessedAnswers,
+      playerPointsIfCorrect,
+      actualPlayerPoints,
+      playerPointsTotal
     };
 
     io.sockets.emit("everyone guessed", dataForNextTurn);
@@ -261,7 +261,7 @@ function getWinner() {
 
   io.sockets.emit("game ends", {
     rankingArray: ranking,
-    winner: winner
+    winner
   });
 }
 
@@ -272,20 +272,20 @@ function addPlayerMidGame(data) {
   io.sockets.emit("add player midgame", {
     selectedPieceId: data.selectedPieceId,
     playerName: data.playerName,
-    gameMaster: gameMaster,
+    gameMaster,
     activePlayer: currentPlayer,
-    playerPointsTotal: playerPointsTotal,
-    numberOfTurnsForThisGame: numberOfTurnsForThisGame,
-    numberOfTurnsLeft: numberOfTurnsLeft,
-    firstCard: firstCard,
-    correctAnswer: correctAnswer,
-    guessedAnswers: guessedAnswers,
-    activeObjects: activeObjects,
-    queuedObjects: queuedObjects,
-    doneBtnPressed: doneBtnPressed,
-    cardPointsHTML: cardPointsHTML,
-    guessingOrDiscussionTime: guessingOrDiscussionTime,
-    dataForNextTurn: dataForNextTurn
+    playerPointsTotal,
+    numberOfTurnsForThisGame,
+    numberOfTurnsLeft,
+    firstCard,
+    correctAnswer,
+    guessedAnswers,
+    activeObjects,
+    queuedObjects,
+    doneBtnPressed,
+    cardPointsHTML,
+    guessingOrDiscussionTime,
+    dataForNextTurn
   });
 }
 
@@ -300,11 +300,11 @@ io.on("connection", socket => {
   socket.emit("welcome", {
     // userId: socket.userId,
     socketId: socket.id,
-    selectedPieces: selectedPieces,
-    playerNames: playerNames,
-    chosenLanguage: chosenLanguage,
-    gameStarted: gameStarted,
-    gameMaster: gameMaster
+    selectedPieces,
+    playerNames,
+    chosenLanguage,
+    gameStarted,
+    gameMaster
   });
 
   socket.on("selected piece", data => {
@@ -325,7 +325,7 @@ io.on("connection", socket => {
         socketId: data.socketId,
         selectedPieceId: data.selectedPieceId,
         playerName: data.playerName,
-        gameMaster: gameMaster
+        gameMaster
       });
     }
   });
@@ -397,9 +397,9 @@ io.on("connection", socket => {
       startPlayer: data.startPlayer,
       activeObjects: data.activeObjects,
       queuedObjects: data.queuedObjects,
-      firstCard: firstCard,
-      correctAnswer: correctAnswer,
-      numberOfTurnsLeft: numberOfTurnsLeft
+      firstCard,
+      correctAnswer,
+      numberOfTurnsLeft
     });
   });
 
